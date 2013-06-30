@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<definition extends="default" name="member/usuarios/list">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/list.jspx"/>
+    </definition>
+	<definition extends="default" name="member/usuarios/show">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/show.jspx"/>
+    </definition>
+	<definition extends="default" name="member/usuarios/create">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/create.jspx"/>
+    </definition>
+	<definition extends="default" name="member/usuarios/update">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/update.jspx"/>
+    </definition>
+	<definition extends="default" name="member/usuarios/upload">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/upload.jspx"/>
+    </definition>
+	<definition extends="default" name="member/usuarios/misturnos">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/misturnos.jspx"/>
+    </definition>
+	<definition extends="default" name="member/usuarios/password">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/password.jspx"/>
+    </definition>
+	<definition extends="public" name="member/usuarios/bienvenido">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/password.jspx"/>
+    </definition>
+	<definition extends="default" name="member/usuarios/noSolicitud">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/noSolicitud.jspx"/>
+    </definition>
+   	<definition extends="default" name="member/usuarios/uploadImg">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/uploadImg.jspx"/>
+    </definition>
+    <definition extends="default" name="member/usuarios/imagen">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/imagen.jspx"/>
+    </definition>
+    <definition extends="default" name="member/usuarios/reset">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/reset.jspx"/>
+    </definition>
+    <definition extends="default" name="member/usuarios/find">
+        <put-attribute name="body" value="/WEB-INF/views/member/usuarios/finder.jspx"/>
+    </definition>
+</tiles-definitions>

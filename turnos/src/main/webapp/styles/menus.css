@@ -1,0 +1,48 @@
+#gridMenu ul{
+	height: 20px;
+	background-color: #666;
+	padding:0px;
+	margin: 0px;
+	vertical-align:text-bottom;
+}
+
+#gridMenu ul li{
+	margin: 0px;
+	list-style: none;
+}
+
+#gridMenu ul li img{
+	margin-left: 3px;
+	height: 20px;
+}
+
+#gridMenu .title{
+	width: 175px;
+	text-transform: capitalize;
+	color: #fff;
+	text-transform: capitalize;
+	font-size: 12px;
+	padding: 2px 3px 1px 0px !important;
+	display: table-cell; 
+	vertical-align: middle;
+	float: left;
+}
+
+#gridMenu .title input, #gridMenu .title label {
+	background: transparent;
+	float:left;
+	border: none;
+	color: white;
+	font-weight: bold;
+	font-size: 12px;
+	height: 14px;
+	width: 100px;
+}
+
+#gridMenu .title input{
+	width: 70px;
+}
+
+#gridMenu .title label{
+	padding-top: 1px;
+}

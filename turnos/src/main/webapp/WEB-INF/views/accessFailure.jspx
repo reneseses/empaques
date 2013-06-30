@@ -1,0 +1,11 @@
+<div id="main_body" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:fn="http://java.sun.com/jsp/jstl/functions"  xmlns:spring="http://www.springframework.org/tags" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  <jsp:directive.page contentType="text/html;charset=UTF-8" />
+  <jsp:output omit-xml-declaration="yes" />
+  <util:panel id="title" title="Acceso no Permitido">
+    <h2>Acceso no Permitido</h2>
+    <p>
+      Lo sentimos, ud no cuenta con los permisos necesarios para realizar esta operacion
+    </p>
+  </util:panel>
+</div>
+

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" id="main_body" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_com_reneseses_empaques_domain_Falta" modelAttribute="falta" path="/member/faltas" versionField="none" z="FdbcssqijqD7yMP02wzvG1F1K8Y=">
+        <field:select field="usuario" id="c_com_reneseses_empaques_domain_Falta_usuario" itemLabel="numero" itemValue="id" items="${usuarios}" path="/member/usuarios" z="user-managed"/>
+        <field:select field="tipoFalta" id="c_com_reneseses_empaques_domain_Falta_tipoFalta" itemLabel="falta" items="${tipofaltaenums}" path="tipofaltaenums" z="user-managed"/>
+        <field:datetime dateTimePattern="${falta_fecha_date_format}" field="fecha" id="c_com_reneseses_empaques_domain_Falta_fecha" z="CkBJgG8pfZPsKXVXOJNNyfZbNiE="/>
+    </form:update>
+</div>

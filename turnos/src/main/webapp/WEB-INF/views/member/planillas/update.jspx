@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div id="main_body" xmlns:spring="http://www.springframework.org/tags" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <spring:url value="/js/planilla.js" var="planilla_js"/>
+    <spring:url value="/member/planillas/getcupos?id=${planilla.id }" var="planilla_data"/>
+    <spring:url value="/member/planillas/save" var="planilla_save"/>
+    <spring:url value="/" var="parent_url"/>
+    <fmt:formatDate pattern="yyyy/MM/dd" value="${planilla.fecha}" var="fecha"/>
+    <script>
+    	dataUrl= "${planilla_data}";
+    	saveUrl= "${planilla_save}";
+    	date= new Date("${fecha}");
+    	planillaId= "${planilla.id}";
+    	parent= "${parent_url}";
+    	var fill = true;
+		var readonly= false;
+    </script>
+    <script src="${planilla_js}">
+        <!-- -->
+    </script>
+    <div id="gridMenu">
+        <ul>
+            <li class="title">
+                <label for="semana">Planilla Semana</label>
+                <input class="week-picker" id="semana" type="text" value="xx-xx-xxxx"/>
+            </li>
+            <li>
+                <a href="#" id="save" onclick="updateTurnos();">
+                    <spring:url value="/images/grid/save.png" var="save"/>
+                    <img src="${save }" title="Guardar Cambios"/>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="planilla" style="display: block; padding-right: 10px; height: 474px; overflow: auto;">
+        <!--  -->
+    </div>
+    <form:update id="fu_com_reneseses_empaques_domain_Planilla" modelAttribute="planilla" path="/member/planillas" render="false" versionField="Version" z="user-managed">
+        <field:datetime dateTimePattern="${planilla_fecha_date_format}" field="fecha" id="c_com_reneseses_empaques_domain_Planilla_fecha" z="G5D0obN0MCQ5aJ+6sQea2BxURe8="/>
+        <field:checkbox field="generada" id="c_com_reneseses_empaques_domain_Planilla_generada" z="VJoU4NyjWmHPlwTjHRmZiq8KQxI="/>
+        <field:checkbox field="repechaje" id="c_com_reneseses_empaques_domain_Planilla_repechaje" z="MuzzfTtCg21Mh9jpDqe7C/YiT8M="/>
+        <field:select field="bloques" id="c_com_reneseses_empaques_domain_Planilla_bloques" itemValue="id" items="${bloques}" multiple="true" path="/bloques" z="D1SYBVC7Q1Lz92WBflbLBvDq59k="/>
+    </form:update>
+</div>

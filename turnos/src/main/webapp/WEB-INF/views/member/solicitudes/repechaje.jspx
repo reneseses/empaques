@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div id="main_body" xmlns:sec="http://www.springframework.org/security/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <spring:url value="/member/solicitudes/recibirRepechaje" var="recibir_url"/>
+    <spring:url value="/" var="parent_url"/>
+    <spring:url value="/js/solicitudes/repechaje.js" var="repechajes_js" />
+    <sec:authentication property="principal.regimen" var="regimen" />
+    <c:set value="Asistencia Libre"  var ="libre"/>
+    <spring:url value="/images/tomaRepechaje.png" var="repechaje_img"/>
+    
+	<util:panel id="title" title="Turnos">
+    <c:choose>
+    	<c:when test="${regimen.regimen eq libre}">
+    		Ud tiene asistencia libre.
+    	</c:when>
+    	<c:otherwise>
+	    	<c:choose>
+	    	<c:when test="${empty error}">
+	    <script>
+	    	var turnos=${turnos};
+	    	<c:if test="${not empty repechaje }">
+	    	var repechaje= ${repechaje};
+	    	var repechajeId= "${repechajeId}";
+	    	</c:if>
+			var dias = {};
+	    	var horas= {};
+	    	var bloques=[];
+	    	var days=[];
+			var recibir_url= "${recibir_url}";
+			var parent_url= "${parent_url}";
+	    	<c:forEach items="${bloques}" var="block">horas["${block}"]="${block.bloque}"; bloques.push("${block}");
+	    	</c:forEach>
+	    	<c:forEach items="${dias}" var="dia">dias["${dia}"]= "${dia.dia}"; days.push("${dia}")
+	    	</c:forEach>
+	    </script>
+	    <script type="text/javascript" src="${repechajes_js}"><!-- --></script>
+	    <spring:message code="application_name" htmlEscape="false" var="app_name"/>
+		    <div class="turnoContainer" style="margin-right: 4px;">
+		    	<fieldset>
+		    		<legend id="turnum">Turno 1</legend>
+		    		<div>
+		    			<label for="dia">Día:</label>
+		    			<br />
+			        	<select id="dia" size="7" style="width: 200px">
+						<!--  -->
+			        	</select>
+		    		</div>
+		    		<div>
+				        <label for="begin">Inicio Rango:</label>
+				        <br />
+				        <select id="begin" size="7" multiple="multiple" class="horas" style="width: 144px; margin-right: 0px" >
+				        	<!--  -->
+				        </select>
+			        </div>
+					<input id="elegir" type="button" value="Elegir" />
+		        </fieldset>
+		    </div>
+		    <div class="turnoContainer" style="margin-left: 4px ">
+		    	<fieldset class="last">
+		    		<legend>Turnos Elegidos</legend>
+		    		<ul id="turnos">
+		    			<!--  -->
+		    		</ul>
+					<input id="enviar" type="button" value="Enviar" disabled="disabled" />
+		        </fieldset>
+		    </div>
+		    <br clear="all" />
+		    <br />
+    <div class="errors" style="display: none">ATENCION: Ud ya realizó su solicitud de repechaje. Cambiar esta información implica actualizar la fecha de su solicitud, pudiendo provocar que se le asignen menos turnos.</div>
+	    	</c:when>
+	    	
+	    	<c:otherwise>
+	    		<h3>${error}</h3>
+	    		<h3>IMPORTANTE: Nueva modalidad de solicitud de repechaje.</h3>
+   	<b>La selección es por día:</b>
+   	<p>Ahora es posible seleccionar más de un turno por día. Para hacer esto es necesario mantener pulsada la tecla <b>ctrl</b> al momento de hacer clic sobre una opción.</p>
+   	<img alt="Solicitud de repechaje" src="${repechaje_img }" />
+	    	</c:otherwise>
+	    </c:choose>
+   		</c:otherwise>
+   	</c:choose>
+    
+	</util:panel>
+    
+</div>

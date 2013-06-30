@@ -1,0 +1,56 @@
+<div id="main_body" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+  	<jsp:output omit-xml-declaration="yes" />
+  	<spring:message var="app_name" code="application_name" htmlEscape="false" />
+  	<spring:message var="title" code="welcome_titlepane" arguments="${app_name}" htmlEscape="false" />
+  	<spring:url value="/images/tomaRepechaje.png" var="repechaje_img"/>
+	<h3>
+     	<spring:message code="welcome_h3" arguments="${app_name}" />
+	</h3>
+   	<p>
+     	<spring:message code="welcome_text" />
+   	</p>
+   	
+   	<div class="info" style="margin-right: 2%">
+	   	<div>
+			<h3>Informaciones</h3>
+			<p><b>¿Problemas para iniciar sesión? ¿Olvidaste tu contraseña?</b> Envianos un mail a <b>consultastomaturnos@gmail.com</b> con tu número, nombre completo y rut.</p>
+			<p>El formato de RUT para ingresar a su cuenta es: <b>XXXXXXXX-X</b>(sin puntos).</p>
+			<p>Es importante que realicen sus solitudes de turnos con un navegador actualizado: Chrome, Firefox, IE9+, Opera, Safari, etc. Además asegurence de que este activado javascript(viene activado por defecto en la mayoría de los navegadores).</p>
+			<p>Se ha restringido el acceso a la toma de turnos:</p>
+			<ul class="ulinfo">
+			<li>El período para realizar solicitudes de <b>turnos</b> comienza todos los <b>domingos a las 23:30</b> y termina los <b>miércoles a las 23:30</b></li>
+			<li>El período para realizar solicitudes de <b>repechajes</b> comienza todos los <b>jueves a las 23:30</b> y termina los <b>viernes a las 23:30</b></li>
+			</ul>
+			<p><b>Recuerden cambiar su contraseña</b> para así evitar accesos no autorizados.</p>
+		</div>
+   	</div>
+	<div class="info">
+	<h3>IMPORTANTE: Nueva modalidad de solicitud de repechaje.</h3>
+   	<b>La selección es por día:</b>
+   	<p>Ahora es posible seleccionar más de un turno por día. Para hacer esto es necesario mantener pulsada la tecla <b>ctrl</b> al momento de hacer clic sobre una opción.</p>
+   	<img alt="Solicitud de repechaje" src="${repechaje_img }" />
+	<h3>Cambio de Base de Datos</h3>
+	<p>Se ha realizado una migración de sus datos desde <a href="http://dev.mysql.com/" title="MySQL" target="_blank">MySQL</a> a <a href="http://www.mongodb.org/" target="_blank" title="MongoDB">MongoDB</a>, debido a algunos inconvenientes que tuvimos a la hora de generar la planilla la semana pasada. Este cambio de hizo lo más rápido posible, por lo que no se pudieron hacer todos los debidos Tests. Si encuentran algún error por favor dar aviso a <b>consultastomaturnos@gmail.com</b>.</p>
+	<p>Debido a lo expuesto anteriorme, todas la imágenes que hayan subido se han perdido. Pedimos disculpas por los inconvenientes que esto pueda causar.</p>
+		<!-- <div>
+			<h3>Actualizaciones</h3>
+			<ul>
+				<li>Se ha agregado un método para recuperar contraseñas olvidadas.</li>
+				<li>Se ha solucionado el problema de que algunos empaques no podían ver su perfil</li>
+				<li>Se han agregado los siguientes datos personales: fecha de nacimiento, universidad y carrera.</li>
+				<li>Al hacer click sobre una casilla de la planilla se mostrarán algunos datos relevantes del empaque asignado a dicho turno (imagen, nombre, número y cantidad turnos asignados)</li>
+			</ul>
+			<p>Si tienes sugerencias, preguntas, reclamos o encuentras un error, envianos un email a <b>consultastomaturnos@gmail.com</b></p>
+		</div>
+		<div>
+			<h3>Procedimiento de asignación de turnos:</h3>
+			<ul>
+				<li>Se ordenan los solicitudes por fecha de recepción y por el número de turnos asignados al empaque solicitante en la semana anterior.</li>
+				<li>Luego para cada una de las solicitudes se revisa si el empaque solicitante tiene falta grave o suspención. En caso de tener falta grave solo se le asiganarán como maximo dos turnos, en caso de estar suspendido se continuará con la siguiente solicitud.</li>
+				<li>Para cada turno en la solicitud se revisa que no haya tope, de no ser así se asigna si es que hay cupos disponibles.</li>
+				<li>Si se han asignado 3 turnos al empaque solicitante o si no quedan más turnos en la solicitud se pasa a la siguiente solicitud.</li>.
+			</ul>
+		</div> -->
+	</div>
+</div>

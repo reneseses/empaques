@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div id="main_body" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:sec="http://www.springframework.org/security/tags" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <c:set value="false" var="admin" />
+    <sec:authorize ifAnyGranted="ADMIN">
+    	<c:set value="true" var="admin" />
+    </sec:authorize>
+    
+    <page:list id="pl_com_reneseses_empaques_domain_Planilla" items="${planillas}" z="TXc6OpwtDEKDdTjEupdqbS9ayL4=">
+        <table:table create="${admin }" delete="${admin }" update="${admin }" data="${planillas}" id="l_com_reneseses_empaques_domain_Planilla" path="/member/planillas" planilla="${admin }" z="user-managed">
+            <table:column date="true" dateTimePattern="${planilla_fecha_date_format}" id="c_com_reneseses_empaques_domain_Planilla_fecha" property="fecha" z="8CHjX/fVe47ca9orwdZNlJsuZPQ="/>
+            <table:column id="c_com_reneseses_empaques_domain_Planilla_generada" property="generada" z="CxdsLqmEFCT6lLfom1Pyo76DPfk="/>
+            <table:column id="c_com_reneseses_empaques_domain_Planilla_repechaje" property="repechaje" z="Z2czh6lGhTInhC+ZE8mFaTM9N+Q="/>
+            <table:column id="c_com_reneseses_empaques_domain_Planilla_bloques" property="bloques" render="false" z="user-managed"/>
+        </table:table>
+    </page:list>
+</div>

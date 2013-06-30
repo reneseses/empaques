@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div id="main_body" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_reneseses_empaques_domain_Empaque" items="${empaques}" z="w9KpMYrO8cq3d5UBNWXSxc4USPo=">
+        <table:table data="${empaques}" id="l_com_reneseses_empaques_domain_Empaque" path="/member/empaques/noSolicitud" z="kOV3ZTU3lV1BALldGWugmGmLOps=">
+            <table:column id="c_com_reneseses_empaques_domain_Empaque_nombre" property="nombre" z="vJdVByrgeq1xUVguVCzRkingnL8="/>
+            <table:column id="c_com_reneseses_empaques_domain_Empaque_email" property="email" z="vDlT5pzI0QyzrMxXBswhOZ5hvlQ="/>
+            <table:column id="c_com_reneseses_empaques_domain_Empaque_password" property="password" render="false" z="user-managed"/>
+            <table:column id="c_com_reneseses_empaques_domain_Empaque_disabled" property="disabled" z="y52Q87T9l27QzKu4Baj+iSwGejI="/>
+            <table:column id="c_com_reneseses_empaques_domain_Empaque_locked" property="locked" z="izt8MlnYRd5/f/N+NVnjqLyCxCU="/>
+            <table:column id="c_com_reneseses_empaques_domain_Empaque_tipo" property="tipo" z="ntzR1+70UHXrwkD6pdA6tAvZDoM="/>
+        </table:table>
+    </page:list>
+</div>

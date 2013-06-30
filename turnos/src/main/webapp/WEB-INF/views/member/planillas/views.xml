@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="member/planillas/list">
+        <put-attribute name="body" value="/WEB-INF/views/member/planillas/list.jspx"/>
+    </definition>
+<definition extends="default" name="member/planillas/show">
+        <put-attribute name="body" value="/WEB-INF/views/member/planillas/show.jspx"/>
+    </definition>
+<definition extends="default" name="member/planillas/create">
+        <put-attribute name="body" value="/WEB-INF/views/member/planillas/create.jspx"/>
+    </definition>
+<definition extends="default" name="member/planillas/update">
+        <put-attribute name="body" value="/WEB-INF/views/member/planillas/update.jspx"/>
+    </definition>
+    <definition extends="default" name="member/planillas/updateTurnos">
+        <put-attribute name="body" value="/WEB-INF/views/member/planillas/updateTurnos.jspx"/>
+    </definition>
+<definition extends="default" name="member/planillas/findPlanillasByFechaEquals">
+        <put-attribute name="body" value="/WEB-INF/views/member/planillas/findPlanillasByFechaEquals.jspx"/>
+    </definition>
+</tiles-definitions>

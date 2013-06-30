@@ -1,0 +1,13 @@
+--- 
+applications: 
+- name: empaques
+  memory: 1G
+  instances: 1
+  url: empaques.cfapps.io
+  path: .
+  services: 
+    empaquemongo: 
+      label: mongolab
+      provider: mongolab
+      version: n/a
+      plan: sandbox

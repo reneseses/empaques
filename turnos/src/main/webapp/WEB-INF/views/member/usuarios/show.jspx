@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:sec="http://www.springframework.org/security/tags" xmlns:spring="http://www.springframework.org/tags" id="main_body" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <c:set value="false" var="admin"/>
+    <sec:authentication property="principal.id" var="id"/>
+    <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
+        <c:set value="true" var="admin"/>
+    </sec:authorize>
+    <page:show create="${admin}" delete="${admin}" id="ps_com_reneseses_empaques_domain_Usuario" list="${admin}" object="${usuario}" path="/member/usuarios" z="user-managed">
+        <div style="width:75%; float:left">
+            <field:display field="password" id="s_com_reneseses_empaques_domain_Usuario_password" object="${usuario}" render="false" z="user-managed"/>
+            <field:display field="nombre" id="s_com_reneseses_empaques_domain_Usuario_nombre" object="${usuario}" z="0LMYzNkhLLaTbh1wBWsye9E88oo="/>
+            <field:display field="rut" id="s_com_reneseses_empaques_domain_Usuario_rut" object="${usuario}" z="FQPh1IHPLZmtnb2tH9CNFouRuyc="/>
+            <field:display field="numero" id="s_com_reneseses_empaques_domain_Usuario_numero" object="${usuario}" z="n7sf+Bpl8brxWzfe4TRdHbX4PoU="/>
+            <field:display field="email" id="s_com_reneseses_empaques_domain_Usuario_email" object="${usuario}" z="m9oJ9aAbxRCHwQlcNcN9PT0UHKw="/>
+            <field:display date="true" dateTimePattern="${usuario_fechanacimiento_date_format}" field="fechaNacimiento" id="s_com_reneseses_empaques_domain_Usuario_fechaNacimiento" object="${usuario}" z="rk6maFyxixfkrUm1lI0zX7yv9hI="/>
+            <field:display field="carrera" id="s_com_reneseses_empaques_domain_Usuario_carrera" object="${usuario}" z="ElX1ackcKO7WNB8WEeB4d8+5NMw="/>
+            <field:display field="universidad" id="s_com_reneseses_empaques_domain_Usuario_universidad" object="${usuario}" z="weJ13UqO58ZD5e5qFWPR7LD4Haw="/>
+            <field:display field="celular" id="s_com_reneseses_empaques_domain_Usuario_celular" object="${usuario}" z="0H19gxQ1DYEdxJov4fHKqzcRuJM="/>
+            <field:display field="regimen" id="s_com_reneseses_empaques_domain_Usuario_regimen" object="${usuario}" z="TPBnnnCUedu9Crr6K8/PaLRbLu4="/>
+            <field:display date="true" dateTimePattern="${usuario_lastsolicitud_date_format}" field="lastSolicitud" id="s_com_reneseses_empaques_domain_Usuario_lastSolicitud" object="${usuario}" z="Fdi5t1qTEKqi998oUnyKU99VlOA="/>
+            <field:display field="tipo" id="s_com_reneseses_empaques_domain_Usuario_tipo" object="${usuario}" z="G6HngVl4Lzwr3aCFIBu1+436or8="/>
+            <field:display field="disabled" id="s_com_reneseses_empaques_domain_Usuario_disabled" object="${usuario}" render="false" z="user-managed"/>
+            <field:display field="locked" id="s_com_reneseses_empaques_domain_Usuario_locked" object="${usuario}" render="false" z="user-managed"/>
+            <field:display field="prioridad" id="s_com_reneseses_empaques_domain_Usuario_prioridad" object="${usuario}" render="false" z="user-managed"/>
+            <field:display field="facebook" id="s_com_reneseses_empaques_domain_Usuario_facebook" object="${usuario}" z="/8HonnKWJ8N4VLZCOx4jEjHOy9U="/>
+        </div>
+        <spring:url value="/member/usuarios/imagen/${usuario.id}" var="img_url"/>
+        <spring:url value="/images/user.png" var="user_img"/>
+        <spring:url value="/member/usuarios/imagen" var="get_img"/>
+        <script>
+			$(function(){
+				$.ajax({
+					url: '${get_img}',
+					dataType: 'text',
+		            success: function(data) {
+		            	var img = $("<img/>");
+		                if(data == "null")
+		                	img.attr('src', '${user_img}');
+		                else
+		                	img.attr('src', '${get_img}?thumb='+ data);
+		                $(".user_img a").append(img.css("width", "100%"));
+		            }
+				});
+			});
+		</script>
+        <div class="user_img">
+            <a href="${img_url }">
+                <!-- -->
+            </a>
+        </div>
+    </page:show>
+</div>
