@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.util.JSON;
 import com.reneseses.empaques.domain.Bloque;
 import com.reneseses.empaques.domain.ImagenUsuario;
 import com.reneseses.empaques.domain.Planilla;
@@ -24,10 +27,6 @@ import com.reneseses.empaques.enums.BloqueEnum;
 import com.reneseses.empaques.enums.DiasEnum;
 import com.reneseses.empaques.enums.EstadoTurnoEnum;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,8 +132,9 @@ public class PlanillaController {
             uiModel.addAttribute("error", "La recepcion de turnos aun esta activa");
             return "redirect:/member/planillas";
         }
-        JSONObject jo;
-		JSONArray ja;
+        
+        BasicDBObject jo;
+        BasicDBList ja;
 		
 		Calendar date= Calendar.getInstance();
 		date.setTime(planilla.getFecha());
@@ -158,7 +158,7 @@ public class PlanillaController {
 		for(Solicitud sol: solicitudes){
 			Usuario empaque = usuarios.get(sol.getUsuario().getId());
 			Integer asignados=0;
-			ja = (JSONArray) JSONSerializer.toJSON(sol.getTurnos());
+			ja = (BasicDBList) JSON.parse(sol.getTurnos());
 			Integer maxTurnos= 0;
 			if(!empaque.getRegimen().equals(RegimenTurnoEnum.LIBRE)){
 				maxTurnos= faltaService.getCantidadTurnos(date1.getTime(), date2.getTime(), empaque);
@@ -171,7 +171,7 @@ public class PlanillaController {
 					if(asignados >= maxTurnos)
 						break;
 					
-					jo = ja.getJSONObject(i);
+					jo = (BasicDBObject) ja.get(i);
 					
 					DiasEnum dia = DiasEnum.valueOf(jo.getString("dia"));
 					if(empaque.getRegimen().equals(RegimenTurnoEnum.NUEVO))
@@ -181,7 +181,7 @@ public class PlanillaController {
 					BloqueEnum fin = BloqueEnum.valueOf(jo.getString("fin"));
 					boolean asignado= true;
 					for(int j= inicio.ordinal(); j <= fin.ordinal(); j++){
-						jo = new JSONObject();
+						jo = new BasicDBObject();
 						jo.put("dia", dia);
 						jo.put("inicio", BloqueEnum.values()[j]);
 											
@@ -217,7 +217,7 @@ public class PlanillaController {
 				}
 				if(libres.size() > 0){
 					if(!sol.hasSunday()){
-						jo = new JSONObject();
+						jo = new BasicDBObject();
 						jo.put("dia", DiasEnum.DOMINGO);
 						jo.put("inicio", BloqueEnum.DOCE);
 						jo.put("fin", BloqueEnum.VIENTE);
@@ -265,8 +265,8 @@ public class PlanillaController {
             return "redirect:/member/planillas";
         }
         
-        JSONObject jo;
-		JSONArray ja;
+        BasicDBObject jo;
+        BasicDBList ja;
 		
 		Calendar date= Calendar.getInstance();
 		date.setTime(planilla.getFecha());
@@ -292,18 +292,18 @@ public class PlanillaController {
 			if(maxTurnos== 0)
 				continue;
 			
-			ja=  (JSONArray) JSONSerializer.toJSON(repechaje.getTurnos());
+			ja=  (BasicDBList) JSON.parse(repechaje.getTurnos());
 			
 			for(int i =0; i < ja.size() && repCont < maxTurnos; i++){
-				jo = ja.getJSONObject(i);
-				JSONArray turnos= jo.getJSONArray("inicio");
+				jo = (BasicDBObject) ja.get(i);
+				BasicDBList turnos= (BasicDBList) jo.get("inicio");
 				for(int j= 0; j< turnos.size() && repCont < 2; j++){
-					JSONObject solicitud= new JSONObject();
+					BasicDBObject solicitud= new BasicDBObject();
 					solicitud.put("dia", jo.getString("dia"));
-					solicitud.put("inicio", turnos.getString(j));
+					solicitud.put("inicio", turnos.get(j));
 					if(planilla.buscarConflicto(solicitud, empaque))
 						continue;
-					Bloque bloque = planilla.getBloque(DiasEnum.valueOf(jo.getString("dia")), BloqueEnum.valueOf(turnos.getString(j)));
+					Bloque bloque = planilla.getBloque(DiasEnum.valueOf(jo.getString("dia")), BloqueEnum.valueOf((String)turnos.get(j)));
 					//System.out.println(bloque);
 
 					if(!bloque.addTurno(empaque, i))
@@ -318,9 +318,9 @@ public class PlanillaController {
         return "redirect:/member/planillas/" + String.valueOf(id);
     }
     
-    private void ajustarPlanilla(Planilla planilla, JSONArray turnos, List<Integer> noAsignados, Usuario empaque, Integer maxTurnos,Integer asignados){
+    private void ajustarPlanilla(Planilla planilla, BasicDBList turnos, List<Integer> noAsignados, Usuario empaque, Integer maxTurnos,Integer asignados){
 		for(Integer solicitud: noAsignados){
-			JSONObject jo= turnos.getJSONObject(solicitud);
+			BasicDBObject jo= (BasicDBObject) turnos.get(solicitud);
 			DiasEnum dia = DiasEnum.valueOf(jo.getString("dia"));
 			BloqueEnum inicio = BloqueEnum.valueOf(jo.getString("inicio"));
 			BloqueEnum fin = BloqueEnum.valueOf(jo.getString("fin"));
@@ -351,7 +351,7 @@ public class PlanillaController {
 				if(date.get(Calendar.MINUTE) < 10)
 					aux= aux + "0";
 				BloqueEnum hour= BloqueEnum.bloqueFromValue(aux);
-				JSONObject job = new JSONObject();
+				BasicDBObject job = new BasicDBObject();
 				job.put("dia", day);
 				job.put("inicio", hour);
 				
@@ -369,14 +369,14 @@ public class PlanillaController {
 					
 					List<Solicitud> query= solicitudService.findSolicitudesByFechaBetweenAndUsuario(date1.getTime(), date2.getTime(), usuario);
 					Solicitud sol= query.get(0);
-					JSONArray ja =  (JSONArray) JSONSerializer.toJSON(sol.getTurnos());
-					JSONObject solTurno= ja.getJSONObject(turno.getSolicitud());
+					BasicDBList ja =  (BasicDBList) JSON.parse(sol.getTurnos());
+					BasicDBObject solTurno= (BasicDBObject) ja.get(turno.getSolicitud());
 					BloqueEnum solFin = BloqueEnum.valueOf(solTurno.getString("fin"));
 					int cont=0;
 					for(int j= hour.ordinal() + 1; j<= solFin.ordinal() && cont < 1; j++){
 						cont++;
 						Bloque block= planilla.getBloques().get(7*j + dia.ordinal());
-						solTurno = new JSONObject();
+						solTurno = new BasicDBObject();
 						solTurno.put("dia", dia);
 						solTurno.put("inicio", BloqueEnum.values()[j]);
 						if(planilla.buscarConflicto(solTurno, usuario))
@@ -403,10 +403,10 @@ public class PlanillaController {
     
     @RequestMapping(value="getcupos")
     public @ResponseBody String getPlanilla(@RequestParam(value = "id", required = false) ObjectId id) {
-        JSONArray ja = new JSONArray();
-        JSONArray rows = new JSONArray();
-        JSONArray data = new JSONArray();
-        JSONObject jo;
+    	BasicDBList ja = new BasicDBList();
+    	BasicDBList rows = new BasicDBList();
+    	BasicDBList data = new BasicDBList();
+        BasicDBObject jo;
         String cupos;
         String[] dias = { "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo" };
         BloqueEnum[] bloques = BloqueEnum.values();
@@ -417,7 +417,7 @@ public class PlanillaController {
                 cupos = planilla.getCupos();
             } else {
                 for (int i = 0; i < bloques.length; i++) {
-                    jo = new JSONObject();
+                    jo = new BasicDBObject();
                     for (int j = 0; j < dias.length; j++) jo.put(dias[j], 0);
                     data.add(jo);
                     rows.add(bloques[i].getBloque());
@@ -546,15 +546,21 @@ public class PlanillaController {
 	@RequestMapping("/saveTurnos")
     public @ResponseBody String saveTurnos(@RequestParam("id") ObjectId id, @RequestParam("data") String data) {
         Planilla planilla = planillaService.findPlanilla(id);
-        JSONArray ja = (JSONArray) JSONSerializer.toJSON(data);
+        BasicDBList ja = (BasicDBList) JSON.parse(data);
         List<Bloque> bloques = planilla.getBloques();
         for (int i = 0; i < ja.size(); i++) {
-            JSONArray change = ja.getJSONArray(i);
-            DiasEnum dia = DiasEnum.valueOf(change.getString(1).toUpperCase());
-            Bloque bloque = bloques.get(7 * change.getInt(0) + dia.ordinal());
-            Usuario usuario= usuarioService.findUsuarioByNumero(Integer.valueOf(change.getString(3)));
+        	BasicDBList change = (BasicDBList) ja.get(i);
+        	
+        	Integer bloq= (Integer) change.get(0);
+        	String day= (String) change.get(1);
+        	Integer nume= (Integer) change.get(2);
+        	Integer numero= (Integer) change.get(3);
+        	
+            DiasEnum dia = DiasEnum.valueOf(day.toUpperCase());
+            Bloque bloque = bloques.get(7 * bloq + dia.ordinal());
+            Usuario usuario= usuarioService.findUsuarioByNumero(numero);
             List<Turno> turnos = bloque.getTurnos();
-            Turno turno = turnos.get(change.getInt(2));
+            Turno turno = turnos.get(nume);
             turno.setUsuario(usuario);
         }
         
@@ -565,7 +571,7 @@ public class PlanillaController {
     @RequestMapping("getuser")
     public @ResponseBody String getData(@RequestParam("numero") Integer numero, @RequestParam("id") ObjectId id) {
     	Usuario usuario = usuarioService.findUsuarioByNumero(numero);
-        JSONObject jo = new JSONObject();
+    	BasicDBObject jo = new BasicDBObject();
         jo.put("nombre", usuario.getNombre());
         jo.put("id", usuario.getId());
         ImagenUsuario imgUser= imagenUsuarioImpl.findByUsuario(usuario);

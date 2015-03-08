@@ -8,21 +8,21 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=8" />	
-			
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
 		<util:load-scripts />
 		
 		<spring:message code="application_name" var="app_name" htmlEscape="false"/>
 		<title><spring:message code="welcome_h3" arguments="${app_name}" /></title>
 	</head>
 	
-  	<body class="tundra spring">
-   		<div id="wrapper">
-		    <tiles:insertAttribute name="header" ignore="true" />
-		    <tiles:insertAttribute name="menu" ignore="true" />   
-		    <div id="main">
-	    		<tiles:insertAttribute name="body"/> 
-		    	<tiles:insertAttribute name="footer" ignore="true"/>
-		    </div>
+	<body>
+		<div class="container-fluid">
+			<tiles:insertAttribute name="header" ignore="true" />
+			<tiles:insertAttribute name="menu" ignore="true" /> 
+			<div id="content">
+				<tiles:insertAttribute name="body"/>
+			</div>
 		</div>
 	</body>
 </html>

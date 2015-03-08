@@ -17,31 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import com.reneseses.empaques.domain.Bloque;
-import com.reneseses.empaques.domain.Imagen;
-import com.reneseses.empaques.domain.ImagenUsuario;
-import com.reneseses.empaques.domain.Planilla;
-import com.reneseses.empaques.domain.Turno;
-import com.reneseses.empaques.domain.Usuario;
-import com.reneseses.empaques.domain.service.ImagenServiceImpl;
-import com.reneseses.empaques.domain.service.ImagenUsuarioServiceImpl;
-import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
-import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
-import com.reneseses.empaques.enums.BloqueEnum;
-import com.reneseses.empaques.enums.DiasEnum;
-import com.reneseses.empaques.enums.RegimenTurnoEnum;
-import com.reneseses.empaques.enums.TipoFaltaEnum;
-import com.reneseses.empaques.enums.TipoUsuarioEnum;
-import com.reneseses.empaques.formularios.ChangePasswordForm;
-import com.reneseses.empaques.formularios.ExcelForm;
-import com.reneseses.empaques.formularios.ForgotPasswordForm;
-import com.reneseses.empaques.formularios.ImagenForm;
-import com.reneseses.empaques.formularios.UsuarioCreateForm;
-import com.reneseses.empaques.formularios.UsuarioUpdateForm;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -69,6 +44,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.reneseses.empaques.domain.Bloque;
+import com.reneseses.empaques.domain.Imagen;
+import com.reneseses.empaques.domain.ImagenUsuario;
+import com.reneseses.empaques.domain.Planilla;
+import com.reneseses.empaques.domain.Turno;
+import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.service.ImagenServiceImpl;
+import com.reneseses.empaques.domain.service.ImagenUsuarioServiceImpl;
+import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
+import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
+import com.reneseses.empaques.enums.BloqueEnum;
+import com.reneseses.empaques.enums.DiasEnum;
+import com.reneseses.empaques.enums.RegimenTurnoEnum;
+import com.reneseses.empaques.enums.TipoFaltaEnum;
+import com.reneseses.empaques.enums.TipoUsuarioEnum;
+import com.reneseses.empaques.formularios.ChangePasswordForm;
+import com.reneseses.empaques.formularios.ExcelForm;
+import com.reneseses.empaques.formularios.ForgotPasswordForm;
+import com.reneseses.empaques.formularios.ImagenForm;
+import com.reneseses.empaques.formularios.UsuarioCreateForm;
+import com.reneseses.empaques.formularios.UsuarioUpdateForm;
 
 @RequestMapping("/member/usuarios")
 @Controller
@@ -110,15 +109,15 @@ public class UsuarioController {
     public String getTurnos(@PathVariable("id") ObjectId id) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
-        JSONObject jo;
-        List<JSONObject> ja = new ArrayList<JSONObject>();
+        BasicDBObject jo;
+        List<BasicDBObject> ja = new ArrayList<BasicDBObject>();
         List<Bloque> bloques = planilla.getBloques();
         for (Bloque bloque : bloques) {
             List<Turno> turnos = bloque.getTurnos();
             for (Turno turno : turnos) {
                 Usuario usuario = turno.getUsuario();
                 if (usuario != null && usuario.getId().equals(principal.getId())) {
-                    jo = new JSONObject();
+                    jo = new BasicDBObject();
                     Calendar calendar= Calendar.getInstance();
                     calendar.setTime(bloque.getFecha());
                     jo.put("dia", calendar.get(Calendar.DAY_OF_WEEK));
@@ -137,8 +136,8 @@ public class UsuarioController {
 
     @RequestMapping("/turnos")
     public String misTurnos(Model uiModel) {
-        JSONObject jo;
-        JSONArray planillas = new JSONArray();
+    	BasicDBObject jo;
+    	BasicDBList planillas = new BasicDBList();
         Long count = planillaServiceImpl.countAllPlanillas();
         int inicio = count.intValue() - 7;
         if (inicio < 0) inicio = 0;
@@ -149,16 +148,16 @@ public class UsuarioController {
             return "member/usuarios/misturnos";
         }
         for (Planilla pla : plas) {
-            jo = new JSONObject();
+            jo = new BasicDBObject();
             jo.put("fecha", pla.getFecha().getTime());
             jo.put("id", pla.getId().toString());
             planillas.add(jo);
         }
         Planilla planilla = plas.get(0);
-        jo= new JSONObject();
+        jo= new BasicDBObject();
         for (int i = 0; i < BloqueEnum.values().length; i++) jo.put(BloqueEnum.values()[i].toString(), BloqueEnum.values()[i].getBloque());
         uiModel.addAttribute("bloques", jo.toString());
-        jo = new JSONObject();
+        jo = new BasicDBObject();
         for (int i = 0; i < DiasEnum.values().length; i++) jo.put(DiasEnum.values()[i].toString(), DiasEnum.values()[i].getDia());
         uiModel.addAttribute("dias", jo.toString());
         uiModel.addAttribute("planillas", planillas);
@@ -191,7 +190,7 @@ public class UsuarioController {
             Workbook wb = WorkbookFactory.create(inp);
             FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
             Sheet thisSheet = wb.getSheetAt(0);
-            JSONObject doc = new JSONObject();
+            BasicDBObject doc = new BasicDBObject();
             for (int i = 0; i <= thisSheet.getLastRowNum(); i++) {
                 usuario = new Usuario();
                 Row row = thisSheet.getRow(i);
@@ -234,7 +233,7 @@ public class UsuarioController {
         return "redirect:/member/usuarios?page=1&size=25";
     }
 
-    private void cellContent(Cell cell, int type, JSONObject doc, String column) {
+    private void cellContent(Cell cell, int type, BasicDBObject doc, String column) {
         switch(type) {
             case Cell.CELL_TYPE_STRING:
                 doc.put(column, cell.getRichStringCellValue().getString());
@@ -292,7 +291,9 @@ public class UsuarioController {
 
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String create(@Valid UsuarioCreateForm usuarioForm, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
-        if (bindingResult.hasErrors()) {
+        System.out.println(usuarioForm);
+    	if (bindingResult.hasErrors()) {
+        	System.out.println(bindingResult.getAllErrors());
             populateEditForm(uiModel, usuarioForm);
             return "member/usuarios/create";
         }

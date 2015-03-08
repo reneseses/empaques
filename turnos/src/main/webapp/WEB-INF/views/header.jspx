@@ -1,49 +1,57 @@
-<div id="header" xmlns:sec="http://www.springframework.org/security/tags" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+<header class="row header"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:spring="http://www.springframework.org/tags" version="2.0">
+	
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 	<spring:url value="/images/banner-graphic2.png" var="banner"/>
-    <spring:url value="/" var="home"/>
-    <div class="banner">
-        <a href="${home}" name="${fn:escapeXml(home_label)}" title="${fn:escapeXml(home_label)}">
-            <img src="${banner}"/>
-        </a>
-    </div>
-	<spring:message code="button_home" var="home_label" htmlEscape="false" />
-		<div class="header_user">
-			<c:if test="${pageContext['request'].userPrincipal != null}">
+	<spring:url value="/" var="home"/>
+	<div class="col-xs-7 col-sm-6">
+		<h1>Empaques</h1>
+	</div>
+	
+	<c:if test="${pageContext['request'].userPrincipal != null}">
+		<div class="col-sm-6 col-xs-5">
 			<sec:authentication property="principal" var="principal"/>
 			<sec:authentication property="principal.id" var="principal_id"/>
-			<spring:url value="/images/user.png" var="user_img"/>
-			<spring:url value="/member/usuarios/imagen" var="get_img"/>
+			
 			<sec:authentication property="principal.nombre" var="principal_nombre"/>
 			
-			<script>
-			$(function(){
-				$.ajax({
-					url: '${get_img}',
-					dataType: 'text',
-		            success: function(data) {
-		            	var img = $("<img />");
-		                if(data == "null")
-		                	img.attr('src', '${user_img}');
-		                else
-		                	img.attr('src', '${get_img}?thumb='+ data);
-		                $(".header_user_img a").append(img);
-		            }
-				});
-			});
-			</script>
-			<div class="header_user_img">
-				<spring:url value="/member/usuarios/${principal_id }" var="my_account"/>
-				<a href="${my_account}" title="Abrir/Cerrar Menu"></a>
-			</div>
-			<div class="header_user_data">
-				<c:out value="${principal_nombre}"></c:out>
-				<br/>
-				<sec:authentication property="principal.tipo" var="principal_tipo"/>
-				${principal_tipo.tipo} <sec:authentication property="principal.numero" />
-			</div>
-			<div id="user_menu">
+			<ul class="pull-right list-inline" style="margin-right: -13px">
+				<li class="dropdown header-dropdown">
+					<a class="btn btn-header dropdown-toggle" data-toggle="dropdown">
+						<i class="fa fa-user"><!----></i>
+					</a>
+					<ul class="dropdown-menu pull-right">
+						<li>
+							<sec:authentication property="principal.id" var="id"/>
+							<spring:url value="/member/usuarios/${id}" var="mi_cuenta"/>
+							<a href="${mi_cuenta }">Mi Cuenta</a>
+						</li>
+						<sec:authorize ifAnyGranted="EMPAQUE,ENCARGADO">
+						<li>
+							<spring:url value="/member/usuarios/turnos" var="mis_turnos"/>
+							<a href="${mis_turnos }">Mis Turnos</a>
+						</li>
+						</sec:authorize>
+						<li>
+							<spring:url value="/member/usuarios/password" var="password"/>
+							<a href="${password}">Cambiar Password</a>
+						</li>
+					</ul>
+				</li>
+				<spring:url value="/resources/j_spring_security_logout" var="logout"/>
+				<spring:message code="security_logout" var="logout_msg"/>
+				<li>
+					<a href="${logout}" title="${logout_msg}" class="btn btn-header" >
+						<i class="fa fa-sign-out"><!----></i>
+					</a>
+				</li>
+			</ul>
+			<div id="user_menu" style="display:none">
 				<ul>
 					<li>
 						<sec:authentication property="principal.id" var="id"/>
@@ -60,13 +68,9 @@
 						<spring:url value="/member/usuarios/password" var="password"/>
 						<a href="${password}">Cambiar Password</a>
 					</li>
-					<li>
-						<spring:url value="/resources/j_spring_security_logout" var="logout"/>
-						<a href="${logout}"><spring:message code="security_logout"/></a>
-					</li>
 				</ul>
 			</div>
-			<br clear="all"/>	
-		</c:if>
-	</div>
-</div> 
+		</div>
+	</c:if>
+	
+</header> 

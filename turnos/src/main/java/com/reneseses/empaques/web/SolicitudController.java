@@ -5,6 +5,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.util.JSON;
 import com.reneseses.empaques.domain.Bloque;
 import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Repechaje;
@@ -17,12 +20,13 @@ import com.reneseses.empaques.domain.service.SolicitudServiceImpl;
 import com.reneseses.empaques.enums.BloqueEnum;
 import com.reneseses.empaques.enums.DiasEnum;
 import com.reneseses.empaques.enums.EstadoTurnoEnum;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.reneseses.empaques.enums.RegimenTurnoEnum;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.roo.addon.web.mvc.controller.scaffold.RooWebScaffold;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -45,47 +49,71 @@ public class SolicitudController {
 	@Autowired
     private PlanillaServiceImpl planillaServiceImpl;
 	
-	private int delay = 4;
+	private int delay = 3;
 
     @RequestMapping("/recibir")
-    public @ResponseBody String recibir(@RequestParam(value = "turnos", required = true) String turnos, @RequestParam(value = "id", required = false) ObjectId id) {
+    public @ResponseBody ResponseEntity<String> recibir(@RequestParam(value = "turnos", required = true) String turnos, @RequestParam(value = "id", required = false) ObjectId id) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Solicitud solicitud = new Solicitud();
-        if(id != null)
-        	solicitud= solicitudService.findSolicitud(id);
-        Usuario usuario = (Usuario) principal;
-        solicitud.setUsuario(usuario);
-        JSONObject jo = new JSONObject();
-        jo.put("turnos", turnos);
-        JSONArray ja = jo.getJSONArray("turnos");
-        solicitud.setTurnos(ja.toString());
-        Date date = new Date();
-        usuario.setLastSolicitud(date);
-        usuarioService.updateUsuario(usuario);
-        solicitud.setFecha(date);
-        solicitudService.saveSolicitud(solicitud);
-        return "true";
+        
+        HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/text; charset=utf-8");
+        
+		try{
+	        if(id != null)
+	        	solicitud= solicitudService.findSolicitud(id);
+	        
+	        Usuario usuario = (Usuario) principal;
+	        
+	        solicitud.setUsuario(usuario);
+	        
+	        BasicDBList ja = (BasicDBList) JSON.parse(turnos);
+	        solicitud.setTurnos(ja.toString());
+	        
+	        Date date = new Date();
+	        usuario.setLastSolicitud(date);
+	        usuarioService.updateUsuario(usuario);
+	        
+	        solicitud.setFecha(date);
+	        solicitudService.saveSolicitud(solicitud);
+	        
+	        return new ResponseEntity<String>(headers, HttpStatus.OK);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new ResponseEntity<String>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
     }
 
     @RequestMapping("/recibirRepechaje")
-    public @ResponseBody String recibirRepechaje(@RequestParam(value = "turnos", required = true) String turnos, @RequestParam(value = "id", required = false) ObjectId id) {
+    public @ResponseBody ResponseEntity<String> recibirRepechaje(@RequestParam(value = "turnos", required = true) String turnos, @RequestParam(value = "id", required = false) ObjectId id) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/text; charset=utf-8");
+        
         Repechaje repechaje = new Repechaje();
-        if(id != null)
-        	repechaje= repechajeService.findRepechaje(id);
-
-        Usuario usuario = (Usuario) principal;
-        repechaje.setUsuario(usuario);
-        JSONObject jo = new JSONObject();
-        jo.put("turnos", turnos);
-        JSONArray ja = jo.getJSONArray("turnos");
-        repechaje.setTurnos(ja.toString());
-        Date date = new Date();
-        usuario.setLastSolicitud(date);
-        usuarioService.updateUsuario(usuario);
-        repechaje.setFecha(date);
-        repechajeService.saveRepechaje(repechaje);
-        return "true";
+        try{
+	        if(id != null)
+	        	repechaje= repechajeService.findRepechaje(id);
+	
+	        Usuario usuario = (Usuario) principal;
+	        repechaje.setUsuario(usuario);
+	        
+	        BasicDBList ja = (BasicDBList) JSON.parse(turnos);
+	        repechaje.setTurnos(ja.toString());
+	        
+	        Date date = new Date();
+	        usuario.setLastSolicitud(date);
+	        usuarioService.updateUsuario(usuario);
+	        
+	        repechaje.setFecha(date);
+	        repechajeService.saveRepechaje(repechaje);
+	        
+	        return new ResponseEntity<String>(headers, HttpStatus.OK);
+        }catch(Exception e){
+        	e.printStackTrace();
+			return new ResponseEntity<String>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping("/turnos")
@@ -95,16 +123,22 @@ public class SolicitudController {
         int day = cal.get(Calendar.DAY_OF_WEEK);
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
-        if (day < Calendar.THURSDAY && day > Calendar.SUNDAY) {
+        
+        if(principal.getRegimen().equals(RegimenTurnoEnum.LIBRE)){
+        	uiModel.addAttribute("error", "Ud tiene asistencia libre.");
+        	return "member/solicitudes/error";
+        }
+                
+        if (day <= Calendar.THURSDAY && day > Calendar.SUNDAY) {
             if (day == Calendar.MONDAY) {
             	if(hour < delay - 1 || (hour == delay - 1 && minute < 30) ){
-            		uiModel.addAttribute("error", "La recepcion de turnos comienza a las 23:30 horas");
-                    return "member/solicitudes/turnos";
+            		uiModel.addAttribute("error", "La recepción de turnos comienza a las 23:30 horas");
+                    return "member/solicitudes/error";
             	}
             }
             if (day == Calendar.THURSDAY && (hour > delay - 1 || (hour == delay - 1 && minute >= 30))) {
-                uiModel.addAttribute("error", "La recepcion de turnos termino a las 23:29 horas");
-                return "member/solicitudes/turnos";
+                uiModel.addAttribute("error", "La recepción de turnos terminó a las 23:29 horas");
+                return "member/solicitudes/error";
             }
             cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_WEEK) + 1);
             cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -123,8 +157,8 @@ public class SolicitudController {
             uiModel.addAttribute("bloques", BloqueEnum.values());
             return "member/solicitudes/turnos";
         }
-        uiModel.addAttribute("error", "La recepcion de turnos comienza los domingo a las 23:30 horas y termina los miercoles a las 23:29");
-        return "member/solicitudes/turnos";
+        uiModel.addAttribute("error", "La recepción de turnos comienza los domingo a las 23:30 horas y termina los miércoles a las 23:29");
+        return "member/solicitudes/error";
     }
 
     @RequestMapping("/repechaje")
@@ -135,16 +169,18 @@ public class SolicitudController {
         int day = cal.get(Calendar.DAY_OF_WEEK);
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int minute = cal.get(Calendar.MINUTE);
+        
+        System.out.println(new Date());
         if (day <= Calendar.SATURDAY && day > Calendar.THURSDAY) {
             if (day == Calendar.FRIDAY) {
             	if(hour < delay - 1 || (hour == delay - 1 && minute < 30) ){
 	                uiModel.addAttribute("error", "La recepcion de turnos de repechaje comienza a las 23:30 horas");
-	                return "member/solicitudes/repechaje";
+	                return "member/solicitudes/error";
             	}
             }
             if (day == Calendar.SATURDAY && (hour > delay - 1 || (hour == delay - 1 && minute >= 30))) {
                 uiModel.addAttribute("error", "La recepcion de turnos de repechaje termino a las 23:29 horas");
-                return "member/solicitudes/repechaje";
+                return "member/solicitudes/error";
             }
             cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_WEEK) + 1);
             Calendar date2 = Calendar.getInstance();
@@ -158,7 +194,7 @@ public class SolicitudController {
             List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal);
             if (solicitudes.size() <= 0) {
                 uiModel.addAttribute("error", "Ud no realizó su solicitud de Turnos");
-                return "member/solicitudes/turnos";
+                return "member/solicitudes/error";
             }
             List<Repechaje> repechajes = repechajeService.findRepechajesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal);
             if (repechajes.size() > 0) {
@@ -173,10 +209,11 @@ public class SolicitudController {
             date2.set(Calendar.SECOND, 0);
             cal = (Calendar) date2.clone();
             date2.set(Calendar.DAY_OF_YEAR, day - 1);
+            
             Planilla planilla = planillaServiceImpl.findPlanillaByFecha(date2.getTime(), cal.getTime());
             if (planilla == null) {
                 uiModel.addAttribute("error", "Error al acceder a la planilla del " + date2.get(Calendar.DAY_OF_MONTH) + "/" + (date2.get(Calendar.MONTH) + 1) + "/" + date2.get(Calendar.YEAR));
-                return "member/solicitudes/repechaje";
+                return "member/solicitudes/error";
             }
             List<Bloque> bloques = planilla.getBloques();
             List<List<String>> array = new ArrayList<List<String>>();
@@ -205,7 +242,7 @@ public class SolicitudController {
             return "member/solicitudes/repechaje";
         }
         uiModel.addAttribute("error", "La recepcion de turnos de repechaje comienza los jueves a las 23:30 horas y termina los viernes a las 23:29");
-        return "member/solicitudes/repechaje";
+        return "member/solicitudes/error";
     }
 
     @RequestMapping(produces = "text/html")
@@ -220,10 +257,10 @@ public class SolicitudController {
             uiModel.addAttribute("solicituds", solicitudServiceImpl.findAllSolicitudesOrderByFecha());
         }
         addDateTimeFormatPatterns(uiModel);
-        JSONObject jo = new JSONObject();
+        BasicDBObject jo = new BasicDBObject();
         for (int i = 0; i < BloqueEnum.values().length; i++) jo.put(BloqueEnum.values()[i].toString(), BloqueEnum.values()[i].getBloque());
         uiModel.addAttribute("bloques", jo.toString());
-        jo = new JSONObject();
+        jo = new BasicDBObject();
         for (int i = 0; i < DiasEnum.values().length; i++) jo.put(DiasEnum.values()[i].toString(), DiasEnum.values()[i].getDia());
         uiModel.addAttribute("dias", jo.toString());
         return "member/solicitudes/list";
@@ -255,14 +292,14 @@ public class SolicitudController {
             while (numeros.contains(aux)) aux = (int) Math.floor(Math.random() * usuarios.size());
             numeros.add(aux);
             Usuario empaque = usuarios.get(aux);
-            JSONArray ja = new JSONArray();
+            BasicDBList ja = new BasicDBList();
             Solicitud solicitud = new Solicitud();
             solicitud.setFecha(new Date());
             solicitud.setUsuario(empaque);
             int j = 0;
             int fin= (int) Math.floor(Math.random() * 3) + 3;
             while (j < fin) {
-                JSONObject jo = new JSONObject();
+            	BasicDBObject jo = new BasicDBObject();
                 aux = (int) Math.floor(Math.random() * 7);
                 jo.put("dia", dias[aux].toString());
                 aux = (int) Math.floor(Math.random() * bloques.length);
@@ -280,9 +317,9 @@ public class SolicitudController {
         return "member/solicitudes/list";
     }
 
-    private boolean buscarConflicto(JSONObject jo, JSONArray ja) {
+    private boolean buscarConflicto(BasicDBObject jo, BasicDBList ja) {
         for (int i = 0; i < ja.size(); i++) {
-            JSONObject aux = ja.getJSONObject(i);
+        	BasicDBObject aux = (BasicDBObject) ja.get(i);
             if (!aux.getString("dia").equals(jo.getString("dia"))) continue;
             int inicio = BloqueEnum.valueOf(aux.getString("inicio")).ordinal();
             int turnoIn = BloqueEnum.valueOf(jo.getString("inicio")).ordinal();
@@ -299,7 +336,7 @@ public class SolicitudController {
     @RequestMapping(value="get")
     public @ResponseBody String getUsuarioSolicitud(@RequestParam(value = "planilla", required = false) ObjectId planillaId){
     	Usuario usuario= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		JSONArray ja= new JSONArray();
+    	BasicDBList ja= new BasicDBList();
     	if(planillaId==null){
     		List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByUsuario(usuario);
     		for(Solicitud sol: solicitudes)

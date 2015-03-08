@@ -50,5 +50,6 @@
                 <!-- -->
             </a>
         </div>
+        <field:display render="false" field="image" id="s_com_reneseses_empaques_domain_Usuario_image" object="${usuario}" z="o+btGxtFk9a00+a7uOaieBgdhSU="/>
     </page:show>
 </div>

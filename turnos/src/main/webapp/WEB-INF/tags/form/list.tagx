@@ -20,7 +20,7 @@
     
       <c:choose>
         <c:when test="${not empty items}">
-        	<util:panel container="false" id="${id}" title="${title_msg}" openPane="${openPane}">
+        	<util:panel container="false" bodyClass="no-padding" id="${id}" title="${title_msg}" openPane="${openPane}">
           		<jsp:doBody />
           	</util:panel>
         </c:when>

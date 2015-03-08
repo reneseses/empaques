@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
-    <definition extends="default" name="member/solicitudes/list">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/list.jspx"/>
-    </definition>
-<definition extends="default" name="member/solicitudes/show">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/show.jspx"/>
-    </definition>
-<definition extends="default" name="member/solicitudes/create">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/create.jspx"/>
-    </definition>
-<definition extends="default" name="member/solicitudes/update">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/update.jspx"/>
-    </definition>
-    
-    <definition extends="default" name="member/solicitudes/turnos">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/turnos.jspx"/>
-    </definition>
-<definition extends="default" name="member/solicitudes/repechaje">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/repechaje.jspx"/>
-    </definition>
-    <definition extends="default" name="member/solicitudes/listRepechajes">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/listRepechajes.jspx"/>
-    </definition>
-<definition extends="default" name="member/solicitudes/findSolicitudsByFechaBetween">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/findSolicitudsByFechaBetween.jspx"/>
-    </definition>
-<definition extends="default" name="member/solicitudes/findSolicitudsByUsuario">
-        <put-attribute name="body" value="/WEB-INF/views/member/solicitudes/findSolicitudsByUsuario.jspx"/>
-    </definition>
+	<definition extends="default" name="member/solicitudes/list">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/list.jspx"/>
+	</definition>
+	<definition extends="default" name="member/solicitudes/error">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/error.jspx"/>
+	</definition>
+	<definition extends="default" name="member/solicitudes/show">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/show.jspx"/>
+	</definition>
+	<definition extends="default" name="member/solicitudes/create">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/create.jspx"/>
+	</definition>
+	<definition extends="default" name="member/solicitudes/update">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/update.jspx"/>
+	</definition>
+	
+	<definition extends="default" name="member/solicitudes/turnos">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/turnos.jspx"/>
+	</definition>
+	<definition extends="default" name="member/solicitudes/repechaje">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/repechaje.jspx"/>
+	</definition>
+	<definition extends="default" name="member/solicitudes/listRepechajes">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/listRepechajes.jspx"/>
+	</definition>
+	<definition extends="default" name="member/solicitudes/findSolicitudsByFechaBetween">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/findSolicitudsByFechaBetween.jspx"/>
+	</definition>
+	<definition extends="default" name="member/solicitudes/findSolicitudsByUsuario">
+		<put-attribute name="body" value="/WEB-INF/views/member/solicitudes/findSolicitudsByUsuario.jspx"/>
+	</definition>
 </tiles-definitions>

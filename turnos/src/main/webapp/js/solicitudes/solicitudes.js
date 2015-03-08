@@ -1,12 +1,19 @@
 var turnSelected=[];
 
 $(function(){
-	if(typeof solicitud != 'undefined'){
+	if(solicitud){
 		turnSelected= solicitud;
 		for(var i=0; i<solicitud.length; i++){
-			newTurno = "<li id='turno" + i + "'><span style='margin-right: 10px' id='"+ i + "' class='ui-icon ui-icon-close'></span>" + 
-			//"<span style='margin-right: 10px' class='ui-icon ui-icon-arrow-4'></span>" +
-			dias[solicitud[i].dia] +": " + horas[solicitud[i].inicio] + " - " + horas[solicitud[i].fin]  + "</li>";
+			var css= "alert-success";
+			var dia= dias[solicitud[i].dia];
+
+			if(dia.toLowerCase() == "domingo" || dia.toLowerCase() == "sabado")
+				css= "alert-info"
+
+			newTurno = "<li class='alert "+ css + " alert-xs fade-in' id='turno" + i + "'>" +
+			"<button class='close' id='"+ i + "'>×</button>"+
+			"<label class='day-label'>" + dia +"</label>: " + horas[solicitud[i].inicio] + " - " + horas[solicitud[i].fin]  + "</li>";
+
 			$("#turnos").append(newTurno);
 			$("#turnum").text("Turno " +  (turnSelected.length + 1));
 			if(turnSelected.length > 2)
@@ -58,9 +65,14 @@ $(function(){
 			alert("Hay un turno en conflicto. Debe haber como minimo 3:30 horas entre cada turno");
 			return;
 		}
-		newTurno = "<li id='turno" + turnSelected.length + "'><span style='margin-right: 10px' id='"+ turnSelected.length + "' class='ui-icon ui-icon-close'></span>" + 
-					//"<span style='margin-right: 10px' class='ui-icon ui-icon-arrow-4'></span>" +
-					dia +": " + inicio + " - " + fin  + "</li>";
+
+		var css= "alert-success";
+		if(dia.toLowerCase() == "domingo" || dia.toLowerCase() == "sabado")
+			css= "alert-info"
+
+		newTurno = "<li class='alert "+ css + " alert-xs fade-in' id='turno" + turnSelected.length + "'>" +
+			"<button class='close' id='"+ turnSelected.length + "'>×</button>"+
+					"<label class='day-label'>" + dia +"</label>: " + inicio + " - " + fin  + "</li>";
 		$("#turnos").append(newTurno);
 		turnSelected.push(turno);
 		$("#turnum").text("Turno " +  (turnSelected.length + 1));
@@ -69,7 +81,7 @@ $(function(){
 		displayDays();
 	});
 
-	$("#turnos").on("click", ".ui-icon-close", function(){
+	$("#turnos").on("click", ".alert button.close", function(){
 		turnoNum= $(this).attr("id");
 		
 		if(turnoNum < 3){
@@ -95,17 +107,15 @@ $(function(){
 	
 	$("#enviar").click(function(){
 		var data= {turnos: JSON.stringify(turnSelected)};
-		if(typeof solicitud != 'undefined')
+		
+		if(solicitud)
 			data= {turnos: JSON.stringify(turnSelected), id: solicitudId};
-		$.ajax({
-			url: url,
-			data: data,
-			type: "POST"
-		}).done(function(data){
-			if(data== "true")
-				window.location = parent_url + "gracias";
-			else
-				alert("Ha ocurrido un error");
+
+		$.post(url, data, function(){
+			window.location = parent_url + "gracias";
+		}).fail(function(e){
+			console.log(e);
+			alert("Ha ocurrido un error");
 		});
 	});
 });

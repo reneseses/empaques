@@ -12,16 +12,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
-
 import org.bson.types.ObjectId;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.layers.repository.mongo.RooMongoEntity;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.util.JSON;
 import com.reneseses.empaques.enums.BloqueEnum;
 import com.reneseses.empaques.enums.DiasEnum;
 import com.reneseses.empaques.enums.EstadoTurnoEnum;
@@ -43,7 +42,7 @@ public class Planilla {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Bloque> bloques = new ArrayList<Bloque>();
     
-    public boolean buscarConflicto(JSONObject turno, Usuario empaque){
+    public boolean buscarConflicto(BasicDBObject turno, Usuario empaque){
 		int dia = DiasEnum.valueOf(turno.getString("dia")).ordinal();
 		int inicio = BloqueEnum.valueOf(turno.getString("inicio")).ordinal();
 		
@@ -70,8 +69,8 @@ public class Planilla {
     }
 	
     public void createPlanilla(String data){
-    	JSONObject jo= new JSONObject();
-		JSONArray ja=  (JSONArray) JSONSerializer.toJSON(data);
+    	BasicDBObject jo= new BasicDBObject();
+		BasicDBList ja=  (BasicDBList) JSON.parse(data);
 
 		BloqueEnum[] horas = BloqueEnum.values();
 		DiasEnum[] dias= DiasEnum.values();
@@ -82,7 +81,7 @@ public class Planilla {
 		String hora;
 		
 		for(int i=0; i < horas.length; i++){
-			jo= ja.getJSONObject(i);
+			jo= (BasicDBObject) ja.get(i);
 
 			hora= horas[i].getBloque();
 			String[] aux= hora.split(":");
@@ -105,10 +104,10 @@ public class Planilla {
     }
     
 	public String getTurnos(){
-		JSONArray ja= new JSONArray();
-		JSONArray data= new JSONArray();
-		JSONArray rows= new JSONArray();
-		JSONObject jo;
+		BasicDBList ja	= new BasicDBList();
+		BasicDBList data= new BasicDBList();
+		BasicDBList rows= new BasicDBList();
+		BasicDBObject jo;
 		
 		DiasEnum[] dias= DiasEnum.values();
 		BloqueEnum[] bloquesEnum = BloqueEnum.values();
@@ -127,8 +126,8 @@ public class Planilla {
 		
 		for(int i=0; i< bloquesEnum.length; i++){
 			for(int k=0; k <= list.get(i); k++){
-				JSONArray row = new JSONArray();
-				jo = new JSONObject();
+				BasicDBList row = new BasicDBList();
+				jo = new BasicDBObject();
 				jo.put("bloque", i);
 				jo.put("turno", k);
 				for(int j= 0; j< dias.length; j++){
@@ -157,15 +156,15 @@ public class Planilla {
 	}
 	
 	public String getCupos(){
-		JSONArray ja = new JSONArray();
-		JSONArray rows = new JSONArray();
-		JSONArray data = new JSONArray();
-		JSONObject jo;
+		BasicDBList ja = new BasicDBList();
+		BasicDBList rows = new BasicDBList();
+		BasicDBList data = new BasicDBList();
+		BasicDBObject jo;
 		DiasEnum[] dias= DiasEnum.values();
 		BloqueEnum[] bloquesEnum = BloqueEnum.values();
 		
 		for(int i=0; i< bloquesEnum.length; i++){
-			jo = new JSONObject();
+			jo = new BasicDBObject();
 			for(int j=0; j<dias.length; j++)
 				jo.put(dias[j].getDia(), this.bloques.get(i*dias.length + j).getCupos());
 			data.add(jo);

@@ -7,6 +7,7 @@ import com.reneseses.empaques.domain.Usuario;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 import com.reneseses.empaques.enums.TipoUsuarioEnum;
 import java.util.Date;
+import org.bson.types.ObjectId;
 
 privileged aspect Usuario_Roo_JavaBean {
     
@@ -132,6 +133,14 @@ privileged aspect Usuario_Roo_JavaBean {
     
     public void Usuario.setUniversidad(String universidad) {
         this.universidad = universidad;
+    }
+    
+    public ObjectId Usuario.getImage() {
+        return this.image;
+    }
+    
+    public void Usuario.setImage(ObjectId image) {
+        this.image = image;
     }
     
 }

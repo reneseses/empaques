@@ -6,8 +6,19 @@
 	<jsp:directive.attribute name="z" type="java.lang.String" required="false" description="Used for checking if element has been modified (to recalculate simply provide empty string value)"/>
 	
 	<c:if test="${empty render or render}">
-		<ul id="${fn:escapeXml(id)}">
-			<jsp:doBody />
-		</ul>
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"><!-- --></span>
+				<span class="icon-bar"><!-- --></span>
+				<span class="icon-bar"><!-- --></span>
+			</button>
+		</div>
+
+		<div class="navbar-collapse collapse" id="menu">
+			<ul class="nav navbar-nav">
+				<jsp:doBody />
+			</ul>
+		</div>
 	</c:if>
 </jsp:root>

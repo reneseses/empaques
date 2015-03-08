@@ -55,6 +55,7 @@ else{
 		{data: "Domingo"},
 	];
 }
+
 $(function () {
 	var startDate= date;
 	var endDate= date;
@@ -63,34 +64,48 @@ $(function () {
 	var curr_month = date.getMonth() + 1; if(curr_month <10) curr_month= "0" + curr_month;
 	var curr_year = date.getFullYear();
 	
-	$('.week-picker').val(curr_date + "-" + curr_month + "-" + curr_year);
-	$("#planilla").height($("#main_body").height() - 20);
+	//$('.week-picker').val(curr_date + "-" + curr_month + "-" + curr_year);
+
+	var height= $(window).height() - $("#planilla").position().top;
+	var width= $("#planilla").width() - 65;
+
+	$("#planilla").height(height - 20);
+
+	var colWidth= parseInt(width/7);
+
+	colWidth= colWidth>80? colWidth: 80;
+
+	var lastWidth= width - colWidth* 6;
+
+	lastWidth= lastWidth> 80? lastWidth: 80;
+
 	$.ajax({
         url: dataUrl,
         dataType: 'json',
         success: function(data) {
-        	first = true;
-        	container = $('#planilla');
-        	grid= container.handsontable({
+        	var first		= true,
+        		container	= document.getElementById('planilla');
+
+        	grid= new Handsontable(container, {
+        		colWidths: [colWidth, colWidth, colWidth, colWidth, colWidth, colWidth, lastWidth],
         		data: data[1],
         		colHeaders: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"],
         		rowHeaders: data[0],
         		columns: columns,
         		fillHandle: fill,
-        		onChange: function(change){
-        			getChanges(change, container.handsontable('getData'));
-        		},
-        		cells: function (row, col, prop) {
-        			var cellProperties = {};
-        		    if (container.handsontable('getData')[row][col] === '') {
-        		    	cellProperties.readOnly = true;
-        		    }
-        		    cellProperties.type = {
-            			renderer: negativeValueRenderer
-        		    };
-        		    return cellProperties;
-        		},
+        		cells:function (row, col, prop) {
+					var cellProperties= {};
+					if(this.instance.getData()[row][col] === '')
+						cellProperties.readonly=true;
+					cellProperties.renderer= negativeValueRenderer;
+
+					return cellProperties;
+				}
         	});
+
+        	grid.addHook('afterChange', function(change){
+        		getChanges(change, grid.getData());
+        	})
         }
     });
 	
@@ -100,8 +115,33 @@ $(function () {
 	        $('.week-picker').find('.ui-datepicker-current-day a').addClass('ui-state-active');
 	    }, 1);
 	};
+
+	$('.week-picker').keydown(function(e){
+		e.preventDefault();
+		return;
+	}).datetimepicker({
+		format      : 'Y-m-d 00:00',
+		timepicker:false,
+		/*onShow:function( ct ){
+			var begin	= $begin.val().split(" "),
+				end		= $end.val().split(" ");
+			this.setOptions({
+				maxDate: $end.val() ? end[0]:0
+			});
+			this.setOptions({
+				maxTime: begin[0] == end[0] ? end[1]:false
+			});
+		},
+		onSelectDate: function(){
+			var begin	= $begin.val().split(" "),
+				end		= $end.val().split(" ");
+			this.setOptions({
+				maxTime: begin[0] == end[0] ? end[1]:false
+			});
+		},*/
+	});
 	
-	$('.week-picker').datepicker({
+	/*$('.week-picker').datepicker({
 		firstDay: 1,
 	    showOtherMonths: true,
 	    selectOtherMonths: true,
@@ -123,10 +163,10 @@ $(function () {
 	    onChangeMonthYear: function(year, month, inst) {
 	        selectCurrentWeek();
 	    }
-	});
+	});*/
 	
-	$('body').on('mouseover', '#ui-datepicker-div .ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); });
-	$('body').on('mouseout','#ui-datepicker-div .ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });
+	/*$('body').on('mouseover', '#ui-datepicker-div .ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); });
+	$('body').on('mouseout','#ui-datepicker-div .ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });*/
 	
 });
 

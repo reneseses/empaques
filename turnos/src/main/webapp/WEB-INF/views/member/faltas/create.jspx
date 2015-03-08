@@ -6,6 +6,7 @@
         <field:select field="usuario" id="c_com_reneseses_empaques_domain_Falta_usuario" itemLabel="numero" itemValue="id" items="${usuarios}" path="/member/usuarios" z="user-managed"/>
         <field:select field="tipoFalta" id="c_com_reneseses_empaques_domain_Falta_tipoFalta" itemLabel="falta" items="${tipofaltaenums}" path="tipofaltaenums" z="user-managed"/>
         <field:datetime dateTimePattern="${falta_fecha_date_format}" field="fecha" id="c_com_reneseses_empaques_domain_Falta_fecha" z="CkBJgG8pfZPsKXVXOJNNyfZbNiE="/>
+        <field:input field="id" id="c_com_reneseses_empaques_domain_Falta_id" required="true" z="O0FRateyZVdh5CRYk/p3WrIku5g="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_com_reneseses_empaques_domain_Falta" render="${not empty dependencies}" z="Hb0NHjzG+x05+f65iLZyJObW6jI="/>
 </div>

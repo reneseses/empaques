@@ -11,8 +11,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -31,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mongodb.BasicDBObject;
 import com.reneseses.empaques.domain.Repechaje;
 import com.reneseses.empaques.domain.Solicitud;
 import com.reneseses.empaques.domain.Usuario;
@@ -157,7 +156,7 @@ public class DataController {
     	return "member/data/upload";
     }
     
-    private void cellContent(Cell cell, int type, JSONObject doc, String column) {
+    private void cellContent(Cell cell, int type, BasicDBObject doc, String column) {
         switch(type) {
             case Cell.CELL_TYPE_STRING:
                 doc.put(column, cell.getRichStringCellValue().getString());
@@ -193,7 +192,7 @@ public class DataController {
 			Workbook wb = WorkbookFactory.create(inp);
             FormulaEvaluator evaluator = wb.getCreationHelper().createFormulaEvaluator();
             Sheet thisSheet = wb.getSheetAt(0);
-            JSONObject doc = new JSONObject();
+            BasicDBObject doc = new BasicDBObject();
             for (int i = 1; i <= thisSheet.getLastRowNum(); i++) {
                 usuario = new Usuario();
                 Row row = thisSheet.getRow(i);
@@ -238,7 +237,7 @@ public class DataController {
                 usuarioServiceImpl.saveUsuario(usuario);
             }
             thisSheet = wb.getSheetAt(1);
-            doc = new JSONObject();
+            doc = new BasicDBObject();
             for (int i = 1; i <= thisSheet.getLastRowNum(); i++) {
             	Row row = thisSheet.getRow(i);
                 if (row != null) {
@@ -267,7 +266,7 @@ public class DataController {
                 solicitudServiceImpl.saveSolicitud(sol);
             }
             thisSheet = wb.getSheetAt(2);
-            doc = new JSONObject();
+            doc = new BasicDBObject();
             for (int i = 1; i <= thisSheet.getLastRowNum(); i++) {
             	Row row = thisSheet.getRow(i);
                 if (row != null) {

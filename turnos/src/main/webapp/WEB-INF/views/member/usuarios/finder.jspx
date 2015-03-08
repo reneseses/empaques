@@ -1,35 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div id="main_body" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+<div 
+    xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+    xmlns:form="urn:jsptagdir:/WEB-INF/tags/form"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:spring="http://www.springframework.org/tags">
+
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <script>
     	$(function(){
-			$("#_title_byRutEquals_id").hide();
+			$(".field-rut").hide();
     		$("#select_query").change(function(){
-    			if($(this).val() == "numero"){
-    				$("#_title_byRutEquals_id").hide();
-    				$("#_title_byNumeroEquals_id").show();
+    			if($(this).val() == "ByNumeroEquals"){
+    				$(".field-rut").hide();
+    				$(".field-numero").show();
     			}
     			else{
-    				$("#_title_byNumeroEquals_id").hide();
-    				$("#_title_byRutEquals_id").show();
+    				$(".field-rut").show();
+                    $(".field-numero").hide();
     			}
     		});
     	})
     </script>
-    <div style="width: 300px; float: left">
-    <label for="selec_query">Buscar por:</label>
-    <select id="select_query">
-    	<option value="numero">Número</option>
-    	<option value="rut">Rut</option>
-    </select>
-    </div>
-    <div style="float: left">
-    <form:find finderName="ByNumeroEquals" id="byNumeroEquals" label="Numero" path="/member/usuarios" z="J+xo7DhpFn3XhCMWfdDouF+HRVE=">
-        <field:input disableFormBinding="true" field="numero" id="f_com_reneseses_empaques_domain_Usuario_numero" required="true" z="lKhdDVx1Fp5JTktW+YR9Ris45mI="/>
-    </form:find>
-    <form:find finderName="ByRutEquals" id="byRutEquals" label="Rut" path="/member/usuarios" z="lr9Z8IbCy762gxFQhF9qCN441to=">
-        <field:input disableFormBinding="true" field="rut" id="f_com_reneseses_empaques_domain_Usuario_rut" required="true" validationRegex="[0-9]{1,8}-[K|k|0-9]" z="VaxBVHopZGRELwxhEovWwAUzK5Y="/>
-    </form:find>
+    <div class="col-xs-12 col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <spring:url value="/member/usuarios" var="form_url" />
+        <form class="panel panel-default" action="${form_url}" method="GET">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Buscar Usuario
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="control-label">Buscar por</label>
+                    <select name="find" id="select_query" class="form-control">
+                        <option value="ByNumeroEquals">Numero</option>
+                        <option value="ByRutEquals">Rut</option>
+                    </select>
+                </div>
+                <div class="form-group field-numero">
+                    <label class="control-label">Numero</label>
+                    <input class="form-control" name="numero"/>
+                </div>
+                <div class="form-group field-rut">
+                    <label class="control-label">Rut</label>
+                    <input class="form-control" name="rut"/>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-primary pull-right">
+                    Buscar
+                </button>
+                <div class="clearfix"><!-- --></div>
+            </div>
+        </form>
     </div>
 </div>

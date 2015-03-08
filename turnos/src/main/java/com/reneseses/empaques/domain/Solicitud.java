@@ -7,16 +7,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
-
 import org.bson.types.ObjectId;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.layers.repository.mongo.RooMongoEntity;
 import org.springframework.roo.addon.tostring.RooToString;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.util.JSON;
 import com.reneseses.empaques.enums.DiasEnum;
 
 @RooJavaBean
@@ -34,9 +33,9 @@ public class Solicitud {
     private String turnos;
     
     public boolean hasSunday(){
-    	JSONArray ja=  (JSONArray) JSONSerializer.toJSON(this.turnos);
+    	BasicDBList ja=  (BasicDBList) JSON.parse(this.turnos);
     	for(int i=0; i< ja.size(); i++){
-    		JSONObject jo = ja.getJSONObject(i);
+    		BasicDBObject jo = (BasicDBObject) ja.get(i);
     		if(DiasEnum.DOMINGO.equals(DiasEnum.valueOf(jo.getString("dia"))))
     			return true;
     	}
