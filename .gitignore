@@ -1,1 +1,6 @@
 /target/
+/log.roo
+/.project
+/.classpath
+/.externalToolBuilders
+/.settings

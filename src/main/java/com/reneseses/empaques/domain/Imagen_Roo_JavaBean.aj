@@ -4,7 +4,7 @@
 package com.reneseses.empaques.domain;
 
 import com.reneseses.empaques.domain.Imagen;
-import com.reneseses.empaques.domain.Usuario;
+import org.bson.types.ObjectId;
 
 privileged aspect Imagen_Roo_JavaBean {
     
@@ -48,11 +48,11 @@ privileged aspect Imagen_Roo_JavaBean {
         this.size = size;
     }
     
-    public Usuario Imagen.getUsuario() {
+    public ObjectId Imagen.getUsuario() {
         return this.usuario;
     }
     
-    public void Imagen.setUsuario(Usuario usuario) {
+    public void Imagen.setUsuario(ObjectId usuario) {
         this.usuario = usuario;
     }
     

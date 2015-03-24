@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -49,6 +50,15 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public List<Usuario> findUsuarioEntriesOrderByNumero(int firstResult, int maxResults){
 		PageRequest pg= new PageRequest(firstResult / maxResults, maxResults);
         return usuarioRepository.findAll(pg).getContent();
+	}
+	
+	public List<Usuario> lightFindAllUsuarios(){
+		Query query= new Query();
+		
+		query.with(new Sort(Direction.ASC, "numero"));
+		query.fields().include("nombre").include("numero");
+		
+		return mongoTemplate.find(query, Usuario.class);
 	}
 	
 	public Map<Integer, Usuario> findAll(){

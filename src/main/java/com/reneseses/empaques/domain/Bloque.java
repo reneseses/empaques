@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -25,7 +23,6 @@ public class Bloque {
 
     private Integer cupos= 0;
     
-    @ManyToMany(cascade = CascadeType.ALL)
     private List<Turno> turnos = new ArrayList<Turno>();
     
     public boolean hasFree(){

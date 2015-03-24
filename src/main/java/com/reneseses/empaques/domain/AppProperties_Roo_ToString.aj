@@ -3,13 +3,13 @@
 
 package com.reneseses.empaques.domain;
 
-import com.reneseses.empaques.domain.ImagenUsuario;
+import com.reneseses.empaques.domain.AppProperties;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-privileged aspect ImagenUsuario_Roo_ToString {
+privileged aspect AppProperties_Roo_ToString {
     
-    public String ImagenUsuario.toString() {
+    public String AppProperties.toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
     

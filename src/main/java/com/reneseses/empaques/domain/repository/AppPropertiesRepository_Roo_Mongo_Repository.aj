@@ -3,16 +3,16 @@
 
 package com.reneseses.empaques.domain.repository;
 
-import com.reneseses.empaques.domain.ImagenUsuario;
-import com.reneseses.empaques.domain.repository.ImagenUsuarioRepository;
+import com.reneseses.empaques.domain.AppProperties;
+import com.reneseses.empaques.domain.repository.AppPropertiesRepository;
 import org.bson.types.ObjectId;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-privileged aspect ImagenUsuarioRepository_Roo_Mongo_Repository {
+privileged aspect AppPropertiesRepository_Roo_Mongo_Repository {
     
-    declare parents: ImagenUsuarioRepository extends PagingAndSortingRepository<ImagenUsuario, ObjectId>;
+    declare parents: AppPropertiesRepository extends PagingAndSortingRepository<AppProperties, ObjectId>;
     
-    declare @type: ImagenUsuarioRepository: @Repository;
+    declare @type: AppPropertiesRepository: @Repository;
     
 }

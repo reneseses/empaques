@@ -3,23 +3,23 @@
 
 package com.reneseses.empaques.domain;
 
-import com.reneseses.empaques.domain.ImagenUsuario;
+import com.reneseses.empaques.domain.AppProperties;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 
-privileged aspect ImagenUsuario_Roo_Mongo_Entity {
+privileged aspect AppProperties_Roo_Mongo_Entity {
     
-    declare @type: ImagenUsuario: @Persistent;
+    declare @type: AppProperties: @Persistent;
     
     @Id
-    private ObjectId ImagenUsuario.id;
+    private ObjectId AppProperties.id;
     
-    public ObjectId ImagenUsuario.getId() {
+    public ObjectId AppProperties.getId() {
         return this.id;
     }
     
-    public void ImagenUsuario.setId(ObjectId id) {
+    public void AppProperties.setId(ObjectId id) {
         this.id = id;
     }
     

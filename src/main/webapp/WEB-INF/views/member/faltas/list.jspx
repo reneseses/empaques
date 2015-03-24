@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div
-    xmlns:c="http://java.sun.com/jsp/jstl/core"
-    xmlns:form="http://www.springframework.org/tags/form"
-    xmlns:jsp="http://java.sun.com/JSP/Page"
-    xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
-    xmlns:sec="http://www.springframework.org/security/tags"
-    xmlns:spring="http://www.springframework.org/tags"
-    xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields">
-
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:form="http://www.springframework.org/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:sec="http://www.springframework.org/security/tags" xmlns:spring="http://www.springframework.org/tags" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-    
     <c:set value="false" var="admin"/>
     <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
         <c:set value="true" var="admin"/>
     </sec:authorize>
-    
     <div class="panel panel-default" id="table-panel" style="display: none">
         <header class="panel-heading">
             <div class="panel-title pull-left">Seleccione una Planilla</div>
             <div class="selectize-container pull-left">
                 <select id="planilla_select" style="width: 250px; margin-right: 10px;">
-                        <!-- -->
+                    <!-- -->
                 </select>
             </div>
-            <div class="clearfix"><!-- --></div>
+            <div class="clearfix">
+                <!-- -->
+            </div>
         </header>
         <div class="panel-body no-padding table-responsive">
             <table class="table table-bordered table-hover table-compact table-striped" id="table-list" style="display: none">
@@ -36,7 +28,7 @@
                         <th>Tipo</th>
                         <c:if test="${admin}">
                             <th/>
-                             <th/>
+                            <th/>
                         </c:if>
                     </tr>
                 </thead>
@@ -63,9 +55,10 @@
     <script>
         var isAdmin= ${admin};
     </script>
-    
-    <spring:url value="/js/list_faltas.js" var="list_js" />
-    <script type="text/javascript" src="${list_js}"><!-- --></script>
+    <spring:url value="/js/list_faltas.js" var="list_js"/>
+    <script src="${list_js}" type="text/javascript">
+        <!-- -->
+    </script>
     <page:list id="pl_com_reneseses_empaques_domain_Falta" items="${faltas}" render="false" z="user-managed">
         <table:table data="${faltas}" id="l_com_reneseses_empaques_domain_Falta" path="/member/faltas" z="BIgf3xr5oNqGZdpoMYkqhfmwT4Q=">
             <table:column id="c_com_reneseses_empaques_domain_Falta_usuario" property="usuario" z="V7xFFVAVJFJihYiu4TOqi9TRUdk="/>

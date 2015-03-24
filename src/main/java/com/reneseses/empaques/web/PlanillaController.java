@@ -13,14 +13,12 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
 import com.reneseses.empaques.domain.Bloque;
-import com.reneseses.empaques.domain.ImagenUsuario;
 import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Repechaje;
 import com.reneseses.empaques.domain.Solicitud;
 import com.reneseses.empaques.domain.Turno;
 import com.reneseses.empaques.domain.Usuario;
 import com.reneseses.empaques.domain.service.FaltaServiceImpl;
-import com.reneseses.empaques.domain.service.ImagenUsuarioServiceImpl;
 import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
 import com.reneseses.empaques.domain.service.RepechajeServiceImpl;
 import com.reneseses.empaques.domain.service.SolicitudServiceImpl;
@@ -63,11 +61,7 @@ public class PlanillaController {
     private PlanillaServiceImpl planillaServiceImpl;
     
     @Autowired
-    private FaltaServiceImpl faltaService;
-    
-    @Autowired
-    private ImagenUsuarioServiceImpl imagenUsuarioImpl;
-    
+    private FaltaServiceImpl faltaService;  
     
     private int delay = 4;
     
@@ -118,13 +112,13 @@ public class PlanillaController {
     	
     	try{
     		if(id != null){
-	    		Planilla bd= planillaService.findPlanilla(id);
+	    		Planilla bd= planillaServiceImpl.findPlanilla(id);
 	    		if(bd== null)
 	    			return new ResponseEntity<String>(headers, HttpStatus.BAD_REQUEST);
 	    		planilla.setFecha(bd.getFecha());
 	    		planilla.createPlanilla(data);
 	    		bd.setBloques(planilla.getBloques());
-	    		planillaService.updatePlanilla(bd);
+	    		planillaServiceImpl.updatePlanilla(bd);
 	    		
 	    		return new ResponseEntity<String>(headers, HttpStatus.OK);
 	    	}else if(fecha != null){		
@@ -453,9 +447,9 @@ public class PlanillaController {
         String[] dias = { "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo" };
         BloqueEnum[] bloques = BloqueEnum.values();
         if (id == null) {
-            Long count = planillaService.countAllPlanillas();
+            Long count = planillaServiceImpl.countAllPlanillas();
             if (count > 0) {
-                Planilla planilla = planillaService.findPlanillaEntries(count.intValue() - 1, count.intValue()).get(0);
+                Planilla planilla = planillaServiceImpl.findPlanillaEntries(count.intValue() - 1, count.intValue()).get(0);
                 cupos = planilla.getCupos();
             } else {
                 for (int i = 0; i < bloques.length; i++) {
@@ -469,7 +463,7 @@ public class PlanillaController {
                 cupos = ja.toString();
             }
         } else {
-            Planilla planilla = planillaService.findPlanilla(id);
+            Planilla planilla = planillaServiceImpl.findPlanilla(id);
             cupos = planilla.getCupos();
         }
         return cupos;
@@ -480,8 +474,8 @@ public class PlanillaController {
         if (page != null || size != null) {
             int sizeNo = size == null ? 10 : size.intValue();
             final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("planillas", planillaService.findPlanillaEntries(firstResult, sizeNo));
-            float nrOfPages = (float) planillaService.countAllPlanillas() / sizeNo;
+            uiModel.addAttribute("planillas", planillaServiceImpl.findPlanillaEntries(firstResult, sizeNo));
+            float nrOfPages = (float) planillaServiceImpl.countAllPlanillas() / sizeNo;
             uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
         } else {
             uiModel.addAttribute("planillas", planillaServiceImpl.findAllPlanillasOrderByFechaDesc());
@@ -500,13 +494,13 @@ public class PlanillaController {
     public String createForm(Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) return "accessFailure";
-        int count = (int) planillaService.countAllPlanillas();
+        int count = (int) planillaServiceImpl.countAllPlanillas();
         Planilla planilla;
         if (count == 0) {
             planilla = new Planilla();
             populateEditForm(uiModel, planilla);
         } else {
-            planilla = planillaService.findPlanillaEntries(count - 1, count).get(0);
+            planilla = planillaServiceImpl.findPlanillaEntries(count - 1, count).get(0);
             uiModel.addAttribute("date", planilla.getFecha());
         }
         return "member/planillas/create";
@@ -516,8 +510,8 @@ public class PlanillaController {
     public String delete(@PathVariable("id") ObjectId id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) return "accessFailure";
-        Planilla planilla = planillaService.findPlanilla(id);
-        planillaService.deletePlanilla(planilla);
+        Planilla planilla = planillaServiceImpl.findPlanilla(id);
+        planillaServiceImpl.deletePlanilla(planilla);
         uiModel.asMap().clear();
         uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
         uiModel.addAttribute("size", (size == null) ? "25" : size.toString());
@@ -528,7 +522,7 @@ public class PlanillaController {
     public String updateForm(@PathVariable("id") ObjectId id, Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) return "accessFailure";
-        populateEditForm(uiModel, planillaService.findPlanilla(id));
+        populateEditForm(uiModel, planillaServiceImpl.findPlanilla(id));
         return "member/planillas/update";
     }
 	
@@ -577,7 +571,7 @@ public class PlanillaController {
 	@RequestMapping(value = "/{id}", produces = "text/html")
     public String show(@PathVariable("id") ObjectId id, Model uiModel) {
         addDateTimeFormatPatterns(uiModel);
-        uiModel.addAttribute("planilla", planillaService.findPlanilla(id));
+        uiModel.addAttribute("planilla", planillaServiceImpl.findPlanilla(id));
         uiModel.addAttribute("itemId", id);
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	if (principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))
@@ -587,7 +581,7 @@ public class PlanillaController {
 	
 	@RequestMapping("/saveTurnos")
     public @ResponseBody String saveTurnos(@RequestParam("id") ObjectId id, @RequestParam("data") String data) {
-        Planilla planilla = planillaService.findPlanilla(id);
+        Planilla planilla = planillaServiceImpl.findPlanilla(id);
         BasicDBList ja = (BasicDBList) JSON.parse(data);
         List<Bloque> bloques = planilla.getBloques();
         for (int i = 0; i < ja.size(); i++) {
@@ -606,7 +600,7 @@ public class PlanillaController {
             turno.setUsuario(usuario.getNumero());
         }
         
-        planillaService.savePlanilla(planilla);
+        planillaServiceImpl.savePlanilla(planilla);
         return "true";
     }
 	
@@ -616,10 +610,9 @@ public class PlanillaController {
     	BasicDBObject jo = new BasicDBObject();
         jo.put("nombre", usuario.getNombre());
         jo.put("id", usuario.getId());
-        ImagenUsuario imgUser= imagenUsuarioImpl.findByUsuario(usuario);
-        if (imgUser == null || imgUser.getImagen() == null) jo.put("imagen", "null"); else jo.put("imagen", imgUser.getImagen().getId());
+        jo.put("imagen", usuario.getImage() == null? null: usuario.getImage().toString());
         jo.put("numero", numero);
-        jo.put("turnos", Planilla.turnos(usuario, planillaService.findPlanilla(id)));
+        jo.put("turnos", Planilla.turnos(usuario, planillaServiceImpl.findPlanilla(id)));
 
         return jo.toString();
     }

@@ -7,6 +7,7 @@ import java.util.List;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.reneseses.empaques.domain.Falta;
+import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Usuario;
 import com.reneseses.empaques.domain.service.FaltaServiceImpl;
 import com.reneseses.empaques.domain.service.PlanillaService;
@@ -22,6 +23,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.roo.addon.web.mvc.controller.scaffold.RooWebScaffold;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.memory.UserMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,9 +44,17 @@ public class FaltaController {
 	
 	@Autowired
 	private UsuarioServiceImpl usuarioServiceImpl;
+	
+	@Autowired
+	private PlanillaServiceImpl planillaServiceImpl;
 
 	@RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String create(@Valid Falta falta, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
+		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))){
+    		return "accessFailure";
+    	}
+		
         if (bindingResult.hasErrors()) {
             populateEditForm(uiModel, falta);
             return "member/faltas/create";
@@ -51,6 +62,24 @@ public class FaltaController {
         uiModel.asMap().clear();
         faltaService.saveFalta(falta);
         return "redirect:/member/faltas/" + encodeUrlPathSegment(falta.getId().toString(), httpServletRequest);
+    }
+	
+	@RequestMapping(params = "form", produces = "text/html")
+    public String createForm(Model uiModel) {
+		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")) && !principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL")) && !principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))){
+    		return "accessFailure";
+    	}
+		
+		List<Planilla> planillas= planillaServiceImpl.findAllPlanillasOrderByFechaDesc();
+		List<Usuario> usuarios= usuarioServiceImpl.lightFindAllUsuarios();
+		
+		System.out.println(usuarios);
+		
+		uiModel.addAttribute("planillas", planillas);
+		uiModel.addAttribute("usuarios", usuarios);
+        populateEditForm(uiModel, new Falta());
+        return "member/faltas/create";
     }
 
 	@RequestMapping(method = RequestMethod.PUT, produces = "text/html")

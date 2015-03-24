@@ -25,12 +25,6 @@ privileged aspect FaltaController_Roo_Controller {
     @Autowired
     FaltaService FaltaController.faltaService;
     
-    @RequestMapping(params = "form", produces = "text/html")
-    public String FaltaController.createForm(Model uiModel) {
-        populateEditForm(uiModel, new Falta());
-        return "member/faltas/create";
-    }
-    
     @RequestMapping(value = "/{id}", produces = "text/html")
     public String FaltaController.show(@PathVariable("id") ObjectId id, Model uiModel) {
         uiModel.addAttribute("falta", faltaService.findFalta(id));

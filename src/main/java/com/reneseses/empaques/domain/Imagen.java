@@ -12,7 +12,6 @@ import javax.imageio.ImageIO;
 import javax.persistence.Basic;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.bson.types.ObjectId;
@@ -39,8 +38,7 @@ public class Imagen {
 
     private Long size;
 
-    @ManyToOne
-    private Usuario usuario;
+    private ObjectId usuario;
     
     public void generateThumb(){
     	ByteArrayOutputStream baos = new ByteArrayOutputStream();

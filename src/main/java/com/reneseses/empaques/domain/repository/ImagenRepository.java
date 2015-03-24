@@ -11,5 +11,5 @@ import org.springframework.roo.addon.layers.repository.mongo.RooMongoRepository;
 public interface ImagenRepository {
 
     List<com.reneseses.empaques.domain.Imagen> findAll();
-    List<Imagen> findImagenByUsuario_Id(ObjectId id);
+    List<Imagen> findImagenByUsuario(ObjectId id);
 }

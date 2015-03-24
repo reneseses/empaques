@@ -49,12 +49,10 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.reneseses.empaques.domain.Bloque;
 import com.reneseses.empaques.domain.Imagen;
-import com.reneseses.empaques.domain.ImagenUsuario;
 import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Turno;
 import com.reneseses.empaques.domain.Usuario;
 import com.reneseses.empaques.domain.service.ImagenServiceImpl;
-import com.reneseses.empaques.domain.service.ImagenUsuarioServiceImpl;
 import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
 import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
 import com.reneseses.empaques.enums.BloqueEnum;
@@ -88,9 +86,6 @@ public class UsuarioController {
     
     @Autowired
     private ImagenServiceImpl imagenServiceImpl;
-
-    @Autowired
-    private ImagenUsuarioServiceImpl imagenUsuarioServiceImpl;
     
     @InitBinder
     protected void initBinder(HttpServletRequest httpServletRequest, ServletRequestDataBinder binder) throws ServletException {
@@ -291,9 +286,7 @@ public class UsuarioController {
 
     @RequestMapping(method = RequestMethod.POST, produces = "text/html")
     public String create(@Valid UsuarioCreateForm usuarioForm, BindingResult bindingResult, Model uiModel, HttpServletRequest httpServletRequest) {
-        System.out.println(usuarioForm);
     	if (bindingResult.hasErrors()) {
-        	System.out.println(bindingResult.getAllErrors());
             populateEditForm(uiModel, usuarioForm);
             return "member/usuarios/create";
         }
@@ -442,27 +435,16 @@ public class UsuarioController {
             model.addAttribute("imagen", imagenForm);
             return "member/usuarios/uploadImg";
         }
-        Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Usuario user = usuarioService.findUsuario(principal.getId());
+        Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();        
         Imagen imagen = new Imagen();
         imagen.setContentType("jpg");
         imagen.setSize(content.getSize());
-        imagen.setUsuario(principal);
+        imagen.setUsuario(principal.getId());
         imagen.generateImagen(imagenForm.getContent());
         imagen.setNombre(content.getOriginalFilename());
         imagen.generateThumb();
         imagenServiceImpl.saveImagen(imagen);
-        ImagenUsuario imgUser= imagenUsuarioServiceImpl.findByUsuario(user);
-        if(imgUser == null){
-        	imgUser= new ImagenUsuario();
-        	imgUser.setImagen(imagen);
-        	imgUser.setUsuario(user);
-        	imagenUsuarioServiceImpl.saveImagenUsuario(imgUser);
-        }
-        else{
-        	imgUser.setImagen(imagen);
-        	imagenUsuarioServiceImpl.updateImagenUsuario(imgUser);
-        }
+                
         return "redirect:/member/usuarios/" + principal.getId();
     }
 
@@ -516,26 +498,24 @@ public class UsuarioController {
     public String select(@RequestParam("sel") ObjectId id, HttpServletResponse response) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Imagen img = imagenServiceImpl.findImagen(id);
-        if (!principal.getId().equals(img.getUsuario().getId())) return "accessFailure";
+        if (!principal.getId().equals(img.getUsuario()))
+        	return "accessFailure";
         Usuario user = usuarioService.findUsuario(principal.getId());
-        ImagenUsuario imgUser= imagenUsuarioServiceImpl.findByUsuario(user);
-        if (imgUser.getImagen() == null || !imgUser.getImagen().getId().equals(img.getId())) {
-        	imgUser.setImagen(img);
-            imagenUsuarioServiceImpl.saveImagenUsuario(imgUser);
-            //
-        }
+        
+        user.setImage(img.getId());
+        
+        usuarioServiceImpl.saveUsuario(user);
+        
         return "redirect:/member/usuarios/" + principal.getId();
     }
     
     @RequestMapping(value = "imagen")
     public @ResponseBody String userImg(HttpServletResponse response) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ImagenUsuario img = imagenUsuarioServiceImpl.findByUsuario(principal);
-        if(img == null || img.getImagen()==null){
-        	return "null";
-        }
-        else
-        	return img.getImagen().getId().toString();
+        
+        Usuario usuario= usuarioServiceImpl.findUsuario(principal.getId());
+        
+        return usuario.getImage()== null? null: usuario.getImage().toString();
     }
 
     @RequestMapping(value = "imagen/{id}", method = RequestMethod.DELETE, produces = "text/html")
@@ -543,10 +523,10 @@ public class UsuarioController {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Usuario user = usuarioService.findUsuario(principal.getId());
         Imagen imagen = imagenServiceImpl.findImagen(id);
-        ImagenUsuario imgUser= imagenUsuarioServiceImpl.findByUsuario(user);
-        if (imgUser != null && imagen.getId().equals(imgUser.getImagen().getId())) {
-            imgUser.setImagen(null);
-            imagenUsuarioServiceImpl.saveImagenUsuario(imgUser);
+        
+        if (imagen.getId().equals(user.getImage())) {
+            user.setImage(null);
+            usuarioServiceImpl.saveUsuario(user);
         }
         imagenServiceImpl.deleteImagen(imagen);
         return "redirect:/member/usuarios/imagen/" + String.valueOf(principal.getId());
