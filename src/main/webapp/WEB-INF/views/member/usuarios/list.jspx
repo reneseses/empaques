@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" id="main_body" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_reneseses_empaques_domain_Usuario" items="${usuarios}" z="KPGtqP2AESRq8owOjW3PsosFbwA=">
+		<table:table data="${usuarios}" id="l_com_reneseses_empaques_domain_Usuario" path="/member/usuarios" z="CQAn6CHm6CNC2aQBptSVbmddslA=">
+		    <table:column id="c_com_reneseses_empaques_domain_Usuario_password" property="password" render="false" z="user-managed"/>
+		    <table:column id="c_com_reneseses_empaques_domain_Usuario_numero" property="numero" tdclass="td-sm text-right" z=""/>
+		    <table:column id="c_com_reneseses_empaques_domain_Usuario_nombre" property="nombre" z="MAKH/X+GFIfFMkGn23oSP5d1dNE="/>
+		    <table:column id="c_com_reneseses_empaques_domain_Usuario_rut" property="rut" render="false" z="user-managed"/>
+		    <table:column id="c_com_reneseses_empaques_domain_Usuario_tipo" property="tipo" tdclass="hidden-xs" thclass="hidden-xs" z="user-managed"/>
+		    <table:column id="c_com_reneseses_empaques_domain_Usuario_regimen" property="regimen" tdclass="hidden-xs hidden-sm" thclass="hidden-xs hidden-sm" z="user-managed"/>
+		    <table:column  id="c_com_reneseses_empaques_domain_Usuario_imagen" property="imagen" render="false" z="WmSBxORvU3QSbenCo5Vimf3QZ+c="/>
+		</table:table>
+    </page:list>
+</div>

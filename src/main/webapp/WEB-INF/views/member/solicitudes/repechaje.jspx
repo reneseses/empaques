@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div class="row"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags">
+
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <spring:url value="/member/solicitudes/recibirRepechaje" var="recibir_url"/>
+    <spring:url value="/" var="parent_url"/>
+    <spring:url value="/js/solicitudes/repechaje.js" var="repechajes_js" />
+    <sec:authentication property="principal.regimen" var="regimen" />
+    <c:set value="Asistencia Libre"  var ="libre"/>
+    <spring:url value="/images/tomaRepechaje.png" var="repechaje_img"/>
+    
+    <script type="text/javascript">
+    	var turnos=${turnos};
+    	<c:if test="${not empty repechaje }">
+    	var repechaje= ${repechaje};
+    	var repechajeId= "${repechajeId}";
+    	</c:if>
+		var dias = {};
+    	var horas= {};
+    	var bloques=[];
+    	var days=[];
+		var recibir_url= "${recibir_url}";
+		var parent_url= "${parent_url}";
+    	<c:forEach items="${bloques}" var="block">horas["${block}"]="${block.bloque}"; bloques.push("${block}");
+    	</c:forEach>
+    	<c:forEach items="${dias}" var="dia">dias["${dia}"]= "${dia.dia}"; days.push("${dia}")
+    	</c:forEach>
+    </script>
+	<script type="text/javascript" src="${repechajes_js}"><!-- --></script>
+
+	<div class="errors alert alert-warning" style="display: none">
+		<button class="close" data-dismiss="alert">×</button>
+		<strong>ATENCION</strong>: Ud ya realizó su solicitud de repechaje. Cambiar esta información implica <strong>actualizar la fecha de su solicitud</strong>, pudiendo provocar que <strong>se le asignen menos turnos</strong>.
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<header class="panel-heading">
+				<h2 class="panel-title" id="turnum">Turno 1</h2>
+			</header>
+			<div class="panel-body" style="min-height: 210px">
+				<div class="row">
+					<div class="col-xs-7">
+						<div class="form-group no-margin">
+							<label for="dia" class="control-label">Día</label>
+							<select id="dia" size="9" class="form-control">
+							<!--  -->
+							</select>
+						</div>
+					</div>
+					<div class="col-xs-5">
+						<div class="form-group no-margin">
+							<label for="begin" class="control-label">Inicio</label>
+							<select id="begin" size="9" multiple="multiple" class="horas form-control">
+								<!-- -->
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<button id="elegir" class="btn btn-primary pull-right">Elegir</button>
+				<div class="clearfix"><!-- --></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<header class="panel-heading">
+				<h2 class="panel-title" id="turnum">Turnos Elegidos</h2>
+			</header>
+			<div class="panel-body" style="min-height: 210px">
+				<ul id="turnos" class="list-unstyled no-margin">
+					<!--  -->
+				</ul>
+			</div>
+			<div class="panel-footer">
+				<button id="enviar" class="btn btn-primary pull-right" disabled="disabled">Enviar</button>
+				<div class="clearfix"><!-- --></div>
+			</div>
+		</div>
+	</div>
+</div>

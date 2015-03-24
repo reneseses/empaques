@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<nav xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" xmlns:sec="http://www.springframework.org/security/tags" xmlns:spring="http://www.springframework.org/tags" class="navbar navbar-default navbar-fixed-top">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <div class="container">
+        <div class="navbar-header">
+            <c:if test="${pageContext['request'].userPrincipal != null}">
+                <sec:authentication property="principal" var="principal"/>
+                <sec:authentication property="principal.id" var="principal_id"/>
+                <sec:authentication property="principal.nombre" var="principal_nombre"/>
+                <button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar">
+                        <!-- -->
+                    </span>
+                    <span class="icon-bar">
+                        <!-- -->
+                    </span>
+                    <span class="icon-bar">
+                        <!-- -->
+                    </span>
+                </button>
+                <ul class="hidden-lg hidden-md hidden-sm list-inline list-unstyled pull-right no-margin" style="margin-right: 10px !important">
+                    <li class="dropdown no-padding">
+                        <button class="btn-header text-center dropdown-toggle" data-toggle="dropdown" title="Opciones">
+                            <i class="fa fa-user">
+                                <!---->
+                            </i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <sec:authentication property="principal.id" var="id"/>
+                                <spring:url value="/member/usuarios/${id}" var="mi_cuenta"/>
+                                <a href="${mi_cuenta }">Mi Cuenta</a>
+                            </li>
+                            <sec:authorize ifAnyGranted="EMPAQUE,ENCARGADO">
+                                <li>
+                                    <spring:url value="/member/usuarios/turnos" var="mis_turnos"/>
+                                    <a href="${mis_turnos }">Mis Turnos</a>
+                                </li>
+                            </sec:authorize>
+                            <li>
+                                <spring:url value="/member/usuarios/password" var="password"/>
+                                <a href="${password}">Cambiar Password</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="no-padding">
+                        <spring:url value="/resources/j_spring_security_logout" var="logout"/>
+                        <spring:message code="security_logout" var="logout_msg"/>
+                        <a class="btn-header text-center" href="${logout}" title="${logout_msg}">
+                            <i class="fa fa-sign-out">
+                                <!---->
+                            </i>
+                        </a>
+                    </li>
+                </ul>
+            </c:if>
+            <div class="navbar-brand">Empaques</div>
+        </div>
+        <c:if test="${pageContext['request'].userPrincipal != null}">
+            <sec:authentication property="principal" var="principal"/>
+            <sec:authentication property="principal.id" var="principal_id"/>
+            <sec:authentication property="principal.nombre" var="principal_nombre"/>
+            <div class="navbar-collapse collapse" id="navbar">
+                <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
+                    <menu:category id="c_solicitud" label="Solicitudes" z="user-managed">
+                        <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
+                            <menu:item id="i_solicitud_list" label="Listar Turnos" url="/member/solicitudes" z="user-managed"/>
+                            <menu:item id="i_repechaje_list" label="Listar Repechajes" url="/member/solicitudes/repechajes" z="user-managed"/>
+                            <menu:item id="fi_solicitud_fechabetween" messageCode="global_menu_find" render="false" url="/member/solicitudes?find=ByFechaBetween&amp;form" z="user-managed"/>
+                            <menu:item id="fi_solicitud_usuario" messageCode="global_menu_find" render="false" url="/member/solicitudes?find=ByUsuario&amp;form" z="user-managed"/>
+                        </sec:authorize>
+                        <sec:authorize ifAnyGranted="EMPAQUE,ENCARGADO">
+                            <menu:item id="i_solicitud_new" label="Turnos" url="/member/solicitudes/turnos" z="user-managed"/>
+                            <menu:item id="i_repechaje_new" label="Repechaje" url="/member/solicitudes/repechaje" z="user-managed"/>
+                        </sec:authorize>
+                    </menu:category>
+                    <sec:authentication property="principal" var="principal"/>
+                    <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
+                        <menu:category id="c_usuario" z="user-managed">
+                            <sec:authentication property="principal.id" var="id"/>
+                            <menu:item id="i_usuario_upload" label="Subir Usuarios" url="/member/usuarios/upload"/>
+                            <menu:item id="i_usuario_new" messageCode="global_menu_new" url="/member/usuarios?form" z="user-managed"/>
+                            <menu:item id="i_usuario_list" messageCode="global_menu_list" url="/member/usuarios?page=1&amp;size=${empty param.size ? 15 : param.size}" z="user-managed"/>
+                            <menu:item id="i_usuario_update" label="Reiniciar password" url="/member/usuarios/resetpass" z="user-managed"/>
+                            <menu:item id="i_usuario_find" label="Buscar" url="/member/usuarios/find"/>
+                            <menu:item id="fi_usuario_numeroequals" messageCode="global_menu_find" render="false" url="/member/usuarios?find=ByNumeroEquals&amp;form" z="user-managed"/>
+                            <menu:item id="fi_usuario_rutequals" messageCode="global_menu_find" render="false" url="/member/usuarios?find=ByRutEquals&amp;form" z="user-managed"/>
+                        </menu:category>
+                    </sec:authorize>
+                    <menu:category id="c_falta" z="TZjPBmgWDcj6Rh0cEhRHdKvCbpE=">
+                        <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
+                            <menu:item id="i_falta_new" messageCode="global_menu_new" url="/member/faltas?form" z="ASR+aldfkj7wW+OT0O9/grDArew="/>
+                        </sec:authorize>
+                        <menu:item id="i_falta_list" messageCode="global_menu_list" url="/member/faltas?page=1&amp;size=${empty param.size ? 15 : param.size}" z="user-managed"/>
+                    </menu:category>
+                    <menu:category id="c_planilla" z="459FFD47/RwHgfI7PPUJxDlR1pE=">
+                        <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
+                            <menu:item id="i_planilla_new" messageCode="global_menu_new" url="/member/planillas?form" z="user-managed"/>
+                        </sec:authorize>
+                        <menu:item id="i_planilla_list" messageCode="global_menu_list" url="/member/planillas" z="user-managed"/>
+                        <menu:item id="fi_planilla_fechaequals" messageCode="global_menu_find" render="false" url="/member/planillas?find=ByFechaEquals&amp;form" z="user-managed"/>
+                    </menu:category>
+                    <menu:category id="c_repechaje" render="false" z="user-managed">
+                        <menu:item id="i_repechaje_new" messageCode="global_menu_new" url="/member/repechaje?form" z="m8AWU4bPTeVk36QJLt96z5SeTM8="/>
+                        <menu:item id="i_repechaje_list" messageCode="global_menu_list" url="/member/repechaje?page=1&amp;size=${empty param.size ? 25 : param.size}" z="uJjTIDmy/Nps9ROW4IudZIFENs8="/>
+                    </menu:category>
+                </menu:menu>
+                <ul class="nav navbar-nav navbar-right hidden-xs">
+                    <li class="dropdown">
+                        <a class="btn-header dropdown-toggle text-center" data-toggle="dropdown">
+                            <i class="fa fa-user">
+                                <!---->
+                            </i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <sec:authentication property="principal.id" var="id"/>
+                                <spring:url value="/member/usuarios/${id}" var="mi_cuenta"/>
+                                <a href="${mi_cuenta }">Mi Cuenta</a>
+                            </li>
+                            <sec:authorize ifAnyGranted="EMPAQUE,ENCARGADO">
+                                <li>
+                                    <spring:url value="/member/usuarios/turnos" var="mis_turnos"/>
+                                    <a href="${mis_turnos }">Mis Turnos</a>
+                                </li>
+                            </sec:authorize>
+                            <li>
+                                <spring:url value="/member/usuarios/password" var="password"/>
+                                <a href="${password}">Cambiar Password</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <spring:url value="/resources/j_spring_security_logout" var="logout"/>
+                    <spring:message code="security_logout" var="logout_msg"/>
+                    <li>
+                        <a class="btn-header text-center" href="${logout}" title="${logout_msg}">
+                            <i class="fa fa-sign-out">
+                                <!---->
+                            </i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </c:if>
+    </div>
+</nav>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:jsp="http://java.sun.com/JSP/Page">
+	<jsp:directive.page contentType="text/html;charset=UTF-8"/>
+	<jsp:output omit-xml-declaration="yes"/>
+	
+
+	<util:panel id="title" title="Mis turnos">
+		<div class="row">
+			<div class="col-sm-4 col-md-3">
+				<select id="planillas" size="10" class="form-control" style="margin-bottom: 15px">
+					<!--  -->
+				</select>
+			</div>
+			<div class="col-sm-8 col-md-9">
+				<div class="info-container">
+					<div id="turnos">
+						<!--  -->
+					</div>
+					<div id="solicitudes">
+						<!--  -->
+					</div>
+					<div id="repechajes">
+						<!--  -->
+					</div>
+				</div>
+				 <div class="loading-indicator large">
+					<a class="btn btn-info disabled" href="#">
+						<i class="fa fa-4x fa-refresh fa-spin">
+							<!-- -->
+						</i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</util:panel>
+	<script type="text/javascript">
+		var bloques= ${bloques};
+		var days= ${dias};
+		var id = "${id}";
+		var planillas = ${planillas};
+	</script>
+	<spring:url value="/js/usuarios/misturnos.js" var="turnos_url"/>
+	<script type="text/javascript" src="${turnos_url}"><!-- --></script>
+</div>

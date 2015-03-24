@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:sec="http://www.springframework.org/security/tags" class="row" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <c:set value="false" var="admin_user"/>
+    <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
+        <c:set value="true" var="admin_user"/>
+    </sec:authorize>
+    <div class="col-xs-12 col-xs-12 col-md-10 col-md-offset-1">
+        <form:update id="fu_com_reneseses_empaques_domain_Usuario" modelAttribute="usuario" path="/member/usuarios" versionField="none" z="user-managed">
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>Información Personal</legend>
+                    <field:input field="nombre" id="c_com_reneseses_empaques_domain_Usuario_nombre" required="true" validationRegex="[a-zA-Z\'\-]+[ [a-zA-Z\'\-]+]*" z="user-managed"/>
+                    <field:input field="rut" id="c_com_reneseses_empaques_domain_Usuario_rut" required="true" validationRegex="[0-9]{1,8}-[K|k|0-9]" z="user-managed"/>
+                    <field:input field="email" id="c_com_reneseses_empaques_domain_Usuario_email" required="true" validationMessageCode="field_invalid_email" validationRegex="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+[.][a-zA-Z]{2,4}" z="user-managed"/>
+                    <field:datetime dateTimePattern="${usuario_fechanacimiento_date_format}" field="fechaNacimiento" id="c_com_reneseses_empaques_domain_Usuario_fechaNacimiento" past="true" z="gspo3KxLnnnIhjxUHtwcDtOQ5u4="/>
+                    <field:input field="carrera" id="c_com_reneseses_empaques_domain_Usuario_carrera" z="t5rBDP+lXUUEM5NqACFJPDyWyBw="/>
+                    <field:input field="universidad" id="c_com_reneseses_empaques_domain_Usuario_universidad" z="hjYndcZ8v8RHfPnQy68ogV6qdE8="/>
+                    <field:input field="celular" id="c_com_reneseses_empaques_domain_Usuario_celular" z="tTWwOqPydyeQgjXHAZWsBOhYg0A="/>
+                </fieldset>
+            </div>
+            <div class="col-sm-6">
+                <fieldset>
+                    <legend>Cuenta</legend>
+                    <field:input field="numero" id="c_com_reneseses_empaques_domain_Usuario_numero" render="${admin_user }" required="true" z="user-managed"/>
+                    <field:select field="tipo" id="c_com_reneseses_empaques_domain_Usuario_tipo" itemLabel="tipo" items="${tipousuarioenums}" path="tipousuarioenums" render="${admin_user }" required="true" z="user-managed"/>
+                    <field:select field="regimen" id="c_com_reneseses_empaques_domain_Usuario_regimen" itemLabel="regimen" items="${regimenturnoenums}" path="regimenturnoenums" render="${admin_user }" z="user-managed"/>
+                    <field:input field="prioridad" id="c_com_reneseses_empaques_domain_Usuario_prioridad" render="${admin_user }" validationRegex="[1-4]" z="user-managed"/>
+                    <field:checkbox field="disabled" id="c_com_reneseses_empaques_domain_Usuario_disabled" render="${admin_user }" z="user-managed"/>
+                    <field:checkbox field="locked" id="c_com_reneseses_empaques_domain_Usuario_locked" render="${admin_user }" z="user-managed"/>
+                </fieldset>
+            </div>
+            <field:input field="password" id="c_com_reneseses_empaques_domain_Usuario_password" render="false" z="user-managed"/>
+            <field:datetime dateTimePattern="${usuario_lastsolicitud_date_format}" field="lastSolicitud" id="c_com_reneseses_empaques_domain_Usuario_lastSolicitud" render="false" z="user-managed"/>
+            <field:input field="facebook" id="c_com_reneseses_empaques_domain_Usuario_facebook" render="false" z="user-managed"/>
+            <field:input field="image" id="c_com_reneseses_empaques_domain_Usuario_image" render="false" z="user-managed"/>
+        </form:update>
+    </div>
+</div>

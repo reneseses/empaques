@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:spring="http://www.springframework.org/tags"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:page="urn:jsptagdir:/WEB-INF/tags/form"
+	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+	
+	<jsp:directive.page contentType="text/html;charset=UTF-8"/>
+	<jsp:output omit-xml-declaration="yes"/>
+
+	<div class="panel panel-default" id="table-panel" style="display: none">
+		<header class="panel-heading">
+			<div class="panel-title pull-left">Seleccione una Planilla</div>
+			<div class="selectize-container pull-left">
+				<select id="planilla_select" style="width: 250px; margin-right: 10px;">
+						<!-- -->
+				</select>
+			</div>
+			<div class="clearfix"><!-- --></div>
+		</header>
+		<div class="panel-body no-padding table-responsive">
+			<table class="table table-bordered table-hover table-compact table-striped" id="table-list" style="display: none">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Empaque</th>
+						<th>Fecha</th>
+						<th>Turno 1</th>
+						<th>Turno 2</th>
+						<th>Turno 3</th>
+						<th>Turno 4</th>
+						<th>Turno 5</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- -->
+				</tbody>
+			</table>
+			<div class="loading-indicator large" id="loading-inner">
+				<a class="btn btn-info disabled" href="#">
+					<i class="fa fa-4x fa-refresh fa-spin">
+						<!-- -->
+					</i>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="loading-indicator large" id="loading-principal">
+		<a class="btn btn-info disabled" href="#">
+			<i class="fa fa-4x fa-refresh fa-spin">
+				<!-- -->
+			</i>
+		</a>
+	</div>
+	<spring:url value="/js/solicitudes/list_solicitudes.js" var="list_js" />
+	<script type="text/javascript">
+		var listUrl= appContext + "member/solicitudes";
+	</script>
+	<script type="text/javascript" src="${list_js}"><!-- --></script>
+	<page:list id="pl_com_reneseses_empaques_domain_Solicitud" items="${solicituds}" render="false" z="user-managed">
+		<table:table create="false" data="${solicituds}" id="l_com_reneseses_empaques_domain_Solicitud" path="/member/solicitudes" update="false" z="user-managed">
+			<table:column id="c_com_reneseses_empaques_domain_Solicitud_usuario" property="numero" z="user-managed"/>
+			<table:column date="true" dateTimePattern="${solicitud_fecha_date_format}" id="c_com_reneseses_empaques_domain_Solicitud_fecha" property="fecha" z="2B3KDLdOduQEIsxZmGzPkEmsWls="/>
+			<table:column id="c_com_reneseses_empaques_domain_Solicitud_turnos" property="turno1" z="user-managed"/>
+			<table:column id="c_com_reneseses_empaques_domain_Solicitud_turnos" property="turno2" z="dmekXK3+6AFQTGyV8o5pVySSjVo="/>
+			<table:column id="c_com_reneseses_empaques_domain_Solicitud_turnos" property="turno3" z="dmekXK3+6AFQTGyV8o5pVySSjVo="/>
+			<table:column id="c_com_reneseses_empaques_domain_Solicitud_turnos" property="turno4" z="dmekXK3+6AFQTGyV8o5pVySSjVo="/>
+			<table:column id="c_com_reneseses_empaques_domain_Solicitud_turnos" property="turno5" z="dmekXK3+6AFQTGyV8o5pVySSjVo="/>
+		</table:table>
+	</page:list>
+</div>

@@ -1,0 +1,158 @@
+body{
+	background: #e0e0e0;
+  	padding-top: 70px;
+}
+
+.login-form{
+}
+
+.btn-header{
+	height: 50px;
+	width: 50px;
+	font-size: 20px;
+	line-height: 49px;
+	border: none;
+	display: inline-block;
+	vertical-align: middle;
+	background-color: transparent;
+	color: #777;
+	cursor: pointer;
+}
+
+.btn-header:hover{
+	color: #333;
+}
+
+.dropdown.open .btn-header{
+	color: #555;
+	background-color: #e7e7e7;
+}
+
+.footer{
+	background: #f5f5f5;
+	border-top: 1px solid #ddd;
+	height: 60px;
+	margin-top: 13px;
+}
+
+.no-padding{
+	padding: 0 !important;
+}
+
+.no-margin{
+	margin: 0 !important;
+}
+
+.pagination-label a{
+	cursor: default !important;
+}
+
+.panel-body.no-padding > .table{
+	border: none;
+}
+
+.panel-body.no-padding .table tbody tr td:first-child,
+.panel-body.no-padding .table thead tr th:first-child,
+.panel-body.no-padding .ht_clone_left tbody tr th,
+.panel-body.no-padding .ht_clone_corner thead tr th{
+	border-left: none !important;
+}
+
+.panel-body.no-padding  .table tbody tr td:last-child, .panel-body.no-padding  .table thead tr th:last-child{
+	border-right: none;
+}
+
+.panel-body.no-padding .handsontable tr:first-child th, .panel-body.no-padding .handsontable tr:first-child td{
+	border-top: none
+}
+
+.panel-heading .input-group{
+	margin-top: -3px;
+	margin-bottom: -3px;
+}
+
+.panel-heading .input-group input, .panel-heading .input-group .input-group-addon{
+	padding: 3px 7px;
+	height: 28px;
+}
+
+.handsontable .handsontable table{
+	box-shadow: none;
+	border-bottom: 1px solid #ddd;
+}
+
+td.utilbox{
+	width: 40px;
+	text-align: center;
+	padding: 6px !important;
+}
+
+.td-sm{
+	width: 80px
+}
+
+.table.table-compact td, .table.table-compact th{
+	padding: 4px 6px;
+	font-size: 13px;
+} 
+
+.table.table-compact td.utilbox{
+	width: 40px;
+	text-align: center;
+	padding: 2px 4px !important;
+}
+
+.no-wrap{
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.alert-xs{
+	padding: 5px 10px;
+	margin-bottom: 5px;
+}
+
+.xdsoft_row_current > th,
+.xdsoft_row_current > td,
+.xdsoft_datetimepicker .xdsoft_row_current td:hover{
+	background: #33aaff !important;
+	box-shadow: #178fe5 0 1px 3px 0 inset;
+	color: #fff !important;
+	font-weight: 700;
+}
+
+.xdsoft_row_hover > th,
+.xdsoft_row_hover > td,
+.xdsoft_datetimepicker .xdsoft_row_hover td:hover{
+	color: #fff !important;
+	background: #ff8000 !important;
+	box-shadow: none !important;
+}
+
+.day-label{
+	width: 65px;
+	margin: 0;
+	font-weight: bold;
+}
+
+.loading-indicator{
+	text-align: center;
+	line-height: 200px;
+}
+
+.panel-heading .selectize-container{
+	margin: -2px 0 -2px 10px;
+	line-height: 0;
+}
+
+.panel-heading .selectize-container .selectize-input.items{
+	padding: 2px 6px;
+	min-height: 0px;
+	border-radius: 0;
+}
+
+.panel-heading .selectize-container .selectize-control.single .selectize-input:after{
+	right: 8px;
+	margin-top: -2px
+}

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div id="main_body" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:spring="http://www.springframework.org/tags" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <spring:url value="/js/planilla.js" var="planilla_js"/>
+    <spring:url value="/member/planillas/getturnos/${planilla.id}" var="planilla_data"/>
+    <spring:url value="/member/planillas/save" var="planilla_save"/>
+    <spring:url value="/member/planillas/getuser" var="usuario_data"/>
+    <spring:url value="/images/user.png" var="user_img"/>
+    <fmt:formatDate pattern="yyyy/MM/dd" value="${planilla.fecha}" var="fecha"/>
+    <fmt:formatDate pattern="dd-MM-yyyy" value="${planilla.fecha}" var="fecha2"/>
+    <script>
+    	dataUrl= "${planilla_data}";
+    	saveUrl= "${planilla_save}";
+    	planilla_id= "${planilla.id}";
+    	usuario_data= "${usuario_data}";
+    	var fill = false;
+    	date= new Date("${fecha}");
+    	var readonly= true;
+    	user_img= "${user_img}";
+    	prev= "";
+    	function getChanges(change){};
+    </script>
+    <script src="${planilla_js}"><!-- --></script>
+    <script type="text/javascript">
+    <![CDATA[
+	$(function(){
+		$('#planilla').on('click',"tbody tr td",function(){
+			if($(this).text() == prev)
+				return;
+			$("#emp_info").empty();
+			if($(this).text() == "" || $(this).text() == "-" || $(this).text() == "  ")
+				return;
+			prev= $(this).text();
+			$.ajax({
+				url: usuario_data + "?numero=" + $(this).text() + "&id=" + planilla_id,
+				dataType: "json",
+				type: "GET",
+				success:function(data){
+					if(data.imagen != null)
+						$("#emp_info").append($("<img style='width: 160px;'>").attr("src",usuario_data +  "imagen?thumb=" + data.imagen));
+					else
+						$("#emp_info").append($("<img style='width: 160px;'>").attr("src",user_img));
+					$("#emp_info").append($("<div style='width: 160px; font-size: 11px'>").append("Nombre: " + data.nombre));
+					$("#emp_info").append($("<div style='width: 160px; font-size: 11px'>").append("Número: " + data.numero));
+					$("#emp_info").append($("<div style='width: 160px; font-size: 11px'>").append("Turnos: " + data.turnos));
+				}
+			});
+		});
+	});
+    ]]>
+    </script>
+
+    <div class="panel panel-default">
+        <header class="panel-heading">
+            <div class="row">
+                <div class="col-xs-9 col-sm-8 col-md-6 col-lg-4">
+                    <div class="row">
+                        <span class="panel-title col-sm-4 hidden-xs">Planilla de </span>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <div class="icon-addon">
+                                    <input class="form-control week-picker" disabled="disabled" />
+                                </div>
+                                 <span class="input-group-addon">
+                                    <i class="fa fa-calendar"><!-- --></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="panel-body no-padding">
+            <div id="planilla" style="overflow: auto; min-height: 200px">
+                <!--  -->
+            </div>
+        </div>
+    </div>
+
+    <page:show id="ps_com_reneseses_empaques_domain_Planilla" object="${planilla}" path="/member/planillas" render="false" z="user-managed">
+        <field:display date="true" dateTimePattern="${planilla_fecha_date_format}" field="fecha" id="s_com_reneseses_empaques_domain_Planilla_fecha" object="${planilla}" z="kHTSJ6yJ39GtCwMLN/BVDuysMH8="/>
+        <field:display field="generada" id="s_com_reneseses_empaques_domain_Planilla_generada" object="${planilla}" z="a05rOxMCLCGCoiABfuojtEN4LGo="/>
+        <field:display field="repechaje" id="s_com_reneseses_empaques_domain_Planilla_repechaje" object="${planilla}" z="kAh/+J/rZuGlWptzi92ujXc9NDw="/>
+        <field:display field="bloques" id="s_com_reneseses_empaques_domain_Planilla_bloques" object="${planilla}" z="5pteQBUBLpa0f8YvLdyXCIXmtuI="/>
+    </page:show>
+</div>

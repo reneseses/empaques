@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" id="main_body" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_reneseses_empaques_domain_Falta" object="${falta}" path="/member/faltas" z="RUQFrhLEql7+clepQUsQOjXutfE=">
+        <field:display field="usuario" id="s_com_reneseses_empaques_domain_Falta_usuario" object="${falta}" z="Kh+sd6LkCCdf9ozNGw/gUNCO6iE="/>
+        <field:display field="tipoFalta" id="s_com_reneseses_empaques_domain_Falta_tipoFalta" object="${falta}" z="JvCBmPxZw2mPmJGK9ViTDofpKIk="/>
+        <field:display field="planilla" id="s_com_reneseses_empaques_domain_Falta_planilla" object="${falta}" z="PxhCBb8YfFTdvdMeFX21VcRHpTQ="/>
+    </page:show>
+</div>

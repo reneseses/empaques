@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" id="main_body" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_reneseses_empaques_domain_Solicitud" object="${solicitud}" path="/member/solicitudes" z="xV0ymeJ85kpUouRFsqPzy06XmE0=">
+        <field:display date="true" dateTimePattern="${solicitud_fecha_date_format}" field="fecha" id="s_com_reneseses_empaques_domain_Solicitud_fecha" object="${solicitud}" z="QKtNGYA73LND005FbLSaP43LRRY="/>
+        <field:display field="turnos" id="s_com_reneseses_empaques_domain_Solicitud_turnos" object="${solicitud}" render="false" z="user-managed"/>
+        <field:display field="usuario" id="s_com_reneseses_empaques_domain_Solicitud_usuario" object="${solicitud}" z="zobHCOHkDb2UgUchI+Myz2HMx4E="/>
+    </page:show>
+</div>

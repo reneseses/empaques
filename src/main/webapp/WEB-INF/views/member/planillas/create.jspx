@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" id="main_body" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <spring:url value="/js/planilla.js" var="planilla_js"/>
+    <spring:url value="/member/planillas/getcupos" var="planilla_data"/>
+    <spring:url value="/" var="parent_url"/>
+    <spring:url value="/member/planillas/save" var="planilla_save"/>
+    <fmt:formatDate pattern="yyyy/MM/dd" value="${date}" var="fecha"/>
+    <script>
+		var changes = [];
+		var fill = true;
+		var dataUrl= "${planilla_data}";
+		var saveUrl= "${planilla_save}";
+		var date= new Date("${fecha}");
+		date= new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 8);
+		var readonly= false;
+		var parent= "${parent_url}";
+		function getChanges(change){};
+	</script>
+    <script src="${planilla_js}">
+        <!-- -->
+    </script>
+    <div class="panel panel-default">
+        <header class="panel-heading">
+            <div class="row">
+                <div class="col-xs-9 col-sm-8 col-md-6 col-lg-4">
+                    <div class="row">
+                        <span class="panel-title col-xs-4 hidden-xs">Planilla de </span>
+                        <div class="col-xs-8">
+                            <div class="input-group">
+                                <div class="icon-addon">
+                                    <input class="form-control week-picker"/>
+                                </div>
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar">
+                                        <!-- -->
+                                    </i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-3 col-sm-2 col-sm-offset-2 col-md-1 col-md-offset-5 col-lg-1 col-lg-offset-7">
+                    <div class="pull-right">
+                        <button class="btn btn-primary btn-xs" onclick="save();">
+                            <i class="fa fa-save">
+                                <!-- -->
+                            </i> Save</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="panel-body no-padding">
+            <div id="planilla" style="overflow: auto; min-height: 200px">
+                <!--  -->
+            </div>
+        </div>
+    </div>
+    <form:create id="fc_com_reneseses_empaques_domain_Planilla" modelAttribute="planilla" path="/member/planillas" render="false" z="user-managed">
+        <field:datetime dateTimePattern="${planilla_fecha_date_format}" field="fecha" id="c_com_reneseses_empaques_domain_Planilla_fecha" z="G5D0obN0MCQ5aJ+6sQea2BxURe8="/>
+        <field:checkbox field="generada" id="c_com_reneseses_empaques_domain_Planilla_generada" z="VJoU4NyjWmHPlwTjHRmZiq8KQxI="/>
+        <field:checkbox field="repechaje" id="c_com_reneseses_empaques_domain_Planilla_repechaje" z="MuzzfTtCg21Mh9jpDqe7C/YiT8M="/>
+        <field:input field="bloques" id="c_com_reneseses_empaques_domain_Planilla_bloques" z="+y1Tu2coaMbp/YtAmeZZr7drQkk="/>
+        <field:input field="id" id="c_com_reneseses_empaques_domain_Planilla_id" required="true" z="f893ksW6u2eScuIR6Ro7W5sEf0k="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_reneseses_empaques_domain_Planilla" render="false" z="user-managed"/>
+</div>
