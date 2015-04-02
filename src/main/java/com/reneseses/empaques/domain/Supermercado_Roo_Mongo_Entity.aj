@@ -3,23 +3,23 @@
 
 package com.reneseses.empaques.domain;
 
-import com.reneseses.empaques.domain.AppProperties;
+import com.reneseses.empaques.domain.Supermercado;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 
-privileged aspect AppProperties_Roo_Mongo_Entity {
+privileged aspect Supermercado_Roo_Mongo_Entity {
     
-    declare @type: AppProperties: @Persistent;
+    declare @type: Supermercado: @Persistent;
     
     @Id
-    private ObjectId AppProperties.id;
+    private ObjectId Supermercado.id;
     
-    public ObjectId AppProperties.getId() {
+    public ObjectId Supermercado.getId() {
         return this.id;
     }
     
-    public void AppProperties.setId(ObjectId id) {
+    public void Supermercado.setId(ObjectId id) {
         this.id = id;
     }
     

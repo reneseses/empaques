@@ -6,17 +6,19 @@ package com.reneseses.empaques.web;
 import com.reneseses.empaques.domain.Falta;
 import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Solicitud;
+import com.reneseses.empaques.domain.Supermercado;
 import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.domain.service.FaltaService;
 import com.reneseses.empaques.domain.service.PlanillaService;
 import com.reneseses.empaques.domain.service.SolicitudService;
+import com.reneseses.empaques.domain.service.SupermercadoService;
 import com.reneseses.empaques.domain.service.UsuarioService;
 import com.reneseses.empaques.web.ApplicationConversionServiceFactoryBean;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.FormatterRegistry;
 
 privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService {
     
@@ -32,12 +34,15 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     SolicitudService ApplicationConversionServiceFactoryBean.solicitudService;
     
     @Autowired
+    SupermercadoService ApplicationConversionServiceFactoryBean.supermercadoService;
+    
+    @Autowired
     UsuarioService ApplicationConversionServiceFactoryBean.usuarioService;
     
     public Converter<Falta, String> ApplicationConversionServiceFactoryBean.getFaltaToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<com.reneseses.empaques.domain.Falta, java.lang.String>() {
             public String convert(Falta falta) {
-                return new StringBuilder().append(falta.getUsuario()).append(' ').append(falta.getPlanilla()).toString();
+                return new StringBuilder().append(falta.getPlanilla()).toString();
             }
         };
     }
@@ -61,7 +66,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Planilla, String> ApplicationConversionServiceFactoryBean.getPlanillaToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<com.reneseses.empaques.domain.Planilla, java.lang.String>() {
             public String convert(Planilla planilla) {
-                return new StringBuilder().append(planilla.getFecha()).toString();
+                return new StringBuilder().append(planilla.getFecha()).append(' ').append(planilla.getSupermercado()).toString();
             }
         };
     }
@@ -85,7 +90,7 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
     public Converter<Solicitud, String> ApplicationConversionServiceFactoryBean.getSolicitudToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<com.reneseses.empaques.domain.Solicitud, java.lang.String>() {
             public String convert(Solicitud solicitud) {
-                return new StringBuilder().append(solicitud.getFecha()).append(' ').append(solicitud.getUsuario()).append(' ').append(solicitud.getTurnos()).toString();
+                return new StringBuilder().append(solicitud.getFecha()).append(' ').append(solicitud.getTurnos()).toString();
             }
         };
     }
@@ -106,43 +111,36 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         };
     }
     
-    public Converter<Usuario, String> ApplicationConversionServiceFactoryBean.getUsuarioToStringConverter() {
-        return new org.springframework.core.convert.converter.Converter<com.reneseses.empaques.domain.Usuario, java.lang.String>() {
-            public String convert(Usuario usuario) {
-                return new StringBuilder().append(usuario.getPassword()).append(' ').append(usuario.getNombre()).append(' ').append(usuario.getRut()).append(' ').append(usuario.getNumero()).toString();
+    public Converter<Supermercado, String> ApplicationConversionServiceFactoryBean.getSupermercadoToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<com.reneseses.empaques.domain.Supermercado, java.lang.String>() {
+            public String convert(Supermercado supermercado) {
+                return new StringBuilder().append(supermercado.getNombre()).append(' ').append(supermercado.getDireccion()).append(' ').append(supermercado.getTelefono()).append(' ').append(supermercado.getMaxTurnosTotal()).toString();
             }
         };
     }
     
-    public Converter<ObjectId, Usuario> ApplicationConversionServiceFactoryBean.getIdToUsuarioConverter() {
-        return new org.springframework.core.convert.converter.Converter<org.bson.types.ObjectId, com.reneseses.empaques.domain.Usuario>() {
-            public com.reneseses.empaques.domain.Usuario convert(org.bson.types.ObjectId id) {
+    public Converter<ObjectId, Supermercado> ApplicationConversionServiceFactoryBean.getIdToSupermercadoConverter() {
+        return new org.springframework.core.convert.converter.Converter<org.bson.types.ObjectId, com.reneseses.empaques.domain.Supermercado>() {
+            public com.reneseses.empaques.domain.Supermercado convert(org.bson.types.ObjectId id) {
+                return supermercadoService.findSupermercado(id);
+            }
+        };
+    }
+    
+    public Converter<String, Supermercado> ApplicationConversionServiceFactoryBean.getStringToSupermercadoConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, com.reneseses.empaques.domain.Supermercado>() {
+            public com.reneseses.empaques.domain.Supermercado convert(String id) {
+                return getObject().convert(getObject().convert(id, ObjectId.class), Supermercado.class);
+            }
+        };
+    }
+    
+    public Converter<UsuarioId, Usuario> ApplicationConversionServiceFactoryBean.getIdToUsuarioConverter() {
+        return new org.springframework.core.convert.converter.Converter<com.reneseses.empaques.domain.UsuarioId, com.reneseses.empaques.domain.Usuario>() {
+            public com.reneseses.empaques.domain.Usuario convert(com.reneseses.empaques.domain.UsuarioId id) {
                 return usuarioService.findUsuario(id);
             }
         };
-    }
-    
-    public Converter<String, Usuario> ApplicationConversionServiceFactoryBean.getStringToUsuarioConverter() {
-        return new org.springframework.core.convert.converter.Converter<java.lang.String, com.reneseses.empaques.domain.Usuario>() {
-            public com.reneseses.empaques.domain.Usuario convert(String id) {
-                return getObject().convert(getObject().convert(id, ObjectId.class), Usuario.class);
-            }
-        };
-    }
-    
-    public void ApplicationConversionServiceFactoryBean.installLabelConverters(FormatterRegistry registry) {
-        registry.addConverter(getFaltaToStringConverter());
-        registry.addConverter(getIdToFaltaConverter());
-        registry.addConverter(getStringToFaltaConverter());
-        registry.addConverter(getPlanillaToStringConverter());
-        registry.addConverter(getIdToPlanillaConverter());
-        registry.addConverter(getStringToPlanillaConverter());
-        registry.addConverter(getSolicitudToStringConverter());
-        registry.addConverter(getIdToSolicitudConverter());
-        registry.addConverter(getStringToSolicitudConverter());
-        registry.addConverter(getUsuarioToStringConverter());
-        registry.addConverter(getIdToUsuarioConverter());
-        registry.addConverter(getStringToUsuarioConverter());
     }
     
     public void ApplicationConversionServiceFactoryBean.afterPropertiesSet() {

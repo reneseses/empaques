@@ -58,3 +58,14 @@ service type --entity ~.domain.AppProperties --interface ~.domain.service.AppPro
 // Spring Roo 1.3.1.RELEASE [rev f4f5256] log closed at 2015-03-24 10:54:12
 // Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-03-24 10:54:28
 // Spring Roo 1.3.1.RELEASE [rev f4f5256] log closed at 2015-03-24 10:55:33
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-03-26 07:04:31
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-03-28 09:46:41
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log closed at 2015-03-28 09:50:03
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-03-28 12:05:46
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-03-28 12:12:56
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-03-28 12:59:14
+web mvc scaffold --class ~.web.admin.SupermercadoController --backingType ~.domain.Supermercado --path "/admin/supermercado"
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-03-28 13:48:09
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-03-28 22:34:33
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-04-01 09:36:18
+// Spring Roo 1.3.1.RELEASE [rev f4f5256] log opened at 2015-04-01 21:02:06

@@ -19,6 +19,7 @@
             <table:column id="c_com_reneseses_empaques_domain_Planilla_generada" property="generada" z="CxdsLqmEFCT6lLfom1Pyo76DPfk="/>
             <table:column id="c_com_reneseses_empaques_domain_Planilla_repechaje" property="repechaje" z="Z2czh6lGhTInhC+ZE8mFaTM9N+Q="/>
             <table:column id="c_com_reneseses_empaques_domain_Planilla_bloques" property="bloques" render="false" z="user-managed"/>
+            <table:column id="c_com_reneseses_empaques_domain_Planilla_supermercado" property="supermercado" z="VoTfPWE2hbF//42UOYgLUGzupzY="/>
         </table:table>
     </page:list>
 </div>

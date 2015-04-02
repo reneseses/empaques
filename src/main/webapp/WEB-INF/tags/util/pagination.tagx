@@ -13,11 +13,11 @@
 		</c:if>
 
 		<c:if test="${empty size || size lt 1}">
-			<c:set var="size" value="10" />
+			<c:set var="size" value="15" />
 		</c:if>
 
 
-		<div class="hidden-xs">
+		<div class="hidden-xs row">
 			<div class="col-sm-6">
 				<jsp:doBody />
 				<ul class="pagination pagination-sm no-margin">
@@ -103,7 +103,7 @@
 		</div>
 
 
-		<div class="hidden-sm hidden-md hidden-lg">
+		<div class="hidden-sm hidden-md hidden-lg row">
 			<div class="col-xs-12 text-center" style="margin-bottom: 5px">
 				<ul class="pagination pagination-sm no-margin" style="margin-left: 10px !important">
 					<c:if test="${page ne 1}">

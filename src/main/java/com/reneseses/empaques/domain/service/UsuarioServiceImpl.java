@@ -1,8 +1,6 @@
 package com.reneseses.empaques.domain.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 
 
 public class UsuarioServiceImpl implements UsuarioService {
@@ -22,12 +21,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public Usuario findUsuarioByNumero(Integer numero){
-		return usuarioRepository.findUsuarioByNumero(numero);
-	}
-	
-	public List<Usuario> findUsuariosByNumeros(List<Integer> numeros){
-		Query query= new Query(Criteria.where("numero").in(numeros));
+	public List<Usuario> findUsuariosByIds(List<UsuarioId> ids){
+		Query query= new Query(Criteria.where("id").in(ids));
 		
 		return mongoTemplate.find(query, Usuario.class);
 	}
@@ -37,14 +32,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	public List<Usuario> findAllOrderByNumero(){
-		Sort order= new Sort(Sort.Direction.ASC, "numero");
-		Iterable<Usuario> it= usuarioRepository.findAll(order);
-		Iterator<Usuario> itr= it.iterator();
-		List<Usuario> list= new ArrayList<Usuario>();
-		while(itr.hasNext()){
-			list.add(itr.next());
-		}
-		return list;
+		Sort order= new Sort(Sort.Direction.ASC, "id");
+		
+		Query query= new Query();
+		query.with(order);
+		
+		return mongoTemplate.find(query, Usuario.class);
 	}
 	
 	public List<Usuario> findUsuarioEntriesOrderByNumero(int firstResult, int maxResults){
@@ -55,8 +48,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public List<Usuario> lightFindAllUsuarios(){
 		Query query= new Query();
 		
-		query.with(new Sort(Direction.ASC, "numero"));
-		query.fields().include("nombre").include("numero");
+		query.with(new Sort(Direction.ASC, "id"));
+		query.fields().include("nombre").include("id");
 		
 		return mongoTemplate.find(query, Usuario.class);
 	}
@@ -65,7 +58,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 		List<Usuario> usuarios= usuarioRepository.findAll();
 		Map<Integer, Usuario> map= new HashMap<Integer, Usuario>();
 		for(Usuario usuario: usuarios)
-			map.put(usuario.getNumero(), usuario);
+			map.put(usuario.getId().getNumero(), usuario);
 		return map;
 	}
 }

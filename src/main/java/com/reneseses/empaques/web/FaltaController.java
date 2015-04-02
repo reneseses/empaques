@@ -9,8 +9,8 @@ import com.mongodb.BasicDBObject;
 import com.reneseses.empaques.domain.Falta;
 import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.domain.service.FaltaServiceImpl;
-import com.reneseses.empaques.domain.service.PlanillaService;
 import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
 import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
 
@@ -25,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.roo.addon.web.mvc.controller.scaffold.RooWebScaffold;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.memory.UserMap;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -73,9 +72,7 @@ public class FaltaController {
 		
 		List<Planilla> planillas= planillaServiceImpl.findAllPlanillasOrderByFechaDesc();
 		List<Usuario> usuarios= usuarioServiceImpl.lightFindAllUsuarios();
-		
-		System.out.println(usuarios);
-		
+
 		uiModel.addAttribute("planillas", planillas);
 		uiModel.addAttribute("usuarios", usuarios);
         populateEditForm(uiModel, new Falta());
@@ -106,19 +103,19 @@ public class FaltaController {
 		try{
 			List<Falta> faltas= faltaServiceImpl.findFaltaByPlanilla(planilla);
 			
-			List<Integer> numeros= new ArrayList<Integer>();
+			List<UsuarioId> ids= new ArrayList<UsuarioId>();
 			
 			for(Falta falta: faltas){
-				if(!numeros.contains(falta.getUsuario()))
-					numeros.add(falta.getUsuario());
+				if(!ids.contains(falta.getUsuario()))
+					ids.add(falta.getUsuario());
 			}
 			
-			List<Usuario> usuarios= usuarioServiceImpl.findUsuariosByNumeros(numeros);
+			List<Usuario> usuarios= usuarioServiceImpl.findUsuariosByIds(ids);
 			
 			HashMap<Integer, Usuario> usuarioMap= new HashMap<Integer, Usuario>();
 			
 			for(Usuario usuario: usuarios)
-				usuarioMap.put(usuario.getNumero(), usuario);
+				usuarioMap.put(usuario.getId().getNumero(), usuario);
 			
 			for(Falta falta: faltas){
 				BasicDBObject jo= new BasicDBObject();

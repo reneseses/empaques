@@ -4,15 +4,15 @@
 package com.reneseses.empaques.domain.service;
 
 import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.domain.service.UsuarioService;
 import java.util.List;
-import org.bson.types.ObjectId;
 
 privileged aspect UsuarioService_Roo_Service {
     
     public abstract long UsuarioService.countAllUsuarios();    
     public abstract void UsuarioService.deleteUsuario(Usuario usuario);    
-    public abstract Usuario UsuarioService.findUsuario(ObjectId id);    
+    public abstract Usuario UsuarioService.findUsuario(UsuarioId id);    
     public abstract List<Usuario> UsuarioService.findAllUsuarios();    
     public abstract List<Usuario> UsuarioService.findUsuarioEntries(int firstResult, int maxResults);    
     public abstract void UsuarioService.saveUsuario(Usuario usuario);    

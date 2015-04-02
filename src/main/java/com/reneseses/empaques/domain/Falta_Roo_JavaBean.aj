@@ -4,16 +4,17 @@
 package com.reneseses.empaques.domain;
 
 import com.reneseses.empaques.domain.Falta;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.enums.TipoFaltaEnum;
 import org.bson.types.ObjectId;
 
 privileged aspect Falta_Roo_JavaBean {
     
-    public Integer Falta.getUsuario() {
+    public UsuarioId Falta.getUsuario() {
         return this.usuario;
     }
     
-    public void Falta.setUsuario(Integer usuario) {
+    public void Falta.setUsuario(UsuarioId usuario) {
         this.usuario = usuario;
     }
     

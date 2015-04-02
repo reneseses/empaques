@@ -3,13 +3,13 @@
 
 package com.reneseses.empaques.domain;
 
-import com.reneseses.empaques.domain.AppProperties;
+import com.reneseses.empaques.domain.Supermercado;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-privileged aspect AppProperties_Roo_ToString {
+privileged aspect Supermercado_Roo_ToString {
     
-    public String AppProperties.toString() {
+    public String Supermercado.toString() {
         return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
     

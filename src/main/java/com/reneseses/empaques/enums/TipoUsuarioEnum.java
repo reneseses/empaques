@@ -2,7 +2,12 @@ package com.reneseses.empaques.enums;
 
 
 public enum TipoUsuarioEnum {
-	EMPAQUE("Empaque"), ENCARGADO("Encargado"), SUBENCARGADOLOCAL("Subencargado de Local"), ENCARGADOLOCAL("Encargado de Local"), ADMIN("Administrador");
+	EMPAQUE("Empaque"),
+	ENCARGADO("Encargado"),
+	SUBENCARGADOLOCAL("Subencargado de Local"),
+	ENCARGADOLOCAL("Encargado de Local"),
+	LOCALADMIN("Supermercado Admin"),
+	ADMIN("Administrador");
 	
 	private String tipo;
 	

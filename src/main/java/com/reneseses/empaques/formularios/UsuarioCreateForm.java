@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 import com.reneseses.empaques.enums.TipoUsuarioEnum;
+
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -17,20 +18,20 @@ import org.springframework.roo.addon.javabean.RooJavaBean;
 @RooJavaBean
 public class UsuarioCreateForm {
 
-    private Long id;
+	@NotNull
+    private Integer numero;
 
     @NotNull
     @Pattern(regexp = "[a-zA-Z\\'\\-]+[ [a-zA-Z\\'\\-]+]*")
     private String nombre;
+    
+    private String supermercado;
 
     @NotNull
     @Pattern(regexp = "[0-9]{1,8}-[K|k|0-9]")
     private String rut;
 
     private TipoUsuarioEnum tipo = TipoUsuarioEnum.EMPAQUE;
-
-    @NotNull
-    private Integer numero;
 
     private String celular;
 

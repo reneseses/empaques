@@ -22,28 +22,11 @@
                 </button>
                 <ul class="hidden-lg hidden-md hidden-sm list-inline list-unstyled pull-right no-margin" style="margin-right: 10px !important">
                     <li class="dropdown no-padding">
-                        <button class="btn-header text-center dropdown-toggle" data-toggle="dropdown" title="Opciones">
+                        <button class="btn-header text-center" title="Mi cuenta">
                             <i class="fa fa-user">
                                 <!---->
                             </i>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <sec:authentication property="principal.id" var="id"/>
-                                <spring:url value="/member/usuarios/${id}" var="mi_cuenta"/>
-                                <a href="${mi_cuenta }">Mi Cuenta</a>
-                            </li>
-                            <sec:authorize ifAnyGranted="EMPAQUE,ENCARGADO">
-                                <li>
-                                    <spring:url value="/member/usuarios/turnos" var="mis_turnos"/>
-                                    <a href="${mis_turnos }">Mis Turnos</a>
-                                </li>
-                            </sec:authorize>
-                            <li>
-                                <spring:url value="/member/usuarios/password" var="password"/>
-                                <a href="${password}">Cambiar Password</a>
-                            </li>
-                        </ul>
                     </li>
                     <li class="no-padding">
                         <spring:url value="/resources/j_spring_security_logout" var="logout"/>
@@ -106,31 +89,20 @@
                         <menu:item id="i_repechaje_new" messageCode="global_menu_new" url="/member/repechaje?form" z="m8AWU4bPTeVk36QJLt96z5SeTM8="/>
                         <menu:item id="i_repechaje_list" messageCode="global_menu_list" url="/member/repechaje?page=1&amp;size=${empty param.size ? 25 : param.size}" z="uJjTIDmy/Nps9ROW4IudZIFENs8="/>
                     </menu:category>
+                    <menu:category id="c_supermercado" z="3VrpuIrkkT2fzNucZyu+bkGU2Lw=">
+                        <menu:item id="i_supermercado_new" messageCode="global_menu_new" url="/admin/supermercado?form" z="EWPzCameGB4Wjtz8LtFD1f0o5jI="/>
+                        <menu:item id="i_supermercado_list" messageCode="global_menu_list" url="/admin/supermercado?page=1&amp;size=${empty param.size ? 10 : param.size}" z="20r0LOD9BA+anDU/W0PW7ZPzqxI="/>
+                    </menu:category>
                 </menu:menu>
                 <ul class="nav navbar-nav navbar-right hidden-xs">
                     <li class="dropdown">
-                        <a class="btn-header dropdown-toggle text-center" data-toggle="dropdown">
+                        <sec:authentication property="principal.id" var="id"/>
+                        <spring:url value="/member/usuarios/${id}" var="mi_cuenta"/>
+                        <a class="btn-header text-center" href="${mi_cuenta}">
                             <i class="fa fa-user">
                                 <!---->
                             </i>
                         </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li>
-                                <sec:authentication property="principal.id" var="id"/>
-                                <spring:url value="/member/usuarios/${id}" var="mi_cuenta"/>
-                                <a href="${mi_cuenta }">Mi Cuenta</a>
-                            </li>
-                            <sec:authorize ifAnyGranted="EMPAQUE,ENCARGADO">
-                                <li>
-                                    <spring:url value="/member/usuarios/turnos" var="mis_turnos"/>
-                                    <a href="${mis_turnos }">Mis Turnos</a>
-                                </li>
-                            </sec:authorize>
-                            <li>
-                                <spring:url value="/member/usuarios/password" var="password"/>
-                                <a href="${password}">Cambiar Password</a>
-                            </li>
-                        </ul>
                     </li>
                     <spring:url value="/resources/j_spring_security_logout" var="logout"/>
                     <spring:message code="security_logout" var="logout_msg"/>

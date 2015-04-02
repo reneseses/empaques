@@ -63,6 +63,7 @@
         <field:checkbox field="repechaje" id="c_com_reneseses_empaques_domain_Planilla_repechaje" z="MuzzfTtCg21Mh9jpDqe7C/YiT8M="/>
         <field:input field="bloques" id="c_com_reneseses_empaques_domain_Planilla_bloques" z="+y1Tu2coaMbp/YtAmeZZr7drQkk="/>
         <field:input field="id" id="c_com_reneseses_empaques_domain_Planilla_id" required="true" z="f893ksW6u2eScuIR6Ro7W5sEf0k="/>
+        <field:input field="supermercado" id="c_com_reneseses_empaques_domain_Planilla_supermercado" z="s3eVdE+lgHjWL6TaLPXuI9si+O4="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_com_reneseses_empaques_domain_Planilla" render="false" z="user-managed"/>
 </div>

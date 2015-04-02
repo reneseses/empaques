@@ -28,7 +28,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @RooJavaBean
 @RooToString
-@RooMongoEntity(identifierType = ObjectId.class)
+@RooMongoEntity(identifierType = UsuarioId.class)
 @RooSerializable
 public class Usuario implements UserDetails {
 
@@ -51,10 +51,6 @@ public class Usuario implements UserDetails {
 
     @Enumerated
     private RegimenTurnoEnum regimen = RegimenTurnoEnum.R2X1;
-
-    @NotNull
-    @Column(unique = true)
-    private Integer numero;
 
     private String celular;
     

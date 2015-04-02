@@ -4,7 +4,7 @@
 package com.reneseses.empaques.domain;
 
 import com.reneseses.empaques.domain.Usuario;
-import org.bson.types.ObjectId;
+import com.reneseses.empaques.domain.UsuarioId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 
@@ -13,13 +13,13 @@ privileged aspect Usuario_Roo_Mongo_Entity {
     declare @type: Usuario: @Persistent;
     
     @Id
-    private ObjectId Usuario.id;
+    private UsuarioId Usuario.id;
     
-    public ObjectId Usuario.getId() {
+    public UsuarioId Usuario.getId() {
         return this.id;
     }
     
-    public void Usuario.setId(ObjectId id) {
+    public void Usuario.setId(UsuarioId id) {
         this.id = id;
     }
     

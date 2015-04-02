@@ -13,13 +13,14 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import com.reneseses.empaques.domain.Solicitud;
+import com.reneseses.empaques.domain.UsuarioId;
 
 public class SolicitudServiceImpl implements SolicitudService {
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	public List<Solicitud> findSolicitudesByFechaBetweenAndUsuario(Date minFecha, Date maxFecha, Integer usuario){
+	public List<Solicitud> findSolicitudesByFechaBetweenAndUsuario(Date minFecha, Date maxFecha, UsuarioId usuario){
 		return solicitudRepository.findSolicitudesByFechaBetweenAndUsuario(minFecha, maxFecha, usuario);
 	}
     public List<Solicitud> findAllSolicitudesOrderByFecha(){
@@ -38,7 +39,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     	return mongoTemplate.find(q, Solicitud.class);
     }
     
-    public List<Solicitud> findSolicitudesByUsuario(Integer usuario){
+    public List<Solicitud> findSolicitudesByUsuario(UsuarioId usuario){
     	return solicitudRepository.findSolicitudesByUsuario(usuario);
     }
 

@@ -23,12 +23,12 @@
 
 		<jsp:doBody />
 
-		<c:if test="${empty typeIdFieldName}">
-			<c:set var="typeIdFieldName" value="id" />
-		</c:if>
-
 		<c:if test="${empty update}">
 			<c:set var="update" value="true" />
+		</c:if>
+
+		<c:if test="${empty typeIdFieldName}">
+			<c:set var="typeIdFieldName" value="id" />
 		</c:if>
 
 		<c:if test="${empty delete}">
@@ -103,6 +103,7 @@
 							<c:out value="${colTxt}" />
 						</td>
 					</c:forTokens>
+
 					<c:set var="itemId"><spring:eval expression="item[typeIdFieldName]"/></c:set>
 					<c:if test="${planilla}">
 						<td class="utilbox">

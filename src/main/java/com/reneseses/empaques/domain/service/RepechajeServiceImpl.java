@@ -8,12 +8,12 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 
 import com.reneseses.empaques.domain.Repechaje;
-import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 
 
 public class RepechajeServiceImpl implements RepechajeService {
 	
-	public List<Repechaje> findRepechajesByFechaBetweenAndUsuario(Date minFecha, Date maxFecha, Integer usuario) {
+	public List<Repechaje> findRepechajesByFechaBetweenAndUsuario(Date minFecha, Date maxFecha, UsuarioId usuario) {
 		return repechajeRepository.findRepechajesByFechaBetweenAndUsuario(minFecha, maxFecha, usuario);
 	}
     public List<Repechaje> findAllOrderByFecha(){
@@ -28,7 +28,7 @@ public class RepechajeServiceImpl implements RepechajeService {
     public List<Repechaje> findRepechajesByFechaBetween(Date minFecha, Date maxFecha){
     	return repechajeRepository.findRepechajesByFechaBetween(minFecha, maxFecha);
     }
-    public List<Repechaje> findRepechajesByUsuario(Integer usuario) {
+    public List<Repechaje> findRepechajesByUsuario(UsuarioId usuario) {
     	return repechajeRepository.findRepechajesByUsuario(usuario);
     }
 	

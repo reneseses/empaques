@@ -4,10 +4,10 @@
 package com.reneseses.empaques.domain.service;
 
 import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.domain.repository.UsuarioRepository;
 import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
 import java.util.List;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ privileged aspect UsuarioServiceImpl_Roo_Service {
         usuarioRepository.delete(usuario);
     }
     
-    public Usuario UsuarioServiceImpl.findUsuario(ObjectId id) {
+    public Usuario UsuarioServiceImpl.findUsuario(UsuarioId id) {
         return usuarioRepository.findOne(id);
     }
     

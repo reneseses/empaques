@@ -31,12 +31,9 @@
 				</div>
 
 				<c:if test="${not empty param.login_error}">
-					<div class="errors">
-						<div class=" text-center">
-							<span class="text-warning"><spring:message code="security_login_unsuccessful" /></span>
-							<strong class="text-danger"><c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" /></strong>.
-						</div>
-
+					<div class="text-center">
+						<small class="text-warning"><spring:message code="security_login_unsuccessful" /><br/></small>
+						<small><strong class="text-danger"><c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" /></strong></small>.
 					</div>
 				</c:if>
 			</div>

@@ -28,7 +28,7 @@ public class Solicitud {
     @DateTimeFormat(style = "M-")
     private Date fecha;
 
-    private Integer usuario;
+    private UsuarioId usuario;
     
     @Lob
     private BasicDBList turnos;
@@ -46,8 +46,7 @@ public class Solicitud {
     public SolicitudList getSolicitudList(){
     	SolicitudList obj= new SolicitudList();
     	
-    	obj.setId(this.getId());
-    	obj.setNumero(this.usuario);
+    	obj.setUsuario(this.usuario);
     	obj.setFecha(this.fecha);
     	    	
     	String turno="";

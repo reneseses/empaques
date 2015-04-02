@@ -4,14 +4,14 @@
 package com.reneseses.empaques.domain.repository;
 
 import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.domain.repository.UsuarioRepository;
-import org.bson.types.ObjectId;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 privileged aspect UsuarioRepository_Roo_Mongo_Repository {
     
-    declare parents: UsuarioRepository extends PagingAndSortingRepository<Usuario, ObjectId>;
+    declare parents: UsuarioRepository extends PagingAndSortingRepository<Usuario, UsuarioId>;
     
     declare @type: UsuarioRepository: @Repository;
     

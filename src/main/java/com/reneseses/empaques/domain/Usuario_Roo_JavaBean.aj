@@ -47,14 +47,6 @@ privileged aspect Usuario_Roo_JavaBean {
         this.regimen = regimen;
     }
     
-    public Integer Usuario.getNumero() {
-        return this.numero;
-    }
-    
-    public void Usuario.setNumero(Integer numero) {
-        this.numero = numero;
-    }
-    
     public String Usuario.getCelular() {
         return this.celular;
     }

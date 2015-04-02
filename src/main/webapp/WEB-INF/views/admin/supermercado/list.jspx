@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_com_reneseses_empaques_domain_Supermercado" items="${supermercadoes}" z="BnBh+ZS8h2sTvppJ2aTW3GsXUQs=">
+        <table:table data="${supermercadoes}" id="l_com_reneseses_empaques_domain_Supermercado" path="/admin/supermercado" z="hrMOezOim4GngTeN9L6zdecAiKM=">
+            <table:column id="c_com_reneseses_empaques_domain_Supermercado_maxTurnosTotal" property="maxTurnosTotal" z="kQgcuxU0+q5Cq6PBXnyWflsvL5Y="/>
+            <table:column id="c_com_reneseses_empaques_domain_Supermercado_maxRepechaje" property="maxRepechaje" z="N8iso3IrEnbQ3JVTT0E5UKWoNHE="/>
+            <table:column id="c_com_reneseses_empaques_domain_Supermercado_maxTurnos" property="maxTurnos" z="BoGOW9UST8efJW5HD7+SEq6BiZ4="/>
+            <table:column id="c_com_reneseses_empaques_domain_Supermercado_direccion" property="direccion" z="sTR8jDQTnT+m7zOu4WJL0x6xIOI="/>
+            <table:column id="c_com_reneseses_empaques_domain_Supermercado_telefono" property="telefono" z="q38YHX+OmoRiXo4eA5keyxaCiuo="/>
+            <table:column id="c_com_reneseses_empaques_domain_Supermercado_nombre" property="nombre" z="P8hL1Mf1aiz1FCg0RXiKqkLh2mA="/>
+        </table:table>
+    </page:list>
+</div>

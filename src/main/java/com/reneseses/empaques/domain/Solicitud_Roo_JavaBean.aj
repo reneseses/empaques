@@ -5,6 +5,7 @@ package com.reneseses.empaques.domain;
 
 import com.mongodb.BasicDBList;
 import com.reneseses.empaques.domain.Solicitud;
+import com.reneseses.empaques.domain.UsuarioId;
 import java.util.Date;
 
 privileged aspect Solicitud_Roo_JavaBean {
@@ -17,11 +18,11 @@ privileged aspect Solicitud_Roo_JavaBean {
         this.fecha = fecha;
     }
     
-    public Integer Solicitud.getUsuario() {
+    public UsuarioId Solicitud.getUsuario() {
         return this.usuario;
     }
     
-    public void Solicitud.setUsuario(Integer usuario) {
+    public void Solicitud.setUsuario(UsuarioId usuario) {
         this.usuario = usuario;
     }
     

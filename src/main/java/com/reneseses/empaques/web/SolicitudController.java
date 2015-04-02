@@ -71,7 +71,7 @@ public class SolicitudController {
 	        
 	        Usuario usuario = (Usuario) principal;
 	        
-	        solicitud.setUsuario(usuario.getNumero());
+	        solicitud.setUsuario(usuario.getId());
 	        
 	        BasicDBList ja = (BasicDBList) JSON.parse(turnos);
 	        solicitud.setTurnos(ja);
@@ -103,7 +103,7 @@ public class SolicitudController {
 	        	repechaje= repechajeService.findRepechaje(id);
 	
 	        Usuario usuario = (Usuario) principal;
-	        repechaje.setUsuario(usuario.getNumero());
+	        repechaje.setUsuario(usuario.getId());
 	        
 	        BasicDBList ja = (BasicDBList) JSON.parse(turnos);
 	        repechaje.setTurnos(ja);
@@ -154,7 +154,7 @@ public class SolicitudController {
             date2.set(Calendar.HOUR_OF_DAY, 0);
             date2.set(Calendar.MINUTE, 0);
             date2.set(Calendar.SECOND, 0);
-            List<Solicitud> sols = solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal.getNumero());
+            List<Solicitud> sols = solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal.getId());
             if (sols.size() > 0) {
                 uiModel.addAttribute("solicitud", sols.get(0).getTurnos());
                 uiModel.addAttribute("solicitudId", sols.get(0).getId());
@@ -195,12 +195,12 @@ public class SolicitudController {
             date2.set(Calendar.HOUR_OF_DAY, 0);
             date2.set(Calendar.MINUTE, 0);
             date2.set(Calendar.SECOND, 0);
-            List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal.getNumero());
+            List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal.getId());
             if (solicitudes.size() <= 0) {
                 uiModel.addAttribute("error", "Ud no realizó su solicitud de Turnos");
                 return "member/solicitudes/error";
             }
-            List<Repechaje> repechajes = repechajeService.findRepechajesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal.getNumero());
+            List<Repechaje> repechajes = repechajeService.findRepechajesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal.getId());
             if (repechajes.size() > 0) {
                 uiModel.addAttribute("repechaje", repechajes.get(0).getTurnos());
                 uiModel.addAttribute("repechajeId", repechajes.get(0).getId());
@@ -403,7 +403,7 @@ public class SolicitudController {
             BasicDBList ja = new BasicDBList();
             Solicitud solicitud = new Solicitud();
             solicitud.setFecha(new Date());
-            solicitud.setUsuario(empaque.getNumero());
+            solicitud.setUsuario(empaque.getId());
             int j = 0;
             int fin= (int) Math.floor(Math.random() * 3) + 3;
             while (j < fin) {
@@ -442,33 +442,42 @@ public class SolicitudController {
     }
     
     @RequestMapping(value="get")
-    public @ResponseBody String getUsuarioSolicitud(@RequestParam(value = "planilla", required = false) ObjectId planillaId){
+    public @ResponseBody ResponseEntity<String> getUsuarioSolicitud(@RequestParam(value = "planilla", required = false) ObjectId planillaId){
+    	HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/json; charset=utf-8");
+		BasicDBList response= new BasicDBList();
+    	
     	Usuario usuario= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	BasicDBList ja= new BasicDBList();
-    	if(planillaId==null){
-    		List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByUsuario(usuario.getNumero());
-    		for(Solicitud sol: solicitudes)
-    			ja.add(sol.getTurnos());
-    		List<Repechaje> repechajes= repechajeService.findRepechajesByUsuario(usuario.getNumero());
-    		for(Repechaje rep: repechajes)
-    			ja.add(rep.getTurnos());
+    	
+    	try{
+	    	if(planillaId==null){
+	    		List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByUsuario(usuario.getId());
+	    		for(Solicitud sol: solicitudes)
+	    			response.add(sol.getTurnos());
+	    		List<Repechaje> repechajes= repechajeService.findRepechajesByUsuario(usuario.getId());
+	    		for(Repechaje rep: repechajes)
+	    			response.add(rep.getTurnos());
+	    	}
+	    	else{
+	    		Planilla planilla= planillaServiceImpl.findPlanilla(planillaId);
+	    		Calendar date= Calendar.getInstance();
+	    		date.setTime(planilla.getFecha());
+	    		Calendar date1 = (Calendar) date.clone();
+	    		Calendar date2 = (Calendar) date.clone();
+	    		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) - 8);
+	    		date2.set(Calendar.DAY_OF_YEAR, date2.get(Calendar.DAY_OF_YEAR) - 1);
+	    		List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(date1.getTime(), date2.getTime(), usuario.getId());
+	    		for(Solicitud sol: solicitudes)
+	    			response.add(sol.getTurnos());
+	    		List<Repechaje> repechajes= repechajeService.findRepechajesByFechaBetweenAndUsuario(date1.getTime(), date2.getTime(), usuario.getId());
+	    		for(Repechaje rep: repechajes)
+	    			response.add(rep.getTurnos());
+	    	}
+	    	return new ResponseEntity<String>(response.toString(), headers, HttpStatus.OK);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		return new ResponseEntity<String>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
     	}
-    	else{
-    		Planilla planilla= planillaServiceImpl.findPlanilla(planillaId);
-    		Calendar date= Calendar.getInstance();
-    		date.setTime(planilla.getFecha());
-    		Calendar date1 = (Calendar) date.clone();
-    		Calendar date2 = (Calendar) date.clone();
-    		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) - 8);
-    		date2.set(Calendar.DAY_OF_YEAR, date2.get(Calendar.DAY_OF_YEAR) - 1);
-    		List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(date1.getTime(), date2.getTime(), usuario.getNumero());
-    		for(Solicitud sol: solicitudes)
-    			ja.add(sol.getTurnos());
-    		List<Repechaje> repechajes= repechajeService.findRepechajesByFechaBetweenAndUsuario(date1.getTime(), date2.getTime(), usuario.getNumero());
-    		for(Repechaje rep: repechajes)
-    			ja.add(rep.getTurnos());
-    	}
-		return ja.toString();
     }
     
 }

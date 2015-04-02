@@ -1,8 +1,10 @@
 package com.reneseses.empaques.domain.repository;
 
 import com.reneseses.empaques.domain.Falta;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.enums.TipoFaltaEnum;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -12,8 +14,8 @@ import org.springframework.roo.addon.layers.repository.mongo.RooMongoRepository;
 public interface FaltaRepository {
 
     List<com.reneseses.empaques.domain.Falta> findAll();
-    List<Falta> findFaltaByUsuario(Integer usuario);
+    List<Falta> findFaltaByUsuario(UsuarioId usuario);
     List<Falta> findFaltaByTipoFalta(TipoFaltaEnum tipo);
     List<Falta> findFaltaByPlanilla(ObjectId planilla);
-    List<Falta> findFaltaByPlanillaAndUsuario(ObjectId planilla, Integer usuario);
+    List<Falta> findFaltaByPlanillaAndUsuario(ObjectId planilla, UsuarioId usuario);
 }

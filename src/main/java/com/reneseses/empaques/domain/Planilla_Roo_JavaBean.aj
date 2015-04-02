@@ -7,6 +7,7 @@ import com.reneseses.empaques.domain.Bloque;
 import com.reneseses.empaques.domain.Planilla;
 import java.util.Date;
 import java.util.List;
+import org.bson.types.ObjectId;
 
 privileged aspect Planilla_Roo_JavaBean {
     
@@ -40,6 +41,14 @@ privileged aspect Planilla_Roo_JavaBean {
     
     public void Planilla.setBloques(List<Bloque> bloques) {
         this.bloques = bloques;
+    }
+    
+    public ObjectId Planilla.getSupermercado() {
+        return this.supermercado;
+    }
+    
+    public void Planilla.setSupermercado(ObjectId supermercado) {
+        this.supermercado = supermercado;
     }
     
 }

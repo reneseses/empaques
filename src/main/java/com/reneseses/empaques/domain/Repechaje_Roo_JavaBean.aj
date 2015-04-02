@@ -5,15 +5,16 @@ package com.reneseses.empaques.domain;
 
 import com.mongodb.BasicDBList;
 import com.reneseses.empaques.domain.Repechaje;
+import com.reneseses.empaques.domain.UsuarioId;
 import java.util.Date;
 
 privileged aspect Repechaje_Roo_JavaBean {
     
-    public Integer Repechaje.getUsuario() {
+    public UsuarioId Repechaje.getUsuario() {
         return this.usuario;
     }
     
-    public void Repechaje.setUsuario(Integer usuario) {
+    public void Repechaje.setUsuario(UsuarioId usuario) {
         this.usuario = usuario;
     }
     

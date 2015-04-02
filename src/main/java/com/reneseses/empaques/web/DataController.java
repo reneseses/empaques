@@ -21,6 +21,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +36,7 @@ import com.mongodb.util.JSON;
 import com.reneseses.empaques.domain.Repechaje;
 import com.reneseses.empaques.domain.Solicitud;
 import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.domain.service.RepechajeServiceImpl;
 import com.reneseses.empaques.domain.service.SolicitudServiceImpl;
 import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
@@ -45,7 +47,6 @@ import com.reneseses.empaques.formularios.ImagenForm;
 @RequestMapping("/member/data")
 @Controller
 public class DataController {
-
 
     @Autowired
     private UsuarioServiceImpl usuarioServiceImpl;
@@ -81,7 +82,7 @@ public class DataController {
         int rownum = 1;
         for(Usuario user: list){
         	row = sheet.createRow(rownum);
-        	cell = row.createCell(0); cell.setCellValue(Integer.valueOf(user.getNumero()));
+        	cell = row.createCell(0); cell.setCellValue(user.getId().getNumero());
             cell = row.createCell(1); cell.setCellValue(user.getNombre());
             cell = row.createCell(2); cell.setCellValue(user.getRut());
             cell = row.createCell(3); cell.setCellValue(user.getPassword());
@@ -115,7 +116,7 @@ public class DataController {
             if(sol.getFecha() != null){
             	cell = row.createCell(0); cell.setCellValue(sol.getFecha());
             }
-            cell = row.createCell(1); cell.setCellValue(Integer.valueOf(sol.getUsuario()));
+            cell = row.createCell(1); cell.setCellValue(sol.getUsuario().getNumero());
             cell = row.createCell(2); cell.setCellValue(sol.getTurnos().toString());
             rownum++;
         }
@@ -133,7 +134,7 @@ public class DataController {
             if(rep.getFecha() != null){
             	cell = row.createCell(0); cell.setCellValue(rep.getFecha());
             }
-            cell = row.createCell(1); cell.setCellValue(Integer.valueOf(rep.getUsuario()));
+            cell = row.createCell(1); cell.setCellValue(rep.getUsuario().getNumero());
             cell = row.createCell(2); cell.setCellValue(rep.getTurnos().toString());
             rownum++;
         }
@@ -186,6 +187,8 @@ public class DataController {
     
     @RequestMapping(value="/upload", method = RequestMethod.POST)
     public String xlsUpload(ImagenForm data, BindingResult bindingResult, @RequestParam("content") MultipartFile content, Model uiModel) {
+    	Usuario principal= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	
         Usuario usuario;
         Cell cell;
     	try {
@@ -208,7 +211,13 @@ public class DataController {
                             doc.put(String.valueOf(j), "");
                     }
                 } else break;
-                usuario.setNumero(doc.getInt("0"));
+                
+                UsuarioId id= new UsuarioId();
+                
+                id.setNumero(doc.getInt("0"));
+                id.setSupermercado(principal.getId().getSupermercado());
+                
+                usuario.setId(id);
                 usuario.setNombre(doc.getString("1"));
                 usuario.setRut(doc.getString("2"));
                 usuario.setPassword(doc.getString("3"));
@@ -258,12 +267,17 @@ public class DataController {
                     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy kk:mm:ss");
                     try {
                         sol.setFecha(formatter.parse(doc.getString("0")));
-                        System.out.println(sol.getFecha());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
-                sol.setUsuario(doc.getInt("1"));
+                
+                UsuarioId id= new UsuarioId();
+                
+                id.setNumero(doc.getInt("1"));
+                id.setSupermercado(principal.getId().getSupermercado());
+                
+                sol.setUsuario(id);
                 BasicDBList ja= (BasicDBList) JSON.parse(doc.getString("2"));
                 sol.setTurnos(ja);
                 solicitudServiceImpl.saveSolicitud(sol);
@@ -292,7 +306,13 @@ public class DataController {
                         e.printStackTrace();
                     }
                 }
-                rep.setUsuario(doc.getInt("1"));
+                
+                UsuarioId id= new UsuarioId();
+                
+                id.setNumero(doc.getInt("1"));
+                id.setSupermercado(principal.getId().getSupermercado());
+                
+                rep.setUsuario(id);
                 
                 BasicDBList ja= (BasicDBList) JSON.parse(doc.getString("2"));
                 

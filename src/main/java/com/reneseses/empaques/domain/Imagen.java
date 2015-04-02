@@ -38,7 +38,7 @@ public class Imagen {
 
     private Long size;
 
-    private ObjectId usuario;
+    private UsuarioId usuario;
     
     public void generateThumb(){
     	ByteArrayOutputStream baos = new ByteArrayOutputStream();

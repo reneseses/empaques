@@ -5,12 +5,13 @@ import java.util.List;
 import org.bson.types.ObjectId;
 
 import com.reneseses.empaques.domain.Falta;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.enums.TipoFaltaEnum;
 
 
 public class FaltaServiceImpl implements FaltaService {
 	
-    public List<Falta> findFaltaByUsuario(Integer usuario){
+    public List<Falta> findFaltaByUsuario(UsuarioId usuario){
     	return faltaRepository.findFaltaByUsuario(usuario);
     }
     
@@ -22,11 +23,11 @@ public class FaltaServiceImpl implements FaltaService {
     	return faltaRepository.findFaltaByPlanilla(planilla);
     }
     
-    public List<Falta> findFaltaByPlanillaAndUsuario(ObjectId planilla, Integer usuario){
+    public List<Falta> findFaltaByPlanillaAndUsuario(ObjectId planilla, UsuarioId usuario){
     	return faltaRepository.findFaltaByPlanillaAndUsuario(planilla, usuario);
     }
     
-    public int getCantidadTurnos(ObjectId planilla, Integer usuario){
+    public int getCantidadTurnos(ObjectId planilla, UsuarioId usuario){
     	List<Falta> faltas= faltaRepository.findFaltaByPlanillaAndUsuario(planilla, usuario);
     	int contGraves= 0;
     	int contLeves=0;
@@ -59,7 +60,7 @@ public class FaltaServiceImpl implements FaltaService {
     	return 3;
     }
     
-    public int getCantidadTurnosRepechaje(ObjectId planilla, Integer usuario){
+    public int getCantidadTurnosRepechaje(ObjectId planilla, UsuarioId usuario){
     	List<Falta> faltas= faltaRepository.findFaltaByPlanillaAndUsuario(planilla, usuario);
     	int contLeves=0;
     	if(faltas.size() == 0)

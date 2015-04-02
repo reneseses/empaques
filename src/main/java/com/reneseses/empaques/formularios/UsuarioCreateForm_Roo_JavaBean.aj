@@ -10,12 +10,12 @@ import java.util.Date;
 
 privileged aspect UsuarioCreateForm_Roo_JavaBean {
     
-    public Long UsuarioCreateForm.getId() {
-        return this.id;
+    public Integer UsuarioCreateForm.getNumero() {
+        return this.numero;
     }
     
-    public void UsuarioCreateForm.setId(Long id) {
-        this.id = id;
+    public void UsuarioCreateForm.setNumero(Integer numero) {
+        this.numero = numero;
     }
     
     public String UsuarioCreateForm.getNombre() {
@@ -24,6 +24,14 @@ privileged aspect UsuarioCreateForm_Roo_JavaBean {
     
     public void UsuarioCreateForm.setNombre(String nombre) {
         this.nombre = nombre;
+    }
+    
+    public String UsuarioCreateForm.getSupermercado() {
+        return this.supermercado;
+    }
+    
+    public void UsuarioCreateForm.setSupermercado(String supermercado) {
+        this.supermercado = supermercado;
     }
     
     public String UsuarioCreateForm.getRut() {
@@ -40,14 +48,6 @@ privileged aspect UsuarioCreateForm_Roo_JavaBean {
     
     public void UsuarioCreateForm.setTipo(TipoUsuarioEnum tipo) {
         this.tipo = tipo;
-    }
-    
-    public Integer UsuarioCreateForm.getNumero() {
-        return this.numero;
-    }
-    
-    public void UsuarioCreateForm.setNumero(Integer numero) {
-        this.numero = numero;
     }
     
     public String UsuarioCreateForm.getCelular() {

@@ -23,7 +23,7 @@ import com.reneseses.empaques.formularios.SolicitudList;
 @RooMongoEntity(identifierType = ObjectId.class)
 public class Repechaje {
 
-	private Integer usuario;
+	private UsuarioId usuario;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(style = "M-")
@@ -35,7 +35,7 @@ public class Repechaje {
     	SolicitudList obj= new SolicitudList();
     	
     	obj.setId(this.getId());
-    	obj.setNumero(this.usuario);
+    	obj.setUsuario(this.usuario);
     	obj.setFecha(this.fecha);
 
     	String turno="";

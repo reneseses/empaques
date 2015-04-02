@@ -1,43 +1,52 @@
 $(function(){
-	var dias = ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"];
-	var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+	var dias	= ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
+		meses	= ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+		bloques	= {},
+		days	= {};
 
-	for(var i=0; i < planillas.length; i++){
-		var date = new Date(planillas[i].fecha);
-		if(planillas[i].id == id){
-			$("#planillas").append($("<option>").attr("selected", "selected").val(planillas[i].id).text(date.getDate() + " de " + meses[date.getMonth()] + ", " + date.getFullYear()));
-			getTurnos(id);
-		}
-		else
-			$("#planillas").append($("<option>").val(planillas[i].id).text(date.getDate() + " de " + meses[date.getMonth()] + ", " + date.getFullYear()));
-	}
-	
 	$("#planillas").change(function(){
 		getTurnos($(this).val());
 	});
-	
+
+	$.get(appContext + "member/usuarios/profile", function(data){
+		var planillas= data.planillas;
+
+		bloques	= data.bloques;
+		days	= data.dias;
+
+		if(planillas.length != 0){
+			for(var i=0; i< planillas.length; i++){
+				var planilla= planillas[i],
+					option	= $("<option>");
+
+				option.val(planilla.id).text(planilla.fecha);
+
+				$("#planillas").append(option);
+			}
+
+			$("#planillas").change();
+		}else{
+			$("#planillas").parent().hide();
+			$(".no-planillas").show();
+		}
+	}).fail(function(e){
+		console.log(e);
+	})
+
 	function getTurnos(id){
 		$("#planillas").prop("disabled", true);
 		$(".info-container").hide();
 		$(".loading-indicator").show();
-		$.ajax({
-			url: appContext + "member/usuarios/getTurnos/" + id,
-			dataType: 'json',
-			success: function(data){
-				ordenar(data);
-				addTurnos(data);
-				$.ajax({
-					url: appContext + "member/solicitudes/get?planilla=" + id,
-					dataType: 'json',
-					success: function(data){
-						addSolicitudes(data);
-						$(".loading-indicator").fadeOut(150, function(){
-							$(".info-container").show();
-							$("#planillas").prop("disabled", false);
-						});
-					}
+		$.get(appContext + "member/usuarios/getTurnos/" + id, function(turnos){
+			ordenar(turnos);
+			addTurnos(turnos);
+			$.get(appContext + "member/solicitudes/get?planilla=" + id, function(solicitudes){
+				addSolicitudes(solicitudes);
+				$(".loading-indicator").fadeOut(150, function(){
+					$(".info-container").show();
+					$("#planillas").prop("disabled", false);
 				});
-			}
+			});
 		});
 	}
 
@@ -60,7 +69,7 @@ $(function(){
 
 	function addTurnos(array){
 		$("#turnos").empty();
-		$("#turnos").append($("<h4>").append("Mis Turnos").css("margin-top", "0"));
+
 		if(array == null){
 			$("<div class='alert alert-danger alert-xs' style='margin-bottom: 20px'>").append("No existe planilla para la fecha solicitada").appendTo("#turnos");
 			return false;
@@ -69,69 +78,121 @@ $(function(){
 			$("<div class='alert alert-info alert-xs' style='margin-bottom: 20px'>").append("Ud no tiene turnos esta semana").appendTo("#turnos");
 			return false;
 		}
-		var table = $("<table class='table table-compact table-hover table-bordered table-striped'>");
-		var head= $("<thead>");
-		head.append($("<tr>").append($("<th>").css("width", "30%").append("Dia")).append($("<th>").css("width", "30%").append("Hora")).append($("<th>").append("Fecha")));
-		var body = $("<tbody>");
+
+		var table	= $("<table class='table table-compact table-hover table-bordered table-striped'>"),
+			head	= $("<thead>"),
+			body	= $("<tbody>");
+
+		head.append($("<tr>")
+				.append($("<th colspan='3'>").addClass('text-center').text("Turnos Asignados")));
+
+		head.append($("<tr>")
+				.append($("<th>").css("width", "30%").text("Dia"))
+				.append($("<th>").css("width", "30%").text("Hora"))
+				.append($("<th>").text("Fecha")));
+		
 		for(var i in array){
-			var turno = array[i];
-			var horas = turno.hora;
-			var minutos = turno.minuto;
+			var turno	= array[i],
+				horas	= turno.hora,
+				minutos	= turno.minuto;
+			
 			if(horas < 10)
 				horas = "0" + horas.toString();
 			if(minutos < 10)
 				minutos = "0" + minutos.toString();
-			body.append($("<tr>").append($("<td>").append(dias[turno.dia - 1])).append($("<td>").append(horas + ":" + minutos)).append($("<td>").append(turno.diaMes + " de " + meses[turno.mes])));
+			
+			body.append($("<tr>")
+					.append($("<td>").text(dias[turno.dia - 1]))
+					.append($("<td>").text(horas + ":" + minutos))
+					.append($("<td>").text(turno.diaMes + " de " + meses[turno.mes])));
 		}
-		table.append(head).append(body);
+
+		table.append(head)
+			.append(body);
+
 		$("#turnos").append(table);
 		return true;
 	}
+
 	function addSolicitudes(array){
 		$("#solicitudes").empty();
 		$("#repechajes").empty();
+		
 		if(array.length == 0){
-			$("<div class='alert alert-danger alert-xs' style='margin-bottom: 20px'>").append("Ud no realizó su solicitud de turnos").appendTo("#solicitud");
+			$("<div class='alert alert-danger alert-xs' style='margin-bottom: 20px'>")
+				.append("Ud no realizó su solicitud de turnos")
+				.appendTo("#solicitud");
+			
 			return false;
 		}
+		
 		$("#solicitudes").empty();
-		$("#solicitudes").append($("<h4>").append("Solicitud").css("margin-top", "0"));
-		var table = $("<table class='table table-compact table-hover table-bordered table-striped'>");
-		var head= $("<thead>");
-		head.append($("<tr>").append($("<th>").append("Dia").css("width", "30%")).append($("<th>").append("Inicio").css("width", "30%")).append($("<th>").append("Fin")));
-		var body = $("<tbody>");
-		for(var i in array[0]){
-			var tr=$("<tr>");
-			var sol = array[0][i];
-			tr.append($("<td>").append(days[sol.dia])).append($("<td>").append(bloques[sol.inicio])).append($("<td>").append(bloques[sol.fin]));
+
+		var table	= $("<table class='table table-compact table-hover table-bordered table-striped'>"),
+			head	= $("<thead>"),
+			body	= $("<tbody>");
+
+		head.append($("<tr>")
+				.append($("<th colspan='3'>").addClass('text-center').text("Solicitudes")));
+
+		head.append($("<tr>")
+				.append($("<th>").text("Dia").css("width", "30%"))
+				.append($("<th>").text("Inicio").css("width", "30%"))
+				.append($("<th>").text("Fin")));
+
+		for(var i=0; i< array[0].length; i++){
+			var tr	= $("<tr>"),
+				sol = array[0][i];
+
+			tr.append($("<td>").text(days[sol.dia]))
+				.append($("<td>").text(bloques[sol.inicio]))
+				.append($("<td>").text(bloques[sol.fin]));
+			
 			body.append(tr);
 		}
-		table.append(head).append(body);
+		table.append(head)
+			.append(body);
+		
 		$("#solicitudes").append(table);
 		
 		if(array.length == 1){
 			$("#repechajes").hide();
 			return
 		}
+		
 		$("#repechajes").empty();
 		$("#repechajes").show();
-		$("#repechajes").append($("<h4>").append("Repechaje").css("margin-top", "0"));
-		var head= $("<thead>");
-		head.append($("<tr>").append($("<th>").append("Dia").css("width", "30%")).append($("<th>").append("Turnos")));
-		var table = $("<table class='table table-compact table-hover table-bordered table-striped'>");
-		var body = $("<tbody>");
-		for(var i in array[1]){
-			var tr=$("<tr>");
-			var sol = array[1][i];
-			tr.append($("<td>").append(days[sol.dia]));
+		
+		table	= $("<table class='table table-compact table-hover table-bordered table-striped'>");
+		head	= $("<thead>");
+		body	= $("<tbody>");
+
+		head.append($("<tr>")
+				.append($("<th colspan='2'>").addClass('text-center').text("Solicitudes de Repechaje")));
+
+		head.append($("<tr>")
+				.append($("<th>").text("Dia").css("width", "30%"))
+				.append($("<th>").text("Turnos")));
+		
+		for(var i=0; i < array[1].length; i++){
+			var tr	=$("<tr>"),
+				sol = array[1][i];
+
+			tr.append($("<td>").text(days[sol.dia]));
+			
 			var str= "";
 			for(var j in sol.inicio){
 				str= str + bloques[sol.inicio[j]]+ ", ";
 			}
-			tr.append($("<td>").append(str.substring(0,str.length - 2)));
+
+			tr.append($("<td>").text(str.substring(0,str.length - 2)));
+			
 			body.append(tr);
 		}
-		table.append(head).append(body);
+
+		table.append(head)
+			.append(body);
+		
 		$("#repechajes").append(table);
 	}
 })

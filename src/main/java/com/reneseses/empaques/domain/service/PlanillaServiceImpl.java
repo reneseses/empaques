@@ -24,6 +24,16 @@ public class PlanillaServiceImpl implements PlanillaService {
 		
     	return mongoTemplate.find(query, Planilla.class);
     }
+	
+	public List<Planilla> findAllPlanillasOrderByFechaDesc(Integer limit){
+		Query query= new Query();
+		
+		query.with(new Sort(Sort.Direction.DESC, "fecha"));
+		query.fields().exclude("bloques");
+		query.limit(limit);
+		
+    	return mongoTemplate.find(query, Planilla.class);
+    }
     
 	public Planilla findPlanillaByFecha(Date fecha1, Date fecha2){
     	List<Planilla> list= planillaRepository.findPlanillasByFechaBetween(fecha1, fecha2);

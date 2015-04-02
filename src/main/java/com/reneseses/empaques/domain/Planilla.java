@@ -42,6 +42,8 @@ public class Planilla {
     @ManyToMany(cascade = CascadeType.ALL)
     private List<Bloque> bloques = new ArrayList<Bloque>();
     
+    private ObjectId supermercado;
+    
     public boolean buscarConflicto(BasicDBObject turno, Integer empaque){
 		int dia = DiasEnum.valueOf(turno.getString("dia")).ordinal();
 		int inicio = BloqueEnum.valueOf(turno.getString("inicio")).ordinal();
@@ -178,7 +180,7 @@ public class Planilla {
 	public HashMap<Integer, Integer> getTurnosUsuario(List<Usuario> usuarios){
 		HashMap<Integer, Integer> map= new HashMap<Integer, Integer>();
 		for(Usuario usuario: usuarios){
-			map.put(usuario.getNumero(), 0);
+			map.put(usuario.getId().getNumero(), 0);
 		}
 		for(Bloque bloque: this.bloques){
 			List<Turno> turnos = bloque.getTurnos();
@@ -191,13 +193,13 @@ public class Planilla {
 		return map;
 	}
 	
-	public static Integer turnos(Usuario usuario,Planilla planilla){
+	public static Integer turnos(Usuario usuario, Planilla planilla){
 		Integer cont=0;
 		if(planilla != null){
 			for(Bloque bloque: planilla.getBloques()){
 				List<Turno> turnos = bloque.getTurnos();
 				for(Turno turno: turnos){
-					if(turno.getUsuario() != null && turno.getUsuario() == usuario.getNumero())
+					if(turno.getUsuario() != null && turno.getUsuario() == usuario.getId().getNumero())
 						cont++;
 				}
 			}

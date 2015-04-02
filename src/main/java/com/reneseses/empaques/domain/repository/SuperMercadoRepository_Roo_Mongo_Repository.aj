@@ -3,16 +3,16 @@
 
 package com.reneseses.empaques.domain.repository;
 
-import com.reneseses.empaques.domain.AppProperties;
-import com.reneseses.empaques.domain.repository.AppPropertiesRepository;
+import com.reneseses.empaques.domain.Supermercado;
+import com.reneseses.empaques.domain.repository.SuperMercadoRepository;
 import org.bson.types.ObjectId;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-privileged aspect AppPropertiesRepository_Roo_Mongo_Repository {
+privileged aspect SuperMercadoRepository_Roo_Mongo_Repository {
     
-    declare parents: AppPropertiesRepository extends PagingAndSortingRepository<AppProperties, ObjectId>;
+    declare parents: SuperMercadoRepository extends PagingAndSortingRepository<Supermercado, ObjectId>;
     
-    declare @type: AppPropertiesRepository: @Repository;
+    declare @type: SuperMercadoRepository: @Repository;
     
 }

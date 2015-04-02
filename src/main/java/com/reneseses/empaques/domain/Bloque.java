@@ -35,7 +35,7 @@ public class Bloque {
     public boolean addTurno(Usuario empaque, int solicitud){
     	for(Turno turno : this.turnos)
 			if(turno.getEstado().equals(EstadoTurnoEnum.LIBRE)){
-				turno.setUsuario(empaque.getNumero());
+				turno.setUsuario(empaque.getId().getNumero());
 				turno.setEstado(EstadoTurnoEnum.OCUPADO);
 				turno.setSolicitud(solicitud);
 				//turno.merge();

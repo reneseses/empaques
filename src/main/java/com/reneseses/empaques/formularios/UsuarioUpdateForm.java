@@ -9,17 +9,22 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
-import org.bson.types.ObjectId;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 import com.reneseses.empaques.enums.TipoUsuarioEnum;
 
 @RooJavaBean
 public class UsuarioUpdateForm {
 	
-	private ObjectId id;
+	private UsuarioId id;
+	
+	@NotNull
+	private Integer numero;
+	
+	private String supermercado;
 
     @NotNull
     @Pattern(regexp = "[a-zA-Z\\'\\-]+[ [a-zA-Z\\'\\-]+]*")
@@ -30,8 +35,6 @@ public class UsuarioUpdateForm {
     private String rut;
 
     private TipoUsuarioEnum tipo = TipoUsuarioEnum.EMPAQUE;
-
-    private Integer numero;
 
     private String celular;
 

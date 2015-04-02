@@ -18,6 +18,7 @@ import com.reneseses.empaques.domain.Repechaje;
 import com.reneseses.empaques.domain.Solicitud;
 import com.reneseses.empaques.domain.Turno;
 import com.reneseses.empaques.domain.Usuario;
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.domain.service.FaltaServiceImpl;
 import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
 import com.reneseses.empaques.domain.service.RepechajeServiceImpl;
@@ -28,6 +29,7 @@ import com.reneseses.empaques.enums.DiasEnum;
 import com.reneseses.empaques.enums.EstadoTurnoEnum;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 
+import org.apache.xmlbeans.impl.xb.xmlconfig.impl.UsertypeconfigImpl;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -73,9 +75,7 @@ public class PlanillaController {
     }
     
     @RequestMapping("ajax/getall")
-    public @ResponseBody ResponseEntity<String> getPlanillas(){
-    	Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	
+    public @ResponseBody ResponseEntity<String> getPlanillas(){   	
     	HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
     	
@@ -197,7 +197,7 @@ public class PlanillaController {
 			ja = sol.getTurnos();
 			Integer maxTurnos= 0;
 			if(!empaque.getRegimen().equals(RegimenTurnoEnum.LIBRE)){
-				maxTurnos= faltaService.getCantidadTurnos(planilla.getId(), empaque.getNumero());
+				maxTurnos= faltaService.getCantidadTurnos(planilla.getId(), empaque.getId());
 				if(empaque.getRegimen().equals(RegimenTurnoEnum.NUEVO))
 					maxTurnos--;
 				
@@ -223,7 +223,7 @@ public class PlanillaController {
 						int index = 7*j + dia.ordinal();
 						Bloque bloque = planilla.getBloques().get(index);
 												
-						if(planilla.buscarConflicto(jo, empaque.getNumero()))
+						if(planilla.buscarConflicto(jo, empaque.getId().getNumero()))
 							continue;
 							
 						if(!bloque.addTurno(empaque, i)){
@@ -323,7 +323,7 @@ public class PlanillaController {
 		for(Repechaje repechaje : repechajes){
 			int repCont = 0;
 			Usuario empaque = usuarios.get(repechaje.getUsuario());
-			Integer maxTurnos= faltaService.getCantidadTurnosRepechaje(planilla.getId(), empaque.getNumero());
+			Integer maxTurnos= faltaService.getCantidadTurnosRepechaje(planilla.getId(), empaque.getId());
 			if(maxTurnos== 0)
 				continue;
 			
@@ -336,7 +336,7 @@ public class PlanillaController {
 					BasicDBObject solicitud= new BasicDBObject();
 					solicitud.put("dia", jo.getString("dia"));
 					solicitud.put("inicio", turnos.get(j));
-					if(planilla.buscarConflicto(solicitud, empaque.getNumero()))
+					if(planilla.buscarConflicto(solicitud, empaque.getId().getNumero()))
 						continue;
 					Bloque bloque = planilla.getBloque(DiasEnum.valueOf(jo.getString("dia")), BloqueEnum.valueOf((String)turnos.get(j)));
 					//System.out.println(bloque);
@@ -390,7 +390,7 @@ public class PlanillaController {
 				job.put("dia", day);
 				job.put("inicio", hour);
 				
-				if(planilla.buscarConflicto(job, empaque.getNumero()))
+				if(planilla.buscarConflicto(job, empaque.getId().getNumero()))
 					continue;
 				
 				for(int k= bloque.getTurnos().size()- 1; k >= 0; k--){
@@ -400,10 +400,15 @@ public class PlanillaController {
 						continue;
 					
 					Integer usuario = turno.getUsuario();
+					
+					UsuarioId id= new UsuarioId();
+					id.setNumero(usuario);
+					id.setSupermercado(planilla.getSupermercado());
+					
 					turno.setUsuario(null);
 					turno.setEstado(EstadoTurnoEnum.LIBRE);
 					
-					List<Solicitud> query= solicitudService.findSolicitudesByFechaBetweenAndUsuario(date1.getTime(), date2.getTime(), usuario);
+					List<Solicitud> query= solicitudService.findSolicitudesByFechaBetweenAndUsuario(date1.getTime(), date2.getTime(), id);
 					Solicitud sol= query.get(0);
 					BasicDBList ja = sol.getTurnos();
 					BasicDBObject solTurno= (BasicDBObject) ja.get(turno.getSolicitud());
@@ -418,7 +423,7 @@ public class PlanillaController {
 						if(planilla.buscarConflicto(solTurno, usuario))
 							continue;
 						
-						if(block.moveTurno(turno, empaque.getNumero(), usuario, solicitud)){
+						if(block.moveTurno(turno, empaque.getId().getNumero(), usuario, solicitud)){
 							cambio= true;
 							asignados++;
 							if(asignados >= maxTurnos)
@@ -536,8 +541,8 @@ public class PlanillaController {
                 Usuario user2= usuarios.get(aux2.getUsuario());
                 if (user1.getPrioridad() < user2.getPrioridad()) continue;
                 if (user1.getPrioridad() == user2.getPrioridad()) {
-                	int turno1= turnosUsuarios.containsKey(user1.getNumero()) &&  turnosUsuarios.get(user1.getNumero()) < 3 ? turnosUsuarios.get(user1.getNumero()):3;
-                	int turno2= turnosUsuarios.containsKey(user2.getNumero()) && turnosUsuarios.get(user2.getNumero()) < 3 ? turnosUsuarios.get(user2.getNumero()):3;
+                	int turno1= turnosUsuarios.containsKey(user1.getId()) &&  turnosUsuarios.get(user1.getId()) < 3 ? turnosUsuarios.get(user1.getId()):3;
+                	int turno2= turnosUsuarios.containsKey(user2.getId()) && turnosUsuarios.get(user2.getId()) < 3 ? turnosUsuarios.get(user2.getId()):3;
                     if (turno1 < turno2) continue;
                     if (turno1 == turno2 && aux1.getFecha().before(aux2.getFecha())) continue;
                 }
@@ -547,7 +552,7 @@ public class PlanillaController {
         }
     }
 	
-	public static void ordenarRepechaje(List<com.reneseses.empaques.domain.Repechaje> repechajes, Map<Integer, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios) {
+	public static void ordenarRepechaje(List<Repechaje> repechajes, Map<Integer, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios) {
 	    for (int i = 0; i < repechajes.size() - 1; i++) {
 	        int menor = i;
 	        for (int j = i + 1; j < repechajes.size(); j++) {
@@ -557,8 +562,8 @@ public class PlanillaController {
                 Usuario user2= usuarios.get(aux.getUsuario());
 	            if (user1.getPrioridad() < user2.getPrioridad()) continue;
 	            if (user1.getPrioridad() == user2.getPrioridad()) {
-	            	int turno1= turnosUsuarios.containsKey(user1.getNumero()) && turnosUsuarios.get(user1.getNumero()) < 3 ? turnosUsuarios.get(user1.getNumero()):3;
-                	int turno2= turnosUsuarios.containsKey(user1.getNumero()) && turnosUsuarios.get(user2.getNumero()) < 3 ? turnosUsuarios.get(user2.getNumero()):3;
+	            	int turno1= turnosUsuarios.containsKey(user1.getId()) && turnosUsuarios.get(user1.getId()) < 3 ? turnosUsuarios.get(user1.getId()):3;
+                	int turno2= turnosUsuarios.containsKey(user1.getId()) && turnosUsuarios.get(user2.getId()) < 3 ? turnosUsuarios.get(user2.getId()):3;
                     if (turno1 < turno2) continue;
 	                if (turno1==turno2 && rep1.getFecha().before(aux.getFecha())) continue;
 	            }
@@ -581,6 +586,8 @@ public class PlanillaController {
 	
 	@RequestMapping("/saveTurnos")
     public @ResponseBody String saveTurnos(@RequestParam("id") ObjectId id, @RequestParam("data") String data) {
+		Usuario principal= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
         BasicDBList ja = (BasicDBList) JSON.parse(data);
         List<Bloque> bloques = planilla.getBloques();
@@ -590,14 +597,18 @@ public class PlanillaController {
         	Integer bloq= (Integer) change.get(0);
         	String day= (String) change.get(1);
         	Integer nume= (Integer) change.get(2);
-        	Integer numero= (Integer) change.get(3);
+        	Integer numero= Integer.valueOf((int)change.get(3));
+        	
+        	UsuarioId usuarioId= new UsuarioId();
+        	usuarioId.setNumero(numero);
+        	usuarioId.setSupermercado(principal.getId().getSupermercado());
         	
             DiasEnum dia = DiasEnum.valueOf(day.toUpperCase());
             Bloque bloque = bloques.get(7 * bloq + dia.ordinal());
-            Usuario usuario= usuarioService.findUsuarioByNumero(numero);
+            Usuario usuario= usuarioService.findUsuario(usuarioId);
             List<Turno> turnos = bloque.getTurnos();
             Turno turno = turnos.get(nume);
-            turno.setUsuario(usuario.getNumero());
+            turno.setUsuario(usuario.getId().getNumero());
         }
         
         planillaServiceImpl.savePlanilla(planilla);
@@ -606,7 +617,13 @@ public class PlanillaController {
 	
     @RequestMapping("getuser")
     public @ResponseBody String getData(@RequestParam("numero") Integer numero, @RequestParam("id") ObjectId id) {
-    	Usuario usuario = usuarioService.findUsuarioByNumero(numero);
+    	Usuario principal= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	
+    	UsuarioId usuarioId= new UsuarioId();
+    	usuarioId.setNumero(numero);
+    	usuarioId.setSupermercado(principal.getId().getSupermercado());
+    	
+    	Usuario usuario = usuarioService.findUsuario(usuarioId);
     	BasicDBObject jo = new BasicDBObject();
         jo.put("nombre", usuario.getNombre());
         jo.put("id", usuario.getId());

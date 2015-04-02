@@ -11,7 +11,8 @@
 	<jsp:directive.attribute name="openPane" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Control if the title pane is opened or closed by default (default: true)"/>
 	<jsp:directive.attribute name="z" type="java.lang.String" required="false" description="Used for checking if element has been modified (to recalculate simply provide empty string value)"/>
 
-	<jsp:directive.attribute name="addLabel" type="java.lang.String" required="false" description=""/>
+	<jsp:directive.attribute name="addLabel" type="java.lang.Boolean" required="false" description=""/>
+	<jsp:directive.attribute name="addPane" type="java.lang.Boolean" required="false" description=""/>
 
 	
 	<c:if test="${empty render or render}">
@@ -31,23 +32,41 @@
 			<c:set var="title_msg" value="${label}" />
 		</c:if>
 
+		<c:if test="${empty addPane}">
+			<c:set var="addPane" value="true"/>
+		</c:if>
+
 		<spring:url value="${path}" var="form_url"/>
-		<form:form action="${form_url}" method="POST" modelAttribute="${modelAttribute}" enctype="${enctype}" id="_title_${id}_id" class="panel panel-default">
-			
-			<header class="panel-heading">
-				<div class="panel-title">${title_msg}</div>
-			</header>
-			<div class="panel-body">
-				<div class="row">
-					<form:errors cssClass="errors" delimiter="&lt;p/&gt;"/>
+
+		<c:if test="${addPane == true}">
+			<form:form action="${form_url}" method="POST" modelAttribute="${modelAttribute}" enctype="${enctype}" id="_title_${id}_id" class="panel panel-default">	
+				<header class="panel-heading">
+					<div class="panel-title">${title_msg}</div>
+				</header>
+				<div class="panel-body">
+					<div class="row">
+						<jsp:doBody />
+					</div>
+				</div>
+				<div class="panel-footer">
+					<spring:message code="button_save" var="save_button" htmlEscape="false" />
+					<button class="btn btn-primary pull-right">${fn:escapeXml(save_button)}</button>
+					<div class="clearfix"></div>
+				</div>
+			</form:form>
+		</c:if>
+
+		<c:if test="${addPane == false}">
+			<form:form action="${form_url}" method="POST" modelAttribute="${modelAttribute}" enctype="${enctype}" id="_title_${id}_id">
+				<div class="panel-body">
 					<jsp:doBody />
 				</div>
-			</div>
-			<div class="panel-footer">
-				<spring:message code="button_save" var="save_button" htmlEscape="false" />
-				<button class="btn btn-primary pull-right">${fn:escapeXml(save_button)}</button>
-				<div class="clearfix"></div>
-			</div>
-		</form:form>
+				<div class="panel-footer">
+					<spring:message code="button_save" var="save_button" htmlEscape="false" />
+					<button class="btn btn-primary pull-right">${fn:escapeXml(save_button)}</button>
+					<div class="clearfix"></div>
+				</div>
+			</form:form>
+		</c:if>
 	</c:if>
 </jsp:root>

@@ -10,8 +10,14 @@ import com.reneseses.empaques.enums.DiasEnum;
 @RooMongoEntity(identifierType=ObjectId.class)
 @RooToString
 @RooJavaBean
-public class AppProperties {
+public class Supermercado {
 
+	private String nombre;
+	
+	private String direccion;
+	
+	private String telefono;
+	
 	private Integer maxTurnosTotal=3;
 	
 	private Integer maxRepechaje=2;
@@ -20,7 +26,7 @@ public class AppProperties {
 	
 	private DiasEnum turnosDia=DiasEnum.DOMINGO;
 	
-	private Integer turnosHora=30;
+	private Integer turnosHora=23;
 	
 	private Integer turnosMinutos=30;
 	

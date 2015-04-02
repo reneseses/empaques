@@ -3,20 +3,36 @@
 
 package com.reneseses.empaques.formularios;
 
+import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 import com.reneseses.empaques.enums.TipoUsuarioEnum;
 import com.reneseses.empaques.formularios.UsuarioUpdateForm;
 import java.util.Date;
-import org.bson.types.ObjectId;
 
 privileged aspect UsuarioUpdateForm_Roo_JavaBean {
     
-    public ObjectId UsuarioUpdateForm.getId() {
+    public UsuarioId UsuarioUpdateForm.getId() {
         return this.id;
     }
     
-    public void UsuarioUpdateForm.setId(ObjectId id) {
+    public void UsuarioUpdateForm.setId(UsuarioId id) {
         this.id = id;
+    }
+    
+    public Integer UsuarioUpdateForm.getNumero() {
+        return this.numero;
+    }
+    
+    public void UsuarioUpdateForm.setNumero(Integer numero) {
+        this.numero = numero;
+    }
+    
+    public String UsuarioUpdateForm.getSupermercado() {
+        return this.supermercado;
+    }
+    
+    public void UsuarioUpdateForm.setSupermercado(String supermercado) {
+        this.supermercado = supermercado;
     }
     
     public String UsuarioUpdateForm.getNombre() {
@@ -41,14 +57,6 @@ privileged aspect UsuarioUpdateForm_Roo_JavaBean {
     
     public void UsuarioUpdateForm.setTipo(TipoUsuarioEnum tipo) {
         this.tipo = tipo;
-    }
-    
-    public Integer UsuarioUpdateForm.getNumero() {
-        return this.numero;
-    }
-    
-    public void UsuarioUpdateForm.setNumero(Integer numero) {
-        this.numero = numero;
     }
     
     public String UsuarioUpdateForm.getCelular() {

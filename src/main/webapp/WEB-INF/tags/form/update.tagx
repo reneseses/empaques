@@ -35,7 +35,6 @@
 			</header>
 			<div class="panel-body">
 				<div class="row">
-					<form:errors cssClass="errors" delimiter="&lt;p/&gt;" />
 					<jsp:doBody />
 					<form:hidden id="_${fn:escapeXml(idField)}_id" path="${fn:escapeXml(idField)}" />
 					<c:if test="${versionField ne 'none'}">

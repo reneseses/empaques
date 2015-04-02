@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_reneseses_empaques_domain_Supermercado" object="${supermercado}" path="/admin/supermercado" z="fRYDWWNvZCn/p8p0XBoHu08iRGk=">
+        <field:display field="maxTurnosTotal" id="s_com_reneseses_empaques_domain_Supermercado_maxTurnosTotal" object="${supermercado}" z="mie79D815Uxj9PervYqaqiUezs0="/>
+        <field:display field="maxRepechaje" id="s_com_reneseses_empaques_domain_Supermercado_maxRepechaje" object="${supermercado}" z="lArnlWsreCYe+p6EJjO4ZDuGwh0="/>
+        <field:display field="maxTurnos" id="s_com_reneseses_empaques_domain_Supermercado_maxTurnos" object="${supermercado}" z="1KxpDYEEm331YJZYWhtk66SJuuM="/>
+        <field:display field="turnosDia" id="s_com_reneseses_empaques_domain_Supermercado_turnosDia" object="${supermercado}" z="ywjYSPu6DqhkUk1mkBFtskc9Bwk="/>
+        <field:display field="turnosHora" id="s_com_reneseses_empaques_domain_Supermercado_turnosHora" object="${supermercado}" z="URKFouy1UIVmc6TxrO1cyuL63tc="/>
+        <field:display field="turnosMinutos" id="s_com_reneseses_empaques_domain_Supermercado_turnosMinutos" object="${supermercado}" z="9Xe//0pgktIR5vzaMw4zC7TfIJU="/>
+        <field:display field="repechajeDia" id="s_com_reneseses_empaques_domain_Supermercado_repechajeDia" object="${supermercado}" z="nuF6Hla3360DcQ5Ktx+2PHJJKKI="/>
+        <field:display field="repechajeHora" id="s_com_reneseses_empaques_domain_Supermercado_repechajeHora" object="${supermercado}" z="wbEt8RBjY0i3K9hIihTarb/X2RI="/>
+        <field:display field="repechajeMinutos" id="s_com_reneseses_empaques_domain_Supermercado_repechajeMinutos" object="${supermercado}" z="+D9/ZuG8JyWi4aZQbiHoRaxugqI="/>
+        <field:display field="delayZonaHoraria" id="s_com_reneseses_empaques_domain_Supermercado_delayZonaHoraria" object="${supermercado}" z="3bDWHqYMPs5kYWXDkP+70N9vTJg="/>
+        <field:display field="direccion" id="s_com_reneseses_empaques_domain_Supermercado_direccion" object="${supermercado}" z="NU+gEopo2kiSLO/wbLttHPSM6zQ="/>
+        <field:display field="telefono" id="s_com_reneseses_empaques_domain_Supermercado_telefono" object="${supermercado}" z="/vCTd9omTMX8f9XISwUvy6ec/RU="/>
+        <field:display field="nombre" id="s_com_reneseses_empaques_domain_Supermercado_nombre" object="${supermercado}" z="AMl4ZkPXTgFuahG7+NIRt1nOINA="/>
+    </page:show>
+</div>

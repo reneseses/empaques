@@ -6,7 +6,7 @@
         <field:datetime dateTimePattern="${solicitud_fecha_date_format}" field="fecha" id="c_com_reneseses_empaques_domain_Solicitud_fecha" z="4RLemNjBS0+L8siB+bS383No4yg="/>
         <field:textarea field="turnos" id="c_com_reneseses_empaques_domain_Solicitud_turnos" z="FNf0UudgkvASiVkPSF9uPaUuGYg="/>
         <field:input field="id" id="c_com_reneseses_empaques_domain_Solicitud_id" required="true" z="1iAm2gWCCGWuZ9ZgHjylWB5VC5U="/>
-        <field:input field="usuario" id="c_com_reneseses_empaques_domain_Solicitud_usuario" validationMessageCode="field_invalid_integer" z="6Mg2BljHFEYWGlGxH+S2GXurbb0="/>
+        <field:input field="usuario" id="c_com_reneseses_empaques_domain_Solicitud_usuario" z="au/nIGk1LxsakSQbMuvzGPScjas="/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_com_reneseses_empaques_domain_Solicitud" render="${not empty dependencies}" z="fE4lflEwcG3vQ2HR8LkCICtWwMU="/>
 </div>
