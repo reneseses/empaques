@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="empaques:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="empaques-2.0-beta.war">
+      <element id="artifact" artifact-name="empaques:war exploded" />
+    </root>
+  </artifact>
+</component>

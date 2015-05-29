@@ -2,9 +2,19 @@ package com.reneseses.empaques.web;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 
+import com.mongodb.BasicDBList;
+import com.reneseses.empaques.domain.*;
+import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
+import com.reneseses.empaques.domain.service.RepechajeServiceImpl;
+import com.reneseses.empaques.domain.service.SolicitudServiceImpl;
+import com.reneseses.empaques.enums.EstadoTurnoEnum;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
-import com.reneseses.empaques.domain.Usuario;
-import com.reneseses.empaques.domain.UsuarioId;
 import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 import com.reneseses.empaques.enums.TipoUsuarioEnum;
@@ -27,6 +35,15 @@ public class DefaultController {
 	
 	@Autowired
 	private UsuarioServiceImpl usuarioServiceImpl;
+
+    @Autowired
+    private SolicitudServiceImpl solicitudService;
+
+    @Autowired
+    private RepechajeServiceImpl repechajeService;
+
+    @Autowired
+    private PlanillaServiceImpl planillaService;
 	
 	@RequestMapping(value="/")
 	public String member(){
@@ -45,14 +62,13 @@ public class DefaultController {
 		
 		BufferedReader br = null;
 		
-		ObjectId supermercado= new ObjectId("5516e1f444ae2102a6915548");
+		ObjectId supermercado= new ObjectId("5567df388b1faec2966c1714");
 		
-		try {
-			 
+		try{
 			String sCurrentLine;
- 
 			br = new BufferedReader(new FileReader(path + "/usuario.json"));
- 
+
+            Calendar aux= Calendar.getInstance();
 			while ((sCurrentLine = br.readLine()) != null) {
 				BasicDBObject jo= (BasicDBObject) JSON.parse(sCurrentLine);
 				
@@ -73,7 +89,11 @@ public class DefaultController {
 				usuario.setUniversidad(jo.getString("universidad"));
 				
 				if(jo.containsField("fechaNacimiento")){
-					usuario.setFechaNacimiento(jo.getDate("fechaNacimiento"));
+                    Date date= jo.getDate("fechaNacimiento");
+                    aux.setTime(date);
+                    aux.add(Calendar.HOUR_OF_DAY, 3);
+
+					usuario.setFechaNacimiento(aux.getTime());
 				}
 				
 				UsuarioId id= new UsuarioId();
@@ -85,8 +105,119 @@ public class DefaultController {
 				
 				usuarioServiceImpl.saveUsuario(usuario);
 			}
-			
 			br.close();
+
+            br = new BufferedReader(new FileReader(path + "/solicitud.json"));
+            while ((sCurrentLine = br.readLine()) != null) {
+                BasicDBObject jo= (BasicDBObject) JSON.parse(sCurrentLine);
+
+                Date date= jo.getDate("fecha");
+                aux.setTime(date);
+                aux.add(Calendar.HOUR_OF_DAY, 3);
+
+                Integer empaque= jo.getInt("usuario");
+                String turnos= jo.getString("turnos");
+
+                UsuarioId usuarioId= new UsuarioId();
+                usuarioId.setNumero(empaque);
+                usuarioId.setSupermercado(supermercado);
+
+                Solicitud solicitud= new Solicitud();
+                solicitud.setFecha(aux.getTime());
+                solicitud.setTurnos((BasicDBList)JSON.parse(turnos));
+                solicitud.setUsuario(usuarioId);
+                solicitud.setId(jo.getObjectId("_id"));
+
+                solicitudService.saveSolicitud(solicitud);
+            }
+            br.close();
+
+            br = new BufferedReader(new FileReader(path + "/repechaje.json"));
+            while ((sCurrentLine = br.readLine()) != null) {
+                BasicDBObject jo= (BasicDBObject) JSON.parse(sCurrentLine);
+
+                Date date= jo.getDate("fecha");
+                aux.setTime(date);
+                aux.add(Calendar.HOUR_OF_DAY, 3);
+
+                Integer empaque= jo.getInt("usuario");
+                String turnos= jo.getString("turnos");
+
+                UsuarioId usuarioId= new UsuarioId();
+                usuarioId.setNumero(empaque);
+                usuarioId.setSupermercado(supermercado);
+
+                Repechaje solicitud= new Repechaje();
+                solicitud.setFecha(aux.getTime());
+                solicitud.setTurnos((BasicDBList)JSON.parse(turnos));
+                solicitud.setUsuario(usuarioId);
+                solicitud.setId(jo.getObjectId("_id"));
+
+                repechajeService.saveRepechaje(solicitud);
+            }
+            br.close();
+
+            br = new BufferedReader(new FileReader(path + "/planilla.json"));
+            while ((sCurrentLine = br.readLine()) != null) {
+                BasicDBObject jo= (BasicDBObject) JSON.parse(sCurrentLine);
+
+                Date date= jo.getDate("fecha");
+                aux.setTime(date);
+                aux.add(Calendar.HOUR_OF_DAY, 3);
+
+                boolean generada= jo.getBoolean("generada");
+                boolean repechaje= jo.getBoolean("repechaje");
+
+                BasicDBList bloques= (BasicDBList) jo.get("bloques");
+
+                Planilla planilla= new Planilla();
+                planilla.setFecha(aux.getTime());
+                planilla.setGenerada(generada);
+                planilla.setSupermercado(supermercado);
+                planilla.setRepechaje(repechaje);
+                planilla.setId(jo.getObjectId("_id"));
+
+                for(int i=0; i < bloques.size(); i++){
+                    BasicDBObject bloq= (BasicDBObject) bloques.get(i);
+
+                    Calendar calendar= Calendar.getInstance();
+                    Date bloqDate= bloq.getDate("fecha");
+                    calendar.setTime(bloqDate);
+                    calendar.add(Calendar.HOUR_OF_DAY, 3);
+
+                    int cupos= bloq.getInt("cupos");
+                    BasicDBList turnos= (BasicDBList) bloq.get("turnos");
+
+                    Bloque bloque= new Bloque();
+                    bloque.setCupos(cupos);
+                    bloque.setFecha(calendar.getTime());
+
+                    if(turnos != null) {
+                        for (int j = 0; j < turnos.size(); j++) {
+                            BasicDBObject turn = (BasicDBObject) turnos.get(j);
+
+                            EstadoTurnoEnum estado = EstadoTurnoEnum.valueOf(turn.getString("estado"));
+                            Turno turno = new Turno();
+                            turno.setEstado(estado);
+
+                            if(!estado.equals(EstadoTurnoEnum.LIBRE)){
+                                Integer empaque = turn.getInt("usuario");
+                                int solicitud = turn.getInt("solicitud");
+
+                                turno.setSolicitud(solicitud);
+                                turno.setUsuario(empaque);
+                            }
+
+                            bloque.getTurnos().add(turno);
+                        }
+                    }
+
+                    planilla.getBloques().add(bloque);
+                }
+
+                planillaService.savePlanilla(planilla);
+            }
+            br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -5,8 +5,8 @@
     <form:create id="fc_com_reneseses_empaques_domain_Supermercado" modelAttribute="supermercado" path="/admin/supermercado" render="${empty dependencies}" z="HPhUsVtnH/UtxYe2gBYDW5a/RUo=">
         <div class="col-sm-6">
             <fieldset>
-                <legend>Informacion</legend>
-                <field:input field="nombre" id="c_com_reneseses_empaques_domain_Supermercado_nombre" required="required" z="eV/iZgZdsryow6oEWv0Kzonx9C8="/>
+                <legend>Información</legend>
+                <field:input field="nombre" id="c_com_reneseses_empaques_domain_Supermercado_nombre" required="required" z="user-managed"/>
                 <field:input field="direccion" id="c_com_reneseses_empaques_domain_Supermercado_direccion" z="5DJ+YCuDSkAynGrvo9Tw1vTtMI8="/>
                 <field:input field="telefono" id="c_com_reneseses_empaques_domain_Supermercado_telefono" z="zpdI9QFB+sw9b+I0YLjBmGz1Cko="/>
             </fieldset>
@@ -43,7 +43,6 @@
                 <field:input field="repechajeMinutos" id="c_com_reneseses_empaques_domain_Supermercado_repechajeMinutos" validationMessageCode="field_invalid_integer" z="8pTmQOF4cnc4JG539hrY2GqxCa4="/>
             </fieldset>
         </div>
-        
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_com_reneseses_empaques_domain_Supermercado" render="${not empty dependencies}" z="V+UgM0UwbiA9btJ6Tq040fN3m5o="/>
 </div>
