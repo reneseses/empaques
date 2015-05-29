@@ -4,7 +4,7 @@
 	<jsp:output omit-xml-declaration="yes"/>
 	<c:set value="false" var="admin_user"/>
 	<c:set value="false" var="admin"/>
-	<sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
+	<sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL,LOCALADMIN">
 		<c:set value="true" var="admin_user"/>
 	</sec:authorize>
 

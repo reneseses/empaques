@@ -21,10 +21,19 @@ $(function(){
 
 			$("#table-list tbody").empty();
 			$("#table-list").hide();
+			$(".empty").hide();
 			$("#loading-inner").show();
 			$("#planilla_select")[0].selectize.disable();
 
 			$.get(listUrl, {week: value}, function(sols){
+
+				if(sols.length==0){
+					$("#planilla_select")[0].selectize.enable();
+					$("#loading-inner").hide();
+					$(".empty").show();
+					return;
+				}
+
 				for(var i=0; i < sols.length; i++){
 					var sol	= sols[i],
 						tr	= $("<tr>");

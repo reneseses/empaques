@@ -19,6 +19,7 @@
             </div>
         </header>
         <div class="panel-body no-padding table-responsive">
+	        <div class="alert alert-info empty" style="margin: 10px">No se han encontrado faltas</div>
             <table class="table table-bordered table-hover table-compact table-striped" id="table-list" style="display: none">
                 <thead>
                     <tr>

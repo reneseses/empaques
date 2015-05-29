@@ -11,19 +11,18 @@ import javax.servlet.ServletContext;
 
 import com.mongodb.BasicDBList;
 import com.reneseses.empaques.domain.*;
-import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
-import com.reneseses.empaques.domain.service.RepechajeServiceImpl;
-import com.reneseses.empaques.domain.service.SolicitudServiceImpl;
+import com.reneseses.empaques.domain.service.*;
 import com.reneseses.empaques.enums.EstadoTurnoEnum;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
-import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 import com.reneseses.empaques.enums.TipoUsuarioEnum;
 
@@ -44,6 +43,12 @@ public class DefaultController {
 
     @Autowired
     private PlanillaServiceImpl planillaService;
+
+	@Autowired
+	private SupermercadoServiceImpl supermercadoService;
+
+	@Autowired
+	private MessageDigestPasswordEncoder messageDigestPasswordEncoder;
 	
 	@RequestMapping(value="/")
 	public String member(){
@@ -54,15 +59,46 @@ public class DefaultController {
 		
 		return "index";
 	}
-	
-	
+
 	@RequestMapping(value="readjsondb")
 	public String readDB(){
+		Object principal= SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if(!(principal instanceof Usuario))
+			return "resourceNotFound";
+
+		Usuario user= (Usuario) principal;
+
+		if(!user.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))
+			return "resourceNotFound";
+
 		String path= context.getRealPath("/WEB-INF/dbjson/");
 		
 		BufferedReader br = null;
 		
 		ObjectId supermercado= new ObjectId("5567df388b1faec2966c1714");
+
+		Supermercado sup= supermercadoService.findSupermercado(supermercado);
+
+		if(sup == null){
+			sup= new Supermercado();
+			sup.setNombre("Jumbo Valparaiso");
+			sup.setId(supermercado);
+			supermercadoService.saveSupermercado(sup);
+
+			Usuario usuario= new Usuario();
+
+			usuario.setNombre("Jumbo Valpo Admin");
+			UsuarioId id= new UsuarioId();
+			id.setNumero(0);
+			id.setSupermercado(supermercado);
+			usuario.setId(id);
+			usuario.setRut("JVadmin");
+			usuario.setPassword(messageDigestPasswordEncoder.encodePassword("passJVAdmin", null));
+			usuario.setTipo(TipoUsuarioEnum.LOCALADMIN);
+
+			usuarioServiceImpl.saveUsuario(usuario);
+		}
 		
 		try{
 			String sCurrentLine;

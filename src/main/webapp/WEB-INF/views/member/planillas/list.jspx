@@ -3,7 +3,7 @@
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
     <c:set value="false" var="admin"/>
-    <sec:authorize ifAnyGranted="ADMIN">
+    <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL,LOCALADMIN">
         <c:set value="true" var="admin"/>
     </sec:authorize>
     

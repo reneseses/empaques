@@ -1,13 +1,7 @@
 package com.reneseses.empaques.web;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -36,8 +30,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.roo.addon.web.mvc.controller.scaffold.RooWebScaffold;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -103,13 +99,15 @@ public class PlanillaController {
     	
     	HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/text; charset=utf-8");
-    	
-    	if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))){
-    		return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
-    	}
+
+	    List<GrantedAuthority> authorities= principal.getAuthorities();
+	    if (!authorities.contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+			    && !authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+			    && !authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+			    && !authorities.contains(new SimpleGrantedAuthority("LOCALADMIN")))
+		    return new ResponseEntity<String>(headers, HttpStatus.FORBIDDEN);
     	
     	Planilla planilla = new Planilla();
-    	
     	try{
     		if(id != null){
 	    		Planilla bd= planillaServiceImpl.findPlanilla(id);
@@ -127,6 +125,7 @@ public class PlanillaController {
 	            Date date= sdf.parse(fecha);
 	            planilla.setFecha(date);
 	            planilla.createPlanilla(data);
+			    planilla.setSupermercado(principal.getId().getSupermercado());
 	            planillaServiceImpl.savePlanilla(planilla);
 	            
 	            return new ResponseEntity<String>(headers, HttpStatus.OK);
@@ -142,7 +141,9 @@ public class PlanillaController {
     @RequestMapping("/generarTurnos/{id}")
     public String generarTurnos(@PathVariable("id") ObjectId id, Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) return "accessFailure";
+        if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))
+		        && !principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN")))
+	        return "accessFailure";
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
         if (planilla == null) {
             uiModel.addAttribute("page", "1");
@@ -182,7 +183,7 @@ public class PlanillaController {
 		if(pasada != null)
 			turnosUsuario= pasada.getTurnosUsuario(usuarioService.findAllUsuarios());
 		
-		Map<Integer, Usuario> usuarios= usuarioService.findAll();
+		Map<UsuarioId, Usuario> usuarios= usuarioService.findAll();
 		List<Solicitud> solicitudes= solicitudService.findSolicitudesByFechaBetween(date1.getTime(), date2.getTime());
 		ordenarSolicitudes(solicitudes, usuarios, turnosUsuario);
 		
@@ -206,14 +207,14 @@ public class PlanillaController {
 					if(asignados >= maxTurnos)
 						break;
 					
-					jo = (BasicDBObject) ja.get(i);
+					LinkedHashMap<String, String> map = (LinkedHashMap<String, String>) ja.get(i);
 					
-					DiasEnum dia = DiasEnum.valueOf(jo.getString("dia"));
+					DiasEnum dia = DiasEnum.valueOf(map.get("dia"));
 					if(empaque.getRegimen().equals(RegimenTurnoEnum.NUEVO))
 						if(dia.equals(DiasEnum.DOMINGO) || dia.equals(DiasEnum.SABADO))
 							continue;
-					BloqueEnum inicio = BloqueEnum.valueOf(jo.getString("inicio"));
-					BloqueEnum fin = BloqueEnum.valueOf(jo.getString("fin"));
+					BloqueEnum inicio = BloqueEnum.valueOf(map.get("inicio"));
+					BloqueEnum fin = BloqueEnum.valueOf(map.get("fin"));
 					boolean asignado= true;
 					for(int j= inicio.ordinal(); j <= fin.ordinal(); j++){
 						jo = new BasicDBObject();
@@ -275,7 +276,9 @@ public class PlanillaController {
     @RequestMapping("/generarRepechaje/{id}")
     public String generarRepechaje(@PathVariable("id") ObjectId id, Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) return "accessFailure";
+        if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))
+		        && !principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN")))
+	        return "accessFailure";
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
         if (planilla == null) {
             uiModel.addAttribute("page", "1");
@@ -312,7 +315,7 @@ public class PlanillaController {
 		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) - 8);
 		date2.set(Calendar.DAY_OF_YEAR, date2.get(Calendar.DAY_OF_YEAR) - 1);
 				
-		Map<Integer, Usuario> usuarios= usuarioService.findAll();
+		Map<UsuarioId, Usuario> usuarios= usuarioService.findAll();
 		Map<Integer, Integer> turnosUsuario= planilla.getTurnosUsuario(usuarioService.findAllUsuarios());
 		
 		List<Repechaje> repechajes= repechajeService.findRepechajesByFechaBetween(date1.getTime(), date2.getTime());
@@ -330,15 +333,17 @@ public class PlanillaController {
 			ja= repechaje.getTurnos();
 			
 			for(int i =0; i < ja.size() && repCont < maxTurnos; i++){
-				jo = (BasicDBObject) ja.get(i);
-				BasicDBList turnos= (BasicDBList) jo.get("inicio");
+				LinkedHashMap<String, Object> map= (LinkedHashMap<String, Object>) ja.get(i);
+				BasicDBList turnos= (BasicDBList) map.get("inicio");
 				for(int j= 0; j< turnos.size() && repCont < 2; j++){
 					BasicDBObject solicitud= new BasicDBObject();
-					solicitud.put("dia", jo.getString("dia"));
+					String dia= (String) map.get("dia");
+
+					solicitud.put("dia", dia);
 					solicitud.put("inicio", turnos.get(j));
 					if(planilla.buscarConflicto(solicitud, empaque.getId().getNumero()))
 						continue;
-					Bloque bloque = planilla.getBloque(DiasEnum.valueOf(jo.getString("dia")), BloqueEnum.valueOf((String)turnos.get(j)));
+					Bloque bloque = planilla.getBloque(DiasEnum.valueOf(dia), BloqueEnum.valueOf((String)turnos.get(j)));
 					//System.out.println(bloque);
 
 					if(!bloque.addTurno(empaque, i))
@@ -355,10 +360,10 @@ public class PlanillaController {
     
     private void ajustarPlanilla(Planilla planilla, BasicDBList turnos, List<Integer> noAsignados, Usuario empaque, Integer maxTurnos,Integer asignados){
 		for(Integer solicitud: noAsignados){
-			BasicDBObject jo= (BasicDBObject) turnos.get(solicitud);
-			DiasEnum dia = DiasEnum.valueOf(jo.getString("dia"));
-			BloqueEnum inicio = BloqueEnum.valueOf(jo.getString("inicio"));
-			BloqueEnum fin = BloqueEnum.valueOf(jo.getString("fin"));
+			LinkedHashMap<String, Object> jo= (LinkedHashMap<String, Object>) turnos.get(solicitud);
+			DiasEnum dia = DiasEnum.valueOf((String) jo.get("dia"));
+			BloqueEnum inicio = BloqueEnum.valueOf((String) jo.get("inicio"));
+			BloqueEnum fin = BloqueEnum.valueOf((String) jo.get("fin"));
 			
 			for(int i= fin.ordinal(); i> BloqueEnum.values().length - 3; i--){
 				fin = BloqueEnum.values()[i];
@@ -411,8 +416,8 @@ public class PlanillaController {
 					List<Solicitud> query= solicitudService.findSolicitudesByFechaBetweenAndUsuario(date1.getTime(), date2.getTime(), id);
 					Solicitud sol= query.get(0);
 					BasicDBList ja = sol.getTurnos();
-					BasicDBObject solTurno= (BasicDBObject) ja.get(turno.getSolicitud());
-					BloqueEnum solFin = BloqueEnum.valueOf(solTurno.getString("fin"));
+					LinkedHashMap<String, Object> solTurno= (LinkedHashMap<String, Object>) ja.get(turno.getSolicitud());
+					BloqueEnum solFin = BloqueEnum.valueOf((String)solTurno.get("fin"));
 					int cont=0;
 					for(int j= hour.ordinal() + 1; j<= solFin.ordinal() && cont < 1; j++){
 						cont++;
@@ -476,15 +481,13 @@ public class PlanillaController {
     
 	@RequestMapping(produces = "text/html")
     public String list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        if (page != null || size != null) {
-            int sizeNo = size == null ? 10 : size.intValue();
-            final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-            uiModel.addAttribute("planillas", planillaServiceImpl.findPlanillaEntries(firstResult, sizeNo));
-            float nrOfPages = (float) planillaServiceImpl.countAllPlanillas() / sizeNo;
-            uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
-        } else {
-            uiModel.addAttribute("planillas", planillaServiceImpl.findAllPlanillasOrderByFechaDesc());
-        }
+		Usuario principal= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
+			uiModel.addAttribute("planillas", planillaServiceImpl.findAllPlanillasOrderByFechaDesc());
+		} else{
+			uiModel.addAttribute("planillas", planillaServiceImpl.findAllPlanillasBySupermercado(principal.getId().getSupermercado()));
+		}
         addDateTimeFormatPatterns(uiModel);
         return "member/planillas/list";
     }
@@ -498,14 +501,22 @@ public class PlanillaController {
 	@RequestMapping(params = "form", produces = "text/html")
     public String createForm(Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) return "accessFailure";
-        int count = (int) planillaServiceImpl.countAllPlanillas();
-        Planilla planilla;
-        if (count == 0) {
+		List<GrantedAuthority> authorities= principal.getAuthorities();
+        if (!authorities.contains(new SimpleGrantedAuthority("ADMIN"))
+		        && !authorities.contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+		        && !authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+		        && !authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+		        && !authorities.contains(new SimpleGrantedAuthority("LOCALADMIN")))
+	        return "accessFailure";
+
+		if(principal.getId() == null || principal.getId().getSupermercado() == null)
+			return "accessFailure";
+
+        Planilla planilla= planillaServiceImpl.findLastPlanillaBySuperMercado(principal.getId().getSupermercado());
+        if (planilla== null) {
             planilla = new Planilla();
             populateEditForm(uiModel, planilla);
         } else {
-            planilla = planillaServiceImpl.findPlanillaEntries(count - 1, count).get(0);
             uiModel.addAttribute("date", planilla.getFecha());
         }
         return "member/planillas/create";
@@ -514,7 +525,13 @@ public class PlanillaController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
     public String delete(@PathVariable("id") ObjectId id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) return "accessFailure";
+		List<GrantedAuthority> authorities= principal.getAuthorities();
+		if (!authorities.contains(new SimpleGrantedAuthority("ADMIN"))
+				&& !authorities.contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				&& !authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				&& !authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				&& !authorities.contains(new SimpleGrantedAuthority("LOCALADMIN")))
+			return "accessFailure";
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
         planillaServiceImpl.deletePlanilla(planilla);
         uiModel.asMap().clear();
@@ -526,12 +543,18 @@ public class PlanillaController {
 	@RequestMapping(value = "/{id}", params = "form", produces = "text/html")
     public String updateForm(@PathVariable("id") ObjectId id, Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) return "accessFailure";
+		List<GrantedAuthority> authorities= principal.getAuthorities();
+		if (!authorities.contains(new SimpleGrantedAuthority("ADMIN"))
+				&& !authorities.contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				&& !authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				&& !authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				&& !authorities.contains(new SimpleGrantedAuthority("LOCALADMIN")))
+			return "accessFailure";
         populateEditForm(uiModel, planillaServiceImpl.findPlanilla(id));
         return "member/planillas/update";
     }
 	
-	public void ordenarSolicitudes(List<Solicitud> solicitudes, Map<Integer, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios) {
+	public void ordenarSolicitudes(List<Solicitud> solicitudes, Map<UsuarioId, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios) {
         for (int i = 0; i < solicitudes.size()- 1; i++) {
             int menor = i;
             for (int j = i + 1; j < solicitudes.size(); j++) {
@@ -552,7 +575,7 @@ public class PlanillaController {
         }
     }
 	
-	public static void ordenarRepechaje(List<Repechaje> repechajes, Map<Integer, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios) {
+	public static void ordenarRepechaje(List<Repechaje> repechajes, Map<UsuarioId, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios) {
 	    for (int i = 0; i < repechajes.size() - 1; i++) {
 	        int menor = i;
 	        for (int j = i + 1; j < repechajes.size(); j++) {
@@ -579,8 +602,13 @@ public class PlanillaController {
         uiModel.addAttribute("planilla", planillaServiceImpl.findPlanilla(id));
         uiModel.addAttribute("itemId", id);
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	if (principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))
-    		return "member/planillas/updateTurnos";
+		List<GrantedAuthority> authorities= principal.getAuthorities();
+		if (authorities.contains(new SimpleGrantedAuthority("ADMIN"))
+				|| authorities.contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				|| authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				|| authorities.contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				|| authorities.contains(new SimpleGrantedAuthority("LOCALADMIN")))
+			return "member/planillas/updateTurnos";
         return "member/planillas/show";
     }
 	

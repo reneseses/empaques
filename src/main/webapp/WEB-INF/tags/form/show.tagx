@@ -36,7 +36,7 @@
 			<c:set var="delete" value="true" />
 		</c:if>
 		<c:if test="${empty panel}">
-			<c:set var="delete" value="true" />
+			<c:set var="panel" value="true" />
 		</c:if>
 
 		<spring:message var="typeName" code="menu_item_${fn:toLowerCase(fn:split(id,'_')[fn:length(fn:split(id,'_')) - 1])}_new_label" htmlEscape="false" />
@@ -135,7 +135,6 @@
 								<spring:url value="${path}/${itemId}" var="update_form_url">
 									<spring:param name="form" />
 								</spring:url>
-								<spring:url value="/resources/images/update.png" var="update_image_url" />
 								<spring:message arguments="${typeName}" code="entity_update" var="update_label" htmlEscape="false" />
 								<a href="${update_form_url}" alt="${fn:escapeXml(update_label)}" title="${fn:escapeXml(update_label)}" class="btn btn-xs btn-warning">
 									<i class="fa fa-edit"><!-- --></i>
@@ -147,7 +146,6 @@
 								<spring:url value="${path}" var="create_form_url">
 									<spring:param name="form" />
 								</spring:url>
-								<spring:url value="/resources/images/create.png" var="create_image_url" />
 								<spring:message arguments="${typeName}" code="entity_create" var="create_label" htmlEscape="false" />
 								<a class="btn btn-xs btn-primary" href="${create_form_url}" alt="${fn:escapeXml(create_label)}" title="${fn:escapeXml(create_label)}">
 									<i class="fa fa-eye"><!-- --></i>
@@ -157,7 +155,6 @@
 						<span>
 							<c:if test="${list}">
 								<spring:url value="${path}" var="list_form_url" />
-								<spring:url value="/resources/images/list.png" var="list_image_url" />
 								<spring:message arguments="${typeNamePlural}" code="entity_list_all" var="list_label" htmlEscape="false" />
 								<a class="btn btn-xs btn-default" href="${list_form_url}" alt="${fn:escapeXml(list_label)}" title="${fn:escapeXml(list_label)}">
 									<i class="fa fa-list-alt"></i>

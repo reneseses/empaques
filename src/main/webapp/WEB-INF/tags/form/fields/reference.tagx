@@ -20,14 +20,11 @@
 		<spring:url value="${path}" var="create_url">
 			<spring:param name="form" />
 		</spring:url>
-		<div class="alert alert-info no-margin">
+		<div class="alert alert-info no-margin alert-xs">
 			<a href="${create_url}">
 				<i class="fa fa-plus"><!-- --></i> <span style="margin-left: 5px"><spring:message arguments="${label}" code="entity_not_found" /></span>
+				<small><c:if test="${not empty required and required eq 'true'}"> (<spring:message code="field_required" />)</c:if></small>
 			</a>
 		</div>
-		
-		<c:if test="${not empty required and required eq 'true'}">
-			( <spring:message code="field_required" /> )
-		</c:if>
 	</c:if>
 </jsp:root>
