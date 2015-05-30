@@ -46,15 +46,15 @@
 			</label>
 			<c:choose>
 				<c:when test="${disableFormBinding}">
-					<input class="form-control" id="_${sec_field}_id" name="${sec_field}"  type="file"/>
+					<input class="form-control input-sm" id="_${sec_field}_id" name="${sec_field}"  type="file"/>
 				</c:when>
 				<c:otherwise>
 					<c:choose>
 						<c:when test="${type eq 'password'}">
-							<form:password class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" type="file"/>
+							<form:password class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" type="file"/>
 						</c:when>
 						<c:otherwise>
-							<form:input class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" type="file"/>
+							<form:input class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" type="file"/>
 						</c:otherwise>
 					</c:choose>
 					<br />

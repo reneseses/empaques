@@ -12,12 +12,6 @@ body{
 	width: 100%;
 }
 
-.errors{
-	float:left;
-	padding: 0 4px;
-	color: #a94442;
-}
-
 input + .errors{
 	font-size: 10px;
 }
@@ -227,6 +221,20 @@ td.utilbox{
 	margin-top: -2px
 }
 
+.input-sm.selectize-control{
+	height: 30px;
+}
+
+.input-sm .selectize-input{
+	padding: 4px 10px;
+	min-height: 30px;
+	border-radius: 3px;
+}
+
+label{
+	font-size: 12px;
+}
+
 .list-group-tabs .list-group-item{
 	padding: 0
 }
@@ -246,4 +254,12 @@ td.utilbox{
 	  color: #fff;
 	  text-decoration: none;
 	  background-color: transparent;
+}
+
+.quicklinks{
+	float: right;
+}
+
+.quicklinks form{
+	display: inline-block;
 }

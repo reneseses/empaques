@@ -1,4 +1,10 @@
-<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:spring="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+<jsp:root
+		xmlns:c="http://java.sun.com/jsp/jstl/core"
+		xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+		xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+		xmlns:spring="http://www.springframework.org/tags"
+		xmlns:form="http://www.springframework.org/tags/form"
+		xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
 	<jsp:output omit-xml-declaration="yes" />
 
 	<jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="The identifier for this tag (do not change!)" />
@@ -7,6 +13,7 @@
 	<jsp:directive.attribute name="items" type="java.util.Collection" required="true" rtexprvalue="true" description="The name of the collection displayed in the select box" />
 	<jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this field, will default to a message bundle if not supplied" />
 	<jsp:directive.attribute name="itemLabel" type="java.lang.String" required="false" rtexprvalue="true" description="Name of the property mapped to the inner text of the 'option' tag (will override the configured converter)" />
+	<jsp:directive.attribute name="labelDateFormat" type="java.lang.String" required="false" rtexprvalue="true" description="format if label is a date" />
 	<jsp:directive.attribute name="itemValue" type="java.lang.String" required="false" rtexprvalue="true" description="The identifier used as value in the select box (defaults to 'id' for non enum types)" />
 	<jsp:directive.attribute name="required" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicates if this field is required (default false)" />
 	<jsp:directive.attribute name="emptyOption" type="java.lang.Boolean" required="false" rtexprvalue="true" description="empty value?" />
@@ -58,7 +65,7 @@
 								<c:when test="${disableFormBinding}">
 									<c:choose>
 										<c:when test="${multiple}">
-											<select class="form-control" id="_${sec_field}_id" name="${sec_field}" multiple="${multiple}">
+											<select class="form-control input-sm" id="_${sec_field}_id" name="${sec_field}" multiple="${multiple}">
 											<c:if test="${emptyOption}">
 												<option value=""><!-- --> </option>
 											</c:if>
@@ -77,7 +84,7 @@
 											</select>
 										</c:when>
 										<c:otherwise>
-											<select class="form-control" id="_${sec_field}_id" name="${sec_field}">
+											<select class="form-control input-sm" id="_${sec_field}_id" name="${sec_field}">
 											<c:if test="${emptyOption}">
 												<option value=""><!-- --> </option>
 											</c:if>
@@ -102,7 +109,7 @@
 										<c:when test="${empty itemLabel}">
 											<c:choose>
 												<c:when test="${multiple}">
-													<form:select class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" multiple="${multiple}" >
+													<form:select class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" multiple="${multiple}" >
 														<c:if test="${emptyOption}">
 															<form:option value=""><!-- --></form:option>
 														</c:if>
@@ -110,7 +117,7 @@
 													</form:select>
 												</c:when>
 												<c:otherwise>
-													<form:select class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}">
+													<form:select class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}">
 															<c:if test="${emptyOption}">
 																<form:option value=""><!-- --></form:option>
 															</c:if>
@@ -122,7 +129,7 @@
 										<c:otherwise>
 											<c:choose>
 												<c:when test="${multiple}">
-													<form:select class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" multiple="${multiple}" >
+													<form:select class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" multiple="${multiple}" >
 														<c:if test="${emptyOption}">
 															<form:option value=""><!-- --></form:option>
 														</c:if>
@@ -130,7 +137,7 @@
 													</form:select>
 												</c:when>
 												<c:otherwise>
-													<form:select class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" >
+													<form:select class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" >
 														<c:if test="${emptyOption}">
 															<form:option value=""><!-- --></form:option>
 														</c:if>
@@ -149,7 +156,7 @@
 								<c:when test="${disableFormBinding}">
 									<c:choose>
 										<c:when test="${multiple}">
-											<select class="form-control" id="_${sec_field}_id" name="${sec_field}" multiple="${multiple}">
+											<select class="form-control input-sm" id="_${sec_field}_id" name="${sec_field}" multiple="${multiple}">
 												<c:if test="${emptyOption}">
 													<option value=""><!-- --></option>
 												</c:if>
@@ -168,7 +175,7 @@
 											</select>
 										</c:when>
 										<c:otherwise>
-											<select class="form-control" id="_${sec_field}_id" name="${sec_field}" multiple="${multiple}">
+											<select class="form-control input-sm" id="_${sec_field}_id" name="${sec_field}" multiple="${multiple}">
 												<c:if test="${emptyOption}">
 													<option value=""><!-- --></option>
 												</c:if>
@@ -193,7 +200,7 @@
 										<c:when test="${empty itemLabel}">
 											<c:choose>
 												<c:when test="${multiple}">
-													<form:select class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" multiple="${multiple}" >
+													<form:select class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" multiple="${multiple}" >
 														<c:if test="${emptyOption}">
 															<form:option value=""><!-- --></form:option>
 														</c:if>
@@ -213,7 +220,7 @@
 										<c:otherwise>
 											<c:choose>
 												<c:when test="${multiple}">
-													<form:select class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" multiple="${multiple}" >
+													<form:select class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" multiple="${multiple}" >
 														<c:if test="${emptyOption}">
 															<form:option value=""><!-- --></form:option>
 														</c:if>
@@ -221,11 +228,24 @@
 													</form:select>
 												</c:when>
 												<c:otherwise>
-													<form:select class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" >
+													<form:select class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" >
 														<c:if test="${emptyOption}">
 															<form:option value=""><!-- --></form:option>
 														</c:if>
-														<form:options items="${items}" itemValue="${fn:escapeXml(itemValue)}" itemLabel="${sec_itemLabel}"/>
+														<c:forEach items="${items}" var="item">
+															<spring:eval expression="item[sec_itemLabel]" var="value"/>
+															<option value="${value}">
+																<c:choose>
+																	<c:when test="${empty itemLabel}">
+																		<spring:eval expression="item" />
+																	</c:when>
+																	<c:otherwise>
+																		<spring:eval expression="item[sec_itemLabel]"/>
+																	</c:otherwise>
+																</c:choose>
+															</option>
+														</c:forEach>
+														<!--<form:options items="${items}" itemValue="${fn:escapeXml(itemValue)}" itemLabel="${sec_itemLabel}"/>-->
 													</form:select>
 												</c:otherwise>
 											</c:choose>

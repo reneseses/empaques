@@ -37,7 +37,7 @@
             <field:datetime dateTimePattern="${usuario_lastsolicitud_date_format}" field="lastSolicitud" id="c_com_reneseses_empaques_domain_Usuario_lastSolicitud" render="false" z="user-managed"/>
             <field:input field="facebook" id="c_com_reneseses_empaques_domain_Usuario_facebook" render="false" z="user-managed"/>
             <field:input field="image" id="c_com_reneseses_empaques_domain_Usuario_image" render="false" z="user-managed"/>
-            <field:input field="id" id="c_com_reneseses_empaques_domain_Usuario_id" required="true" z="HG3Y5OQVN2soJ/LSFcQtMQ37ICU="/>
+            <field:input field="id" render="false" id="c_com_reneseses_empaques_domain_Usuario_id" required="true" z="HG3Y5OQVN2soJ/LSFcQtMQ37ICU="/>
         </form:create>
         <form:dependency dependencies="${dependencies}" id="d_com_reneseses_empaques_domain_Usuario" render="${not empty dependencies}" z="O0yx3pV64++WTsLVs9yPYaajQRg="/>
     </div>

@@ -4,7 +4,7 @@
 	<jsp:output omit-xml-declaration="yes"/>
 	<c:set value="false" var="admin"/>
 	<sec:authentication property="principal.id" var="id"/>
-	<sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL">
+	<sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL,LOCALADMIN">
 		<c:set value="true" var="admin"/>
 	</sec:authorize>
 	<div class="col-xs-12 col-lg-offset-1 col-lg-10">

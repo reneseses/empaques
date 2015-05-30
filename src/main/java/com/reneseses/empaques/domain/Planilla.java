@@ -1,10 +1,6 @@
 package com.reneseses.empaques.domain;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,9 +40,9 @@ public class Planilla {
     
     private ObjectId supermercado;
     
-    public boolean buscarConflicto(BasicDBObject turno, Integer empaque){
-		int dia = DiasEnum.valueOf(turno.getString("dia")).ordinal();
-		int inicio = BloqueEnum.valueOf(turno.getString("inicio")).ordinal();
+    public boolean buscarConflicto(LinkedHashMap<String, Object> turno, Integer empaque){
+		int dia = ((DiasEnum) turno.get("dia")).ordinal();
+		int inicio = ((BloqueEnum) turno.get("inicio")).ordinal();
 		
 		int rango1 = 7*(inicio - 6) + dia;
 		int rango2 = 7*(inicio + 6) + dia;

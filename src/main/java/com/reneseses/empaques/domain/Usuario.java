@@ -84,6 +84,9 @@ public class Usuario implements UserDetails {
     public List<org.springframework.security.core.GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority(this.tipo.toString()));
+
+	    if(TipoUsuarioEnum.ENCARGADOLOCAL.equals(this.tipo) || TipoUsuarioEnum.SUBENCARGADOLOCAL.equals(this.tipo))
+		    authorities.add(new SimpleGrantedAuthority(TipoUsuarioEnum.LOCALADMIN.toString()));
         return authorities;
     }
 

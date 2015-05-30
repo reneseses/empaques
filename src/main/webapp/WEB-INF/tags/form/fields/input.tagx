@@ -61,15 +61,15 @@
 			</label>
 			<c:choose>
 				<c:when test="${disableFormBinding}">
-					<input class="form-control" id="_${sec_field}_id" name="${sec_field}" type="${fn:escapeXml(type)}" />
+					<input class="form-control input-sm" id="_${sec_field}_id" name="${sec_field}" type="${fn:escapeXml(type)}" />
 				</c:when>
 				<c:otherwise>
 					<c:choose>
 						<c:when test="${type eq 'password'}">
-							<form:password class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
+							<form:password class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
 						</c:when>
 						<c:otherwise>
-							<form:input class="form-control" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
+							<form:input class="form-control input-sm" id="_${sec_field}_id" path="${sec_field}" disabled="${disabled}" />
 						</c:otherwise>
 					</c:choose>
 					<form:errors cssClass="errors" id="_${sec_field}_error_id" path="${sec_field}" />

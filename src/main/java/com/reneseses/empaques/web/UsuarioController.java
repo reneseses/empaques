@@ -356,7 +356,11 @@ public class UsuarioController {
 	@RequestMapping(params = "form", produces = "text/html")
 	public String createForm(Model uiModel) {
 		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (!(principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))) return "accessFailure";
+		if (!(principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))))
+			return "accessFailure";
 		populateEditForm(uiModel, new UsuarioCreateForm());
 		return "member/usuarios/create";
 	}
@@ -365,7 +369,11 @@ public class UsuarioController {
 	public String show(@PathVariable("id") UsuarioId usuarioId, Model uiModel) {
 		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")) || principal.getId().equals(usuarioId)) {
+		if (principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
+				|| principal.getId().equals(usuarioId)) {
 			addDateTimeFormatPatterns(uiModel);
 			uiModel.addAttribute("usuario", usuarioService.findUsuario(usuarioId));
 			uiModel.addAttribute("itemId", usuarioId);
@@ -378,7 +386,11 @@ public class UsuarioController {
 	@RequestMapping(produces = "text/html")
 	public String list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
 		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (!(principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))) return "accessFailure";
+		if (!(principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))))
+			return "accessFailure";
 		if (page != null || size != null) {
 			int sizeNo = size == null ? 25 : size.intValue();
 			final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
@@ -431,6 +443,7 @@ public class UsuarioController {
 		}
 		
 		if ((principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
 				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
 				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))) {
 			
@@ -455,7 +468,10 @@ public class UsuarioController {
 	@RequestMapping(value = "/{id}", params = "form", produces = "text/html")
 	public String updateForm(@PathVariable("id") UsuarioId id, Model uiModel) {
 		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")) || principal.getId().equals(id)) {
+		if (principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")) || principal.getId().equals(id)) {
 
 			Usuario usuario = usuarioService.findUsuario(id);
 			UsuarioUpdateForm usuarioForm = new UsuarioUpdateForm();
@@ -484,7 +500,11 @@ public class UsuarioController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
 	public String delete(@PathVariable("id") UsuarioId id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
 		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (!(principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))) return "accessFailure";
+		if (!(principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))))
+			return "accessFailure";
 
 		Usuario usuario = usuarioService.findUsuario(id);
 		usuarioService.deleteUsuario(usuario);
@@ -505,7 +525,6 @@ public class UsuarioController {
 		if(principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
 			uiModel.addAttribute("supermercados", supermercadoServiceImpl.findAllSupermercadoes());
 		}
-
 	}
 
 	private void populateEditForm(Model uiModel, UsuarioUpdateForm usuario) {
@@ -643,7 +662,11 @@ public class UsuarioController {
 	@RequestMapping("/resetpass")
 	public String resetPasswordForm(Model uiModel) {
 		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (!(principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL")) || principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")))) return "accessFailure";
+		if (!(principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
+				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))))
+			return "accessFailure";
 		uiModel.addAttribute("passForm", new ForgotPasswordForm());
 		return "member/usuarios/reset";
 	}

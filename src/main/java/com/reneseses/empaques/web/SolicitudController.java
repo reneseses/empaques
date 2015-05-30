@@ -284,7 +284,7 @@ public class SolicitudController {
 				BasicDBObject jo= new BasicDBObject();
 				
 				jo.append("num", i);
-				jo.append("empaque", sol.getUsuario());
+				jo.append("empaque", sol.getUsuario().getNumero());
 				
 				cal.setTime(sol.getFecha());
 				cal.add(Calendar.HOUR, -delay);
@@ -352,7 +352,7 @@ public class SolicitudController {
 				BasicDBObject jo= new BasicDBObject();
 				
 				jo.append("num", i);
-				jo.append("empaque", rep.getUsuario());
+				jo.append("empaque", rep.getUsuario().getNumero());
 				
 				cal.setTime(rep.getFecha());
 				cal.add(Calendar.HOUR, -delay);

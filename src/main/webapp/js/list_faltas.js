@@ -19,12 +19,19 @@ $(function(){
 		}).on("change", function(){
 			var value= $(this).val();
 
+			$(".empty").hide();
 			$("#table-list tbody").empty();
 			$("#table-list").hide();
 			$("#loading-inner").show();
 			$("#planilla_select")[0].selectize.disable();
 
 			$.get(appContext + "member/faltas", {planilla: value}, function(faltas){
+				if(faltas.length == 0){
+					$("#loading-inner").hide();
+					$("#planilla_select")[0].selectize.enable();
+					$(".empty").show();
+					return;
+				}
 				for(var i=0; i < faltas.length; i++){
 					var falta	= faltas[i],
 						tr		= $("<tr>");

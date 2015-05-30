@@ -42,7 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	public List<Usuario> findUsuarioEntriesOrderByNumero(int firstResult, int maxResults){
 		PageRequest pg= new PageRequest(firstResult / maxResults, maxResults);
-        return usuarioRepository.findAll(pg).getContent();
+        return usuarioRepository.findAll();
 	}
 	
 	public List<Usuario> lightFindAllUsuarios(){
@@ -54,11 +54,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return mongoTemplate.find(query, Usuario.class);
 	}
 	
-	public Map<Integer, Usuario> findAll(){
+	public Map<UsuarioId, Usuario> findAll(){
 		List<Usuario> usuarios= usuarioRepository.findAll();
-		Map<Integer, Usuario> map= new HashMap<Integer, Usuario>();
+		Map<UsuarioId, Usuario> map= new HashMap<UsuarioId, Usuario>();
 		for(Usuario usuario: usuarios)
-			map.put(usuario.getId().getNumero(), usuario);
+			map.put(usuario.getId(), usuario);
 		return map;
 	}
 }

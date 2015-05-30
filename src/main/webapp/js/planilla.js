@@ -145,7 +145,7 @@ function save(){
 		url: saveUrl,
 		data: {data: JSON.stringify(grid.getData()), fecha: $(".week-picker").val()},
 		type: "POST",
-		success:function(){
+		success:function(data){
 			window.location.href = parent + "member/planillas?page=1&size=10";
 		}
 	});
