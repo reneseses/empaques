@@ -23,9 +23,10 @@ import com.reneseses.empaques.enums.DiasEnum;
 import com.reneseses.empaques.enums.EstadoTurnoEnum;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 
-import org.apache.xmlbeans.impl.xb.xmlconfig.impl.UsertypeconfigImpl;
 import org.bson.types.ObjectId;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

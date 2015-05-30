@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:sec="http://www.springframework.org/security/tags" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:sec="http://www.springframework.org/security/tags" version="2.0">
     <jsp:directive.page contentType="text/html;charset=UTF-8"/>
     <jsp:output omit-xml-declaration="yes"/>
-
-	<sec:authorize ifAnyGranted="ADMIN" var="admin" />
-	<sec:authorize ifAnyGranted="LOCALADMIN" var="localadmin" />
-	<sec:authentication property="principal.id" var="principal_id"/>
-    <page:show id="ps_com_reneseses_empaques_domain_Supermercado" object="${supermercado}" update="${admin or (localadmin and (principal_id.supermercado eq supermercado.id))}" create="${admin}" list="${admin}" delete="${admin}" path="/admin/supermercado" z="fRYDWWNvZCn/p8p0XBoHu08iRGk=">
+    <sec:authorize ifAnyGranted="ADMIN" var="admin"/>
+    <sec:authorize ifAnyGranted="LOCALADMIN" var="localadmin"/>
+    <sec:authentication property="principal.id" var="principal_id"/>
+    <page:show create="${admin}" delete="${admin}" id="ps_com_reneseses_empaques_domain_Supermercado" list="${admin}" object="${supermercado}" path="/admin/supermercado" update="${admin or (localadmin and (principal_id.supermercado eq supermercado.id))}" z="user-managed">
         <field:display field="maxTurnosTotal" id="s_com_reneseses_empaques_domain_Supermercado_maxTurnosTotal" object="${supermercado}" z="mie79D815Uxj9PervYqaqiUezs0="/>
         <field:display field="maxRepechaje" id="s_com_reneseses_empaques_domain_Supermercado_maxRepechaje" object="${supermercado}" z="lArnlWsreCYe+p6EJjO4ZDuGwh0="/>
         <field:display field="maxTurnos" id="s_com_reneseses_empaques_domain_Supermercado_maxTurnos" object="${supermercado}" z="1KxpDYEEm331YJZYWhtk66SJuuM="/>

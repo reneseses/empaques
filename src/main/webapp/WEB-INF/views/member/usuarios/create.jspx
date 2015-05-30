@@ -9,7 +9,7 @@
         <form:create id="fc_com_reneseses_empaques_domain_Usuario" modelAttribute="usuario" path="/member/usuarios" render="${empty dependencies}" z="nnWT7nUHj1eBiSNYxo22oBhz2QU=">
             <div class="col-sm-6">
                 <fieldset>
-                    <legend>Información Personal</legend>
+                    <legend>Informacion Personal</legend>
                     <field:input field="nombre" id="c_com_reneseses_empaques_domain_Usuario_nombre" required="trueu" validationRegex="[a-zA-Z\'\-]+[ [a-zA-Z\'\-]+]*" z="user-managed"/>
                     <field:input field="rut" id="c_com_reneseses_empaques_domain_Usuario_rut" required="true" validationRegex="[0-9]{1,8}-[K|k|0-9]" z="hwmFRVt4Nk+A+jYP8DvL1MH0lVQ="/>
                     <field:input field="email" id="c_com_reneseses_empaques_domain_Usuario_email" validationMessageCode="field_invalid_email" validationRegex="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+[.][a-zA-Z]{2,4}" z="user-managed"/>
@@ -37,7 +37,7 @@
             <field:datetime dateTimePattern="${usuario_lastsolicitud_date_format}" field="lastSolicitud" id="c_com_reneseses_empaques_domain_Usuario_lastSolicitud" render="false" z="user-managed"/>
             <field:input field="facebook" id="c_com_reneseses_empaques_domain_Usuario_facebook" render="false" z="user-managed"/>
             <field:input field="image" id="c_com_reneseses_empaques_domain_Usuario_image" render="false" z="user-managed"/>
-            <field:input field="id" render="false" id="c_com_reneseses_empaques_domain_Usuario_id" required="true" z="HG3Y5OQVN2soJ/LSFcQtMQ37ICU="/>
+            <field:input field="id" id="c_com_reneseses_empaques_domain_Usuario_id" render="false" required="true" z="user-managed"/>
         </form:create>
         <form:dependency dependencies="${dependencies}" id="d_com_reneseses_empaques_domain_Usuario" render="${not empty dependencies}" z="O0yx3pV64++WTsLVs9yPYaajQRg="/>
     </div>

@@ -43,7 +43,7 @@
 					else
 						$("#emp_info").append($("<img style='width: 160px;'>").attr("src",user_img));
 					$("#emp_info").append($("<div style='width: 160px; font-size: 11px'>").append("Nombre: " + data.nombre));
-					$("#emp_info").append($("<div style='width: 160px; font-size: 11px'>").append("Número: " + data.numero));
+					$("#emp_info").append($("<div style='width: 160px; font-size: 11px'>").append("Numero: " + data.numero));
 					$("#emp_info").append($("<div style='width: 160px; font-size: 11px'>").append("Turnos: " + data.turnos));
 				}
 			});
