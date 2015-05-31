@@ -19,5 +19,11 @@
         <field:display field="direccion" id="s_com_reneseses_empaques_domain_Supermercado_direccion" object="${supermercado}" z="NU+gEopo2kiSLO/wbLttHPSM6zQ="/>
         <field:display field="telefono" id="s_com_reneseses_empaques_domain_Supermercado_telefono" object="${supermercado}" z="/vCTd9omTMX8f9XISwUvy6ec/RU="/>
         <field:display field="nombre" id="s_com_reneseses_empaques_domain_Supermercado_nombre" object="${supermercado}" z="AMl4ZkPXTgFuahG7+NIRt1nOINA="/>
+        <field:display field="turnosDiaEnd" id="s_com_reneseses_empaques_domain_Supermercado_turnosDiaEnd" object="${supermercado}" z="M8OVx8Z8VnaxdVC6F9WWmtAX3I0="/>
+        <field:display field="turnosHoraEnd" id="s_com_reneseses_empaques_domain_Supermercado_turnosHoraEnd" object="${supermercado}" z="wYonO7wD6dsNU8Px7Pbu058jCkc="/>
+        <field:display field="turnosMinutosEnd" id="s_com_reneseses_empaques_domain_Supermercado_turnosMinutosEnd" object="${supermercado}" z="7T4yKSl9fbvGGr74BRNbIqZ0Q9g="/>
+        <field:display field="repechajeDiaEnd" id="s_com_reneseses_empaques_domain_Supermercado_repechajeDiaEnd" object="${supermercado}" z="J0+Bn4tzrqspEa8R0EFnDttSJu4="/>
+        <field:display field="repechajeHoraEnd" id="s_com_reneseses_empaques_domain_Supermercado_repechajeHoraEnd" object="${supermercado}" z="WPI7ggKyzIP/L/qIsMx+zFRNFzY="/>
+        <field:display field="repechajeMinutosEnd" id="s_com_reneseses_empaques_domain_Supermercado_repechajeMinutosEnd" object="${supermercado}" z="9FVgFsOjL7mWBAV9BeimsYZwlFY="/>
     </page:show>
 </div>

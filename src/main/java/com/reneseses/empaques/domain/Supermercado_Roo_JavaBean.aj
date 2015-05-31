@@ -56,6 +56,14 @@ privileged aspect Supermercado_Roo_JavaBean {
         this.maxTurnos = maxTurnos;
     }
     
+    public int Supermercado.getDelayZonaHoraria() {
+        return this.delayZonaHoraria;
+    }
+    
+    public void Supermercado.setDelayZonaHoraria(int delayZonaHoraria) {
+        this.delayZonaHoraria = delayZonaHoraria;
+    }
+    
     public DiasEnum Supermercado.getTurnosDia() {
         return this.turnosDia;
     }
@@ -78,6 +86,30 @@ privileged aspect Supermercado_Roo_JavaBean {
     
     public void Supermercado.setTurnosMinutos(Integer turnosMinutos) {
         this.turnosMinutos = turnosMinutos;
+    }
+    
+    public DiasEnum Supermercado.getTurnosDiaEnd() {
+        return this.turnosDiaEnd;
+    }
+    
+    public void Supermercado.setTurnosDiaEnd(DiasEnum turnosDiaEnd) {
+        this.turnosDiaEnd = turnosDiaEnd;
+    }
+    
+    public Integer Supermercado.getTurnosHoraEnd() {
+        return this.turnosHoraEnd;
+    }
+    
+    public void Supermercado.setTurnosHoraEnd(Integer turnosHoraEnd) {
+        this.turnosHoraEnd = turnosHoraEnd;
+    }
+    
+    public Integer Supermercado.getTurnosMinutosEnd() {
+        return this.turnosMinutosEnd;
+    }
+    
+    public void Supermercado.setTurnosMinutosEnd(Integer turnosMinutosEnd) {
+        this.turnosMinutosEnd = turnosMinutosEnd;
     }
     
     public DiasEnum Supermercado.getRepechajeDia() {
@@ -104,12 +136,28 @@ privileged aspect Supermercado_Roo_JavaBean {
         this.repechajeMinutos = repechajeMinutos;
     }
     
-    public Float Supermercado.getDelayZonaHoraria() {
-        return this.delayZonaHoraria;
+    public DiasEnum Supermercado.getRepechajeDiaEnd() {
+        return this.repechajeDiaEnd;
     }
     
-    public void Supermercado.setDelayZonaHoraria(Float delayZonaHoraria) {
-        this.delayZonaHoraria = delayZonaHoraria;
+    public void Supermercado.setRepechajeDiaEnd(DiasEnum repechajeDiaEnd) {
+        this.repechajeDiaEnd = repechajeDiaEnd;
+    }
+    
+    public Integer Supermercado.getRepechajeHoraEnd() {
+        return this.repechajeHoraEnd;
+    }
+    
+    public void Supermercado.setRepechajeHoraEnd(Integer repechajeHoraEnd) {
+        this.repechajeHoraEnd = repechajeHoraEnd;
+    }
+    
+    public Integer Supermercado.getRepechajeMinutosEnd() {
+        return this.repechajeMinutosEnd;
+    }
+    
+    public void Supermercado.setRepechajeMinutosEnd(Integer repechajeMinutosEnd) {
+        this.repechajeMinutosEnd = repechajeMinutosEnd;
     }
     
 }

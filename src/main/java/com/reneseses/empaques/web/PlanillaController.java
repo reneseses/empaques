@@ -10,6 +10,7 @@ import com.reneseses.empaques.domain.Bloque;
 import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Repechaje;
 import com.reneseses.empaques.domain.Solicitud;
+import com.reneseses.empaques.domain.Supermercado;
 import com.reneseses.empaques.domain.Turno;
 import com.reneseses.empaques.domain.Usuario;
 import com.reneseses.empaques.domain.UsuarioId;
@@ -17,6 +18,7 @@ import com.reneseses.empaques.domain.service.FaltaServiceImpl;
 import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
 import com.reneseses.empaques.domain.service.RepechajeServiceImpl;
 import com.reneseses.empaques.domain.service.SolicitudServiceImpl;
+import com.reneseses.empaques.domain.service.SupermercadoServiceImpl;
 import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
 import com.reneseses.empaques.enums.BloqueEnum;
 import com.reneseses.empaques.enums.DiasEnum;
@@ -24,9 +26,7 @@ import com.reneseses.empaques.enums.EstadoTurnoEnum;
 import com.reneseses.empaques.enums.RegimenTurnoEnum;
 
 import org.bson.types.ObjectId;
-import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,6 @@ import org.springframework.roo.addon.web.mvc.controller.scaffold.RooWebScaffold;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,8 +61,9 @@ public class PlanillaController {
     @Autowired
     private FaltaServiceImpl faltaService;  
     
-    private int delay = 4;
-    
+    @Autowired
+    private SupermercadoServiceImpl supermercadoServiceImpl;
+        
     @RequestMapping("getturnos/{id}")
     @ResponseBody
     public String getData(@PathVariable("id") ObjectId id) {
@@ -145,7 +145,9 @@ public class PlanillaController {
         if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))
 		        && !principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN")))
 	        return "accessFailure";
+        
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
+		
         if (planilla == null) {
             uiModel.addAttribute("page", "1");
             uiModel.addAttribute("size", "25");
@@ -158,11 +160,11 @@ public class PlanillaController {
             uiModel.addAttribute("error", "La planilla especificada ya ha sido generada");
             return "redirect:/member/planillas";
         }
+        
+        Supermercado supermercado= supermercadoServiceImpl.findSupermercado(planilla.getSupermercado());
         Calendar date1 = Calendar.getInstance();
-        int day = date1.get(Calendar.DAY_OF_WEEK);
-        int hour = date1.get(Calendar.HOUR_OF_DAY);
-        int minute = date1.get(Calendar.MINUTE);
-        if (day < Calendar.THURSDAY || (day == Calendar.THURSDAY && hour < delay && minute < 30)) {
+
+        if (supermercado.isTurnosActivo()) {
             uiModel.addAttribute("page", "1");
             uiModel.addAttribute("size", "25");
             uiModel.addAttribute("error", "La recepcion de turnos aun esta activa");
@@ -199,7 +201,7 @@ public class PlanillaController {
 			ja = sol.getTurnos();
 			Integer maxTurnos= 0;
 			if(!empaque.getRegimen().equals(RegimenTurnoEnum.LIBRE)){
-				maxTurnos= faltaService.getCantidadTurnos(planilla.getId(), empaque.getId());
+				maxTurnos= faltaService.getCantidadTurnos(planilla.getId(), empaque.getId(), supermercado.getMaxTurnos());
 				if(empaque.getRegimen().equals(RegimenTurnoEnum.NUEVO))
 					maxTurnos--;
 				
@@ -280,7 +282,9 @@ public class PlanillaController {
         if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))
 		        && !principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN")))
 	        return "accessFailure";
+        
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
+                
         if (planilla == null) {
             uiModel.addAttribute("page", "1");
             uiModel.addAttribute("size", "25");
@@ -293,18 +297,16 @@ public class PlanillaController {
             uiModel.addAttribute("error", "El repechaje de esta semana ya ha sido generado");
             return "redirect:/member/planillas";
         }
+        
+        Supermercado supermercado= supermercadoServiceImpl.findSupermercado(planilla.getSupermercado());
         Calendar date1 = Calendar.getInstance();
-        int day = date1.get(Calendar.DAY_OF_WEEK);
-        int hour = date1.get(Calendar.HOUR_OF_DAY);
-        int minute = date1.get(Calendar.MINUTE);
-        if (day < Calendar.SATURDAY || (day == Calendar.SATURDAY && hour < delay && minute < 30)) {
+        if (supermercado.isRepechajeActivo()) {
             uiModel.addAttribute("page", "1");
             uiModel.addAttribute("size", "25");
             uiModel.addAttribute("error", "La recepcion de turnos de repechaje aun esta activa");
             return "redirect:/member/planillas";
         }
         
-        BasicDBObject jo;
         BasicDBList ja;
 		
 		Calendar date= Calendar.getInstance();
@@ -324,11 +326,15 @@ public class PlanillaController {
 		
 		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) + 2);
 		date2.set(Calendar.DAY_OF_YEAR, date2.get(Calendar.DAY_OF_YEAR) + 2);
+		
 		for(Repechaje repechaje : repechajes){
 			int repCont = 0;
 			Usuario empaque = usuarios.get(repechaje.getUsuario());
-			Integer maxTurnos= faltaService.getCantidadTurnosRepechaje(planilla.getId(), empaque.getId());
-			if(maxTurnos== 0)
+			Integer maxTurnos= faltaService.getCantidadTurnosRepechaje(planilla.getId(), empaque.getId(), supermercado.getMaxRepechaje());
+			Integer currentTurnos= turnosUsuario.get(empaque.getId().getNumero());
+			
+			maxTurnos= maxTurnos > supermercado.getMaxTurnosTotal() - currentTurnos? supermercado.getMaxTurnosTotal()-currentTurnos: maxTurnos;
+			if(maxTurnos<= 0)
 				continue;
 			
 			ja= repechaje.getTurnos();

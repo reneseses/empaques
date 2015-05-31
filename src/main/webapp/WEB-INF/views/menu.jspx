@@ -39,7 +39,8 @@
                     </li>
                 </ul>
             </c:if>
-            <div class="navbar-brand">Empaques</div>
+            <spring:url var="home_url" value="/"/>
+            <div class="navbar-brand"><a href="${home_url}" title="Inicio">Empaques</a></div>
         </div>
         <c:if test="${pageContext['request'].userPrincipal != null}">
             <sec:authentication property="principal" var="principal"/>

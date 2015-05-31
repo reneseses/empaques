@@ -5,7 +5,7 @@
     <form:create id="fc_com_reneseses_empaques_domain_Supermercado" modelAttribute="supermercado" path="/admin/supermercado" render="${empty dependencies}" z="HPhUsVtnH/UtxYe2gBYDW5a/RUo=">
         <div class="col-sm-6">
             <fieldset>
-                <legend>Información</legend>
+                <legend>Informacion</legend>
                 <field:input field="nombre" id="c_com_reneseses_empaques_domain_Supermercado_nombre" required="required" z="user-managed"/>
                 <field:input field="direccion" id="c_com_reneseses_empaques_domain_Supermercado_direccion" z="5DJ+YCuDSkAynGrvo9Tw1vTtMI8="/>
                 <field:input field="telefono" id="c_com_reneseses_empaques_domain_Supermercado_telefono" z="zpdI9QFB+sw9b+I0YLjBmGz1Cko="/>
@@ -13,8 +13,8 @@
         </div>
         <div class="col-sm-6">
             <fieldset>
-                <legend>Configuración</legend>
-                <field:input field="delayZonaHoraria" id="c_com_reneseses_empaques_domain_Supermercado_delayZonaHoraria" validationMessageCode="field_invalid_number" z="SRoHnH2pegAE397ueu3MNwa9crg="/>
+                <legend>Configuracion</legend>
+                <field:input field="delayZonaHoraria" id="c_com_reneseses_empaques_domain_Supermercado_delayZonaHoraria" z="eFAJnoMW4VCX0RF60F2rYumXQ94="/>
                 <field:input field="maxTurnosTotal" id="c_com_reneseses_empaques_domain_Supermercado_maxTurnosTotal" validationMessageCode="field_invalid_integer" z="zhWh8ekj3IBKg2LuMFQaMbUpkd0="/>
                 <div class="row">
                     <div class="col-sm-6">
@@ -30,17 +30,59 @@
         <div class="col-sm-6">
             <fieldset>
                 <legend>Turnos</legend>
-                <field:select field="turnosDia" id="c_com_reneseses_empaques_domain_Supermercado_turnosDia" items="${diasenums}" path="diasenums" z="LlBZlUWPWdt558L07rRELRTX7y0="/>
-                <field:input field="turnosHora" id="c_com_reneseses_empaques_domain_Supermercado_turnosHora" validationMessageCode="field_invalid_integer" z="cTgiNzSgiUBWtgKbZFw7/z1T454="/>
-                <field:input field="turnosMinutos" id="c_com_reneseses_empaques_domain_Supermercado_turnosMinutos" validationMessageCode="field_invalid_integer" z="XNjIA+74PR2j30Rt9LQ5H3O3Zak="/>
+                <h4 style="margin-top: 0">Inicio</h4>
+                <div class="row">
+                    <div class="col-md-4">
+                        <field:select field="turnosDia" id="c_com_reneseses_empaques_domain_Supermercado_turnosDia" items="${diasenums}" path="diasenums" z="LlBZlUWPWdt558L07rRELRTX7y0="/>
+                    </div>
+                    <div class="col-md-4">
+                        <field:input field="turnosHora" id="c_com_reneseses_empaques_domain_Supermercado_turnosHora" validationMessageCode="field_invalid_integer" z="cTgiNzSgiUBWtgKbZFw7/z1T454="/>
+                    </div>
+                    <div class="col-md-4">
+                        <field:input field="turnosMinutos" id="c_com_reneseses_empaques_domain_Supermercado_turnosMinutos" validationMessageCode="field_invalid_integer" z="XNjIA+74PR2j30Rt9LQ5H3O3Zak="/>
+                    </div>
+                </div>
+                <h4 style="margin-top: 0">Fin</h4>
+                <div class="row">
+                    <div class="col-md-4">
+                        <field:select field="turnosDiaEnd" id="c_com_reneseses_empaques_domain_Supermercado_turnosDiaEnd" items="${diasenums}" path="diasenums" z="user-managed"/>
+                    </div>
+                    <div class="col-md-4">
+                        <field:input field="turnosHoraEnd" id="c_com_reneseses_empaques_domain_Supermercado_turnosHoraEnd" validationMessageCode="field_invalid_integer" z="user-managed"/>
+                    </div>
+                    <div class="col-md-4">
+                        <field:input field="turnosMinutosEnd" id="c_com_reneseses_empaques_domain_Supermercado_turnosMinutosEnd" validationMessageCode="field_invalid_integer" z="user-managed"/>
+                    </div>
+                </div>
             </fieldset>
         </div>
         <div class="col-sm-6">
             <fieldset>
                 <legend>Repechajes</legend>
-                <field:select field="repechajeDia" id="c_com_reneseses_empaques_domain_Supermercado_repechajeDia" items="${diasenums}" path="diasenums" z="LWKQq8x6O9uOG/jR8qBnsrW52TQ="/>
-                <field:input field="repechajeHora" id="c_com_reneseses_empaques_domain_Supermercado_repechajeHora" validationMessageCode="field_invalid_integer" z="XTUXtYiIDW42qQGImM1OccF4HyY="/>
-                <field:input field="repechajeMinutos" id="c_com_reneseses_empaques_domain_Supermercado_repechajeMinutos" validationMessageCode="field_invalid_integer" z="8pTmQOF4cnc4JG539hrY2GqxCa4="/>
+                <h4 style="margin-top: 0">Inicio</h4>
+                <div class="row">
+                    <div class="col-md-4">
+                        <field:select field="repechajeDia" id="c_com_reneseses_empaques_domain_Supermercado_repechajeDia" items="${diasenums}" path="diasenums" z="LWKQq8x6O9uOG/jR8qBnsrW52TQ="/>
+                    </div>
+                    <div class="col-md-4">
+                        <field:input field="repechajeHora" id="c_com_reneseses_empaques_domain_Supermercado_repechajeHora" validationMessageCode="field_invalid_integer" z="XTUXtYiIDW42qQGImM1OccF4HyY="/>
+                    </div>
+                    <div class="col-md-4">
+                        <field:input field="repechajeMinutos" id="c_com_reneseses_empaques_domain_Supermercado_repechajeMinutos" validationMessageCode="field_invalid_integer" z="8pTmQOF4cnc4JG539hrY2GqxCa4="/>
+                    </div>
+                </div>
+                <h4 style="margin-top: 0">Fin</h4>
+                <div class="row">
+                    <div class="col-md-4">
+                        <field:select field="repechajeDiaEnd" id="c_com_reneseses_empaques_domain_Supermercado_repechajeDiaEnd" items="${diasenums}" path="diasenums" z="user-managed"/>
+                    </div>
+                    <div class="col-md-4">
+                        <field:input field="repechajeHoraEnd" id="c_com_reneseses_empaques_domain_Supermercado_repechajeHoraEnd" validationMessageCode="field_invalid_integer" z="user-managed"/>
+                    </div>
+                    <div class="col-md-4">
+                        <field:input field="repechajeMinutosEnd" id="c_com_reneseses_empaques_domain_Supermercado_repechajeMinutosEnd" validationMessageCode="field_invalid_integer" z="user-managed"/>
+                    </div>
+                </div>
             </fieldset>
         </div>
     </form:create>

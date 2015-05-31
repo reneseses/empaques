@@ -20,6 +20,7 @@
 
 		<script type="text/javascript">
 			var appContext= '${context}';
+			//var delay= ${delay};
 		</script>
 
 	</head>

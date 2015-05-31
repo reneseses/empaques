@@ -27,12 +27,12 @@ public class FaltaServiceImpl implements FaltaService {
     	return faltaRepository.findFaltaByPlanillaAndUsuario(planilla, usuario);
     }
     
-    public int getCantidadTurnos(ObjectId planilla, UsuarioId usuario){
+    public int getCantidadTurnos(ObjectId planilla, UsuarioId usuario, Integer MAX){
     	List<Falta> faltas= faltaRepository.findFaltaByPlanillaAndUsuario(planilla, usuario);
     	int contGraves= 0;
     	int contLeves=0;
     	if(faltas.size() == 0)
-    		return 3;
+    		return MAX;
     	else{
     		for(Falta falta: faltas){
     			if(falta.getTipoFalta().equals(TipoFaltaEnum.SUSPENSION))
@@ -57,14 +57,14 @@ public class FaltaServiceImpl implements FaltaService {
     		return 1;
     	if(contGraves== 1)
     		return 2;
-    	return 3;
+    	return MAX;
     }
     
-    public int getCantidadTurnosRepechaje(ObjectId planilla, UsuarioId usuario){
+    public int getCantidadTurnosRepechaje(ObjectId planilla, UsuarioId usuario, Integer MAX){
     	List<Falta> faltas= faltaRepository.findFaltaByPlanillaAndUsuario(planilla, usuario);
     	int contLeves=0;
     	if(faltas.size() == 0)
-    		return 2;
+    		return MAX;
     	else{
     		for(Falta falta: faltas){
     			if(falta.getTipoFalta().equals(TipoFaltaEnum.SUSPENSION))
@@ -77,7 +77,7 @@ public class FaltaServiceImpl implements FaltaService {
     	}
     	if(contLeves >= 2)
     		return 0;
-    	return 2;
+    	return MAX;
     }
     
 }

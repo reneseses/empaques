@@ -13,12 +13,14 @@ import com.mongodb.BasicDBList;
 import com.reneseses.empaques.domain.*;
 import com.reneseses.empaques.domain.service.*;
 import com.reneseses.empaques.enums.EstadoTurnoEnum;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mongodb.BasicDBObject;
@@ -50,14 +52,34 @@ public class DefaultController {
 	@Autowired
 	private MessageDigestPasswordEncoder messageDigestPasswordEncoder;
 	
-	@RequestMapping(value="/")
-	public String member(){
+	@RequestMapping(value="/", produces = "text/html")
+	public String index(Model uiModel){
 		Object principal= SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		if(principal instanceof Usuario)
+		if(principal instanceof Usuario){
 			return "redirect:/member";
+		}
 		
 		return "index";
+	}
+	
+	@RequestMapping(value="/member", produces = "text/html")
+	public String member(Model uiModel){
+		Object principal= SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if(principal instanceof Usuario){
+			Usuario usuario= (Usuario) principal;
+			
+			if(usuario.getId() == null || usuario.getId().getSupermercado() == null){
+				uiModel.addAttribute("delay", 0);
+			}else{
+				Supermercado supermercado= supermercadoService.findSupermercado(usuario.getId().getSupermercado());
+				uiModel.addAttribute("delay", supermercado.getDelayZonaHoraria());
+			}
+			return "member";
+		}
+		
+		return "redirect:/index";
 	}
 
 	@RequestMapping(value="readjsondb")

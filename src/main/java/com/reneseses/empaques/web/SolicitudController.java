@@ -14,11 +14,13 @@ import com.reneseses.empaques.domain.Bloque;
 import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Repechaje;
 import com.reneseses.empaques.domain.Solicitud;
+import com.reneseses.empaques.domain.Supermercado;
 import com.reneseses.empaques.domain.Turno;
 import com.reneseses.empaques.domain.Usuario;
 import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
 import com.reneseses.empaques.domain.service.RepechajeServiceImpl;
 import com.reneseses.empaques.domain.service.SolicitudServiceImpl;
+import com.reneseses.empaques.domain.service.SupermercadoServiceImpl;
 import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
 import com.reneseses.empaques.enums.BloqueEnum;
 import com.reneseses.empaques.enums.DiasEnum;
@@ -55,8 +57,9 @@ public class SolicitudController {
 	@Autowired
 	private UsuarioServiceImpl usuarioServiceImpl;
 	
-	private int delay = 3;
-
+	@Autowired
+	private SupermercadoServiceImpl supermercadoServiceImpl;
+	
     @RequestMapping("/recibir")
     public @ResponseBody ResponseEntity<String> recibir(@RequestParam(value = "turnos", required = true) String turnos, @RequestParam(value = "id", required = false) ObjectId id) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -125,31 +128,19 @@ public class SolicitudController {
     @RequestMapping("/turnos")
     public String turno(Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Calendar cal = Calendar.getInstance();
-        int day = cal.get(Calendar.DAY_OF_WEEK);
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
+        Supermercado supermercado= supermercadoServiceImpl.findSupermercado(principal.getId().getSupermercado());
         
         if(principal.getRegimen().equals(RegimenTurnoEnum.LIBRE)){
         	uiModel.addAttribute("error", "Ud tiene asistencia libre.");
         	return "member/solicitudes/error";
         }
-                
-        if (day <= Calendar.THURSDAY && day > Calendar.SUNDAY) {
-            if (day == Calendar.MONDAY) {
-            	if(hour < delay - 1 || (hour == delay - 1 && minute < 30) ){
-            		uiModel.addAttribute("error", "La recepción de turnos comienza a las 23:30 horas");
-                    return "member/solicitudes/error";
-            	}
-            }
-            if (day == Calendar.THURSDAY && (hour > delay - 1 || (hour == delay - 1 && minute >= 30))) {
-                uiModel.addAttribute("error", "La recepción de turnos terminó a las 23:29 horas");
-                return "member/solicitudes/error";
-            }
+        
+        if (supermercado.isTurnosActivo()) {
+        	Calendar cal = Calendar.getInstance();
             cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_WEEK) + 1);
             cal.set(Calendar.HOUR_OF_DAY, 0);
             Calendar date2 = Calendar.getInstance();
-            day = cal.get(Calendar.DAY_OF_YEAR) + 6;
+            int day = cal.get(Calendar.DAY_OF_YEAR) + 6;
             date2.set(Calendar.DAY_OF_YEAR, day);
             date2.set(Calendar.HOUR_OF_DAY, 0);
             date2.set(Calendar.MINUTE, 0);
@@ -163,32 +154,20 @@ public class SolicitudController {
             uiModel.addAttribute("bloques", BloqueEnum.values());
             return "member/solicitudes/turnos";
         }
-        uiModel.addAttribute("error", "La recepción de turnos comienza los domingo a las 23:30 horas y termina los miércoles a las 23:29");
+        uiModel.addAttribute("error", "La recepción de turnos aun no está activa");
         return "member/solicitudes/error";
     }
 
     @RequestMapping("/repechaje")
     public String repechaje(Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Calendar cal = Calendar.getInstance();
-        int day = cal.get(Calendar.DAY_OF_WEEK);
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
+        Supermercado supermercado= supermercadoServiceImpl.findSupermercado(principal.getId().getSupermercado());
         
-        if (day <= Calendar.SATURDAY && day > Calendar.THURSDAY) {
-            if (day == Calendar.FRIDAY) {
-            	if(hour < delay - 1 || (hour == delay - 1 && minute < 30) ){
-	                uiModel.addAttribute("error", "La recepcion de turnos de repechaje comienza a las 23:30 horas");
-	                return "member/solicitudes/error";
-            	}
-            }
-            if (day == Calendar.SATURDAY && (hour > delay - 1 || (hour == delay - 1 && minute >= 30))) {
-                uiModel.addAttribute("error", "La recepcion de turnos de repechaje termino a las 23:29 horas");
-                return "member/solicitudes/error";
-            }
+        if (supermercado.isRepechajeActivo()) {
+        	Calendar cal = Calendar.getInstance();
             cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_WEEK) + 1);
             Calendar date2 = Calendar.getInstance();
-            day = cal.get(Calendar.DAY_OF_YEAR) + 7;
+            int day = cal.get(Calendar.DAY_OF_YEAR) + 7;
             cal.set(Calendar.HOUR_OF_DAY, 0);
             
             date2.set(Calendar.DAY_OF_YEAR, day);
@@ -245,7 +224,7 @@ public class SolicitudController {
             uiModel.addAttribute("turnos", array);
             return "member/solicitudes/repechaje";
         }
-        uiModel.addAttribute("error", "La recepcion de turnos de repechaje comienza los jueves a las 23:30 horas y termina los viernes a las 23:29");
+        uiModel.addAttribute("error", "La recepcion de turnos de repechaje aún no está activa");
         return "member/solicitudes/error";
     }
 
@@ -256,6 +235,10 @@ public class SolicitudController {
     
     @RequestMapping(params="week")
     public @ResponseBody ResponseEntity<String> getSolicitudes(@RequestParam String week){
+    	Usuario principal= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	Supermercado supermercado= supermercadoServiceImpl.findSupermercado(principal.getId().getSupermercado());
+    	int delay= supermercado.getDelayZonaHoraria();
+    	
     	HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		
@@ -263,7 +246,7 @@ public class SolicitudController {
 		
 		SimpleDateFormat sdfsol= new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		BasicDBList response= new BasicDBList();
-		
+			
 		try{
 			Date date= sdf.parse(week);
 			Calendar cal= Calendar.getInstance();
@@ -287,7 +270,7 @@ public class SolicitudController {
 				jo.append("empaque", sol.getUsuario().getNumero());
 				
 				cal.setTime(sol.getFecha());
-				cal.add(Calendar.HOUR, -delay);
+				cal.add(Calendar.HOUR, delay);
 				
 				String formated= sdfsol.format(cal.getTime());
 				jo.append("fecha", formated);
@@ -324,6 +307,10 @@ public class SolicitudController {
 
     @RequestMapping(value = "repechajes", params="week")
     public @ResponseBody ResponseEntity<String> getRepechajes(@RequestParam String week){
+    	Usuario principal= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    	Supermercado supermercado= supermercadoServiceImpl.findSupermercado(principal.getId().getSupermercado());
+    	int delay= supermercado.getDelayZonaHoraria();
+    	
     	HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		
@@ -355,7 +342,7 @@ public class SolicitudController {
 				jo.append("empaque", rep.getUsuario().getNumero());
 				
 				cal.setTime(rep.getFecha());
-				cal.add(Calendar.HOUR, -delay);
+				cal.add(Calendar.HOUR, delay);
 				
 				String formated= sdfsol.format(cal.getTime());
 				jo.append("fecha", formated);
