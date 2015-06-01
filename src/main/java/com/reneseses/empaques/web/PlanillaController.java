@@ -41,6 +41,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RequestMapping("/member/planillas")
 @Controller
@@ -140,7 +141,7 @@ public class PlanillaController {
     }
     
     @RequestMapping("/generarTurnos/{id}")
-    public String generarTurnos(@PathVariable("id") ObjectId id, Model uiModel) {
+    public String generarTurnos(@PathVariable("id") ObjectId id, RedirectAttributes uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))
 		        && !principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN")))
@@ -149,25 +150,21 @@ public class PlanillaController {
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
 		
         if (planilla == null) {
-            uiModel.addAttribute("page", "1");
-            uiModel.addAttribute("size", "25");
-            uiModel.addAttribute("error", "No se ha encontrado planilla en la semana especificada");
+            uiModel.addFlashAttribute("error", "No se ha encontrado planilla en la semana especificada");
             return "redirect:/member/planillas";
         }
         if (planilla.getGenerada()) {
-            uiModel.addAttribute("page", "1");
-            uiModel.addAttribute("size", "25");
-            uiModel.addAttribute("error", "La planilla especificada ya ha sido generada");
+            uiModel.addFlashAttribute("error", "La planilla especificada ya ha sido generada");
             return "redirect:/member/planillas";
         }
         
         Supermercado supermercado= supermercadoServiceImpl.findSupermercado(planilla.getSupermercado());
         Calendar date1 = Calendar.getInstance();
 
-        if (supermercado.isTurnosActivo()) {
-            uiModel.addAttribute("page", "1");
-            uiModel.addAttribute("size", "25");
-            uiModel.addAttribute("error", "La recepcion de turnos aun esta activa");
+        Date now= new Date();
+                
+        if (supermercado.isTurnosActivo() && now.before(planilla.getFecha())) {
+            uiModel.addFlashAttribute("error", "La recepcion de turnos aun esta activa");
             return "redirect:/member/planillas";
         }
         
@@ -188,7 +185,7 @@ public class PlanillaController {
 		
 		Map<UsuarioId, Usuario> usuarios= usuarioService.findAll();
 		List<Solicitud> solicitudes= solicitudService.findSolicitudesByFechaBetween(date1.getTime(), date2.getTime());
-		ordenarSolicitudes(solicitudes, usuarios, turnosUsuario);
+		ordenarSolicitudes(solicitudes, usuarios, turnosUsuario, supermercado);
 		
 		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) - 6);
 		date1.set(Calendar.HOUR_OF_DAY, 23);
@@ -277,7 +274,7 @@ public class PlanillaController {
     }
     
     @RequestMapping("/generarRepechaje/{id}")
-    public String generarRepechaje(@PathVariable("id") ObjectId id, Model uiModel) {
+    public String generarRepechaje(@PathVariable("id") ObjectId id, RedirectAttributes uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (!principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))
 		        && !principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN")))
@@ -286,24 +283,21 @@ public class PlanillaController {
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
                 
         if (planilla == null) {
-            uiModel.addAttribute("page", "1");
-            uiModel.addAttribute("size", "25");
-            uiModel.addAttribute("error", "No se ha encontrado planilla en la semana especificada");
+            uiModel.addFlashAttribute("error", "No se ha encontrado planilla en la semana especificada");
             return "redirect:/member/planillas";
         }
         if (planilla.getRepechaje()) {
-            uiModel.addAttribute("page", "1");
-            uiModel.addAttribute("size", "25");
-            uiModel.addAttribute("error", "El repechaje de esta semana ya ha sido generado");
+            uiModel.addFlashAttribute("error", "El repechaje de esta semana ya ha sido generado");
             return "redirect:/member/planillas";
         }
         
         Supermercado supermercado= supermercadoServiceImpl.findSupermercado(planilla.getSupermercado());
         Calendar date1 = Calendar.getInstance();
-        if (supermercado.isRepechajeActivo()) {
-            uiModel.addAttribute("page", "1");
-            uiModel.addAttribute("size", "25");
-            uiModel.addAttribute("error", "La recepcion de turnos de repechaje aun esta activa");
+        
+        Date now= new Date();
+        
+        if ((supermercado.isTurnosActivo() || supermercado.isRepechajeActivo()) && now.before(planilla.getFecha())) {
+            uiModel.addFlashAttribute("error", "La recepcion de turnos de repechaje aun esta activa");
             return "redirect:/member/planillas";
         }
         
@@ -322,7 +316,7 @@ public class PlanillaController {
 		Map<Integer, Integer> turnosUsuario= planilla.getTurnosUsuario(usuarioService.findAllUsuarios());
 		
 		List<Repechaje> repechajes= repechajeService.findRepechajesByFechaBetween(date1.getTime(), date2.getTime());
-		ordenarRepechaje(repechajes, usuarios, turnosUsuario);
+		ordenarRepechaje(repechajes, usuarios, turnosUsuario, supermercado);
 		
 		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) + 2);
 		date2.set(Calendar.DAY_OF_YEAR, date2.get(Calendar.DAY_OF_YEAR) + 2);
@@ -561,8 +555,10 @@ public class PlanillaController {
         return "member/planillas/update";
     }
 	
-	public void ordenarSolicitudes(List<Solicitud> solicitudes, Map<UsuarioId, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios) {
-        for (int i = 0; i < solicitudes.size()- 1; i++) {
+	public void ordenarSolicitudes(List<Solicitud> solicitudes, Map<UsuarioId, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios, Supermercado supermercado) {
+        int maxTurnos= supermercado.getMaxTurnosTotal();
+		
+		for (int i = 0; i < solicitudes.size()- 1; i++) {
             int menor = i;
             for (int j = i + 1; j < solicitudes.size(); j++) {
             	Solicitud aux1= solicitudes.get(menor);
@@ -571,8 +567,8 @@ public class PlanillaController {
                 Usuario user2= usuarios.get(aux2.getUsuario());
                 if (user1.getPrioridad() < user2.getPrioridad()) continue;
                 if (user1.getPrioridad() == user2.getPrioridad()) {
-                	int turno1= turnosUsuarios.containsKey(user1.getId()) &&  turnosUsuarios.get(user1.getId()) < 3 ? turnosUsuarios.get(user1.getId()):3;
-                	int turno2= turnosUsuarios.containsKey(user2.getId()) && turnosUsuarios.get(user2.getId()) < 3 ? turnosUsuarios.get(user2.getId()):3;
+                	int turno1= turnosUsuarios.containsKey(user1.getId()) &&  turnosUsuarios.get(user1.getId()) < maxTurnos ? turnosUsuarios.get(user1.getId()):maxTurnos;
+                	int turno2= turnosUsuarios.containsKey(user2.getId()) && turnosUsuarios.get(user2.getId()) < maxTurnos ? turnosUsuarios.get(user2.getId()):maxTurnos;
                     if (turno1 < turno2) continue;
                     if (turno1 == turno2 && aux1.getFecha().before(aux2.getFecha())) continue;
                 }
@@ -582,8 +578,10 @@ public class PlanillaController {
         }
     }
 	
-	public static void ordenarRepechaje(List<Repechaje> repechajes, Map<UsuarioId, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios) {
-	    for (int i = 0; i < repechajes.size() - 1; i++) {
+	public static void ordenarRepechaje(List<Repechaje> repechajes, Map<UsuarioId, Usuario> usuarios, Map<Integer, Integer> turnosUsuarios, Supermercado supermercado) {
+		int maxTurnos= supermercado.getMaxTurnosTotal();
+		
+		for (int i = 0; i < repechajes.size() - 1; i++) {
 	        int menor = i;
 	        for (int j = i + 1; j < repechajes.size(); j++) {
 	            Repechaje rep1= repechajes.get(menor);
@@ -592,8 +590,8 @@ public class PlanillaController {
                 Usuario user2= usuarios.get(aux.getUsuario());
 	            if (user1.getPrioridad() < user2.getPrioridad()) continue;
 	            if (user1.getPrioridad() == user2.getPrioridad()) {
-	            	int turno1= turnosUsuarios.containsKey(user1.getId()) && turnosUsuarios.get(user1.getId()) < 3 ? turnosUsuarios.get(user1.getId()):3;
-                	int turno2= turnosUsuarios.containsKey(user1.getId()) && turnosUsuarios.get(user2.getId()) < 3 ? turnosUsuarios.get(user2.getId()):3;
+	            	int turno1= turnosUsuarios.containsKey(user1.getId()) && turnosUsuarios.get(user1.getId()) < maxTurnos ? turnosUsuarios.get(user1.getId()):maxTurnos;
+                	int turno2= turnosUsuarios.containsKey(user1.getId()) && turnosUsuarios.get(user2.getId()) < maxTurnos ? turnosUsuarios.get(user2.getId()):maxTurnos;
                     if (turno1 < turno2) continue;
 	                if (turno1==turno2 && rep1.getFecha().before(aux.getFecha())) continue;
 	            }

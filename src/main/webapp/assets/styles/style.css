@@ -264,38 +264,28 @@ label{
 	display: inline-block;
 }
 
-.dummy {
-    margin-top: 100%;
-}
-
-.dummy .thumbnail {
-    position: absolute;
-    top: 15px;
-    bottom: 0;
-    left: 15px;
-    right: 0;
+.thumbnail.tail {
+    position: relative;
     text-align: center;
-    display: none;
-    border: 1px solid #ddd;
-    margin-bottom: 0;
+    display: block;
 }
 
-.dummy .thumbnail h3{
+.thumbnail.tail h3{
 	margin:0;
 	position: absolute;
 	left: 0;
 	right: 0;
 	transition: opacity .2s ease-in-out;
-	opacity: .9;
+	opacity: .8;
 	font-size: 22px;
 }
 
-.dummy .thumbnail h3 small{
+.thumbnail.tail h3 small{
 	display: block;
 	font-size: 13px;
 }
 
-.dummy .thumbnail:hover h3{
+.thumbnail.tail:hover h3{
 	opacity: 1;
 }
 
@@ -304,7 +294,7 @@ label{
 	color: #fff !important;
 }
 
-a.thumbnail.purple.active, a.thumbnail.purple:focus, a.thumbnail.purple:hover{
+.thumbnail.tail.purple.active, .thumbnail.tail.purple:focus, .thumbnail.tail.purple:hover{
 	border-color: #9C59B8;
 }
 
@@ -313,7 +303,7 @@ a.thumbnail.purple.active, a.thumbnail.purple:focus, a.thumbnail.purple:hover{
 	color: #fff !important;
 }
 
-a.thumbnail.green.active, a.thumbnail.green:focus, a.thumbnail.green:hover{
+.thumbnail.tail.green.active, .thumbnail.tail.green:focus, .thumbnail.tail.green:hover{
 	border-color: #2FCC71;
 }
 
@@ -322,7 +312,7 @@ a.thumbnail.green.active, a.thumbnail.green:focus, a.thumbnail.green:hover{
 	color: #fff !important;
 }
 
-a.thumbnail.blue.active, a.thumbnail.blue:focus, a.thumbnail.blue:hover{
+.thumbnail.tail.blue.active, .thumbnail.tail.blue:focus, .thumbnail.tail.blue:hover{
 	border-color: #3598DC;
 }
 
@@ -331,7 +321,7 @@ a.thumbnail.blue.active, a.thumbnail.blue:focus, a.thumbnail.blue:hover{
 	color: #fff !important;
 }
 
-a.thumbnail.orange.active, a.thumbnail.orange:focus, a.thumbnail.orange:hover{
+.thumbnail.tail.orange.active, .thumbnail.tail.orange:focus, .thumbnail.tail.orange:hover{
 	border-color: #F49C14;
 }
 
@@ -550,27 +540,16 @@ a.thumbnail.orange.active, a.thumbnail.orange:focus, a.thumbnail.orange:hover{
 }
 
 @media(max-width: 414px){
-    .dummy .thumbnail h3{
+    .thumbnail.tail h3{
 		font-size: 16px
 	}
 	
-	.dummy .thumbnail h3 small{
+	.thumbnail.tail h3 small{
 		font-size: 12px;
 	}
-	
-	.dummy {
-	    margin-top: 0;
-	}
 
-	.dummy .thumbnail {
-	    position: relative;
-	    top: auto;
-	    bottom: auto;
-	    left: 0;
-	    right: 0;
-	    text-align: center;
-	    display: none;
-	    height: 130px;
+	.thumbnail.tail {
+	    max-height: 130px;
 	    margin-bottom: 10px;
 	}
 }

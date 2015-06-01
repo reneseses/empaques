@@ -7,18 +7,21 @@
 	<script type="text/javascript">
 	$(function () {
 		var refreshLinks= function(){
-			$(".dummy .thumbnail").each(function(){
-				var	height	= $(this).height(),
+			$(".thumbnail.tail").each(function(){
+				var	width	= $(this).width(),
+					height	= width > 200? 200: width - 10,
 					text	= $(this).find("h3"),
 					tHeight = text.height();
 
+				$(this).height(height);
+				height= $(this).height();
 				text.css({bottom: height /2 - 5});
 			});
 		}
 
 		refreshLinks();
 
-		$(".dummy .thumbnail").fadeIn().css("display","block");;
+		$(".thumbnail.tail").fadeIn().css("display","block");;
 
 		$(window).resize(function(){
 			refreshLinks();
@@ -26,32 +29,28 @@
 	});
 	</script>
 	<div class="col-sm-12 col-md-8">
-		<div class="col-md-4 col-sm-4 col-xs-6 col-xxs-12">
-			<div class="dummy">
+		<div class="row">
+			<div class="col-md-4 col-sm-4 col-xs-6 col-xxs-12">
 				<spring:url value="/member/solicitudes/turnos" var="turnos_url" />
-				<a href="${turnos_url}" class="thumbnail purple">
+				<a href="${turnos_url}" class="thumbnail purple tail">
 					<h3>
 						<small>Solicitar</small>
 						Turnos
 					</h3>
 				</a>
 			</div>
-		</div>
-		<div class="col-md-4 col-sm-4 col-xs-6 col-xxs-12">
-			<div class="dummy">
+			<div class="col-md-4 col-sm-4 col-xs-6 col-xxs-12">
 				<spring:url value="/member/solicitudes/repechaje" var="repechaje_url" />
-				<a href="${repechaje_url}" class="thumbnail blue">
+				<a href="${repechaje_url}" class="thumbnail blue tail">
 					<h3>
 						<small>Solicitar</small>
 						Repechaje
 					</h3>
 				</a>
 			</div>
-		</div>
-		<div class="col-md-4 col-sm-4 col-xs-6 col-xxs-12">
-			<div class="dummy">
+			<div class="col-md-4 col-sm-4 col-xs-6 col-xxs-12">
 				<spring:url value="/member/planillas" var="planillas_url" />
-				<a href="${planillas_url}" class="thumbnail orange">
+				<a href="${planillas_url}" class="thumbnail orange tail">
 					<h3>Planillas</h3>
 				</a>
 			</div>

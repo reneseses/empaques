@@ -7,9 +7,8 @@
         <c:set value="true" var="admin"/>
     </sec:authorize>
     
-    ${error}
     <c:if test="${not empty error}">
-        <div class="alert alert-danger">
+        <div class="alert alert-danger alert-xs">
             ${error}
         </div>
     </c:if>
