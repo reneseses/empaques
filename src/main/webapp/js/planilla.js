@@ -49,44 +49,41 @@ else{
 }
 
 $(function () {
-	var startDate= date;
-	var endDate= date;
+	var startDate	= date,
+		endDate		= date;
 	
-	var curr_date = date.getDate(); if(curr_date <10) curr_date= "0" + curr_date;
-	var curr_month = date.getMonth() + 1; if(curr_month <10) curr_month= "0" + curr_month;
-	var curr_year = date.getFullYear();
+	var curr_date	= date.getDate(); if(curr_date <10) curr_date= "0" + curr_date,
+		curr_month	= date.getMonth() + 1; if(curr_month <10) curr_month= "0" + curr_month,
+		curr_year	= date.getFullYear();
 	
 	//$('.week-picker').val(curr_date + "-" + curr_month + "-" + curr_year);
 
-	var height= $(window).height() - $("#planilla").position().top - 1;
-	var width= $("#planilla").width() - 65;
+	var height	= $(window).height() - $("#planilla").position().top - 21,
+		width	= $("#planilla").width();
 
-	$("#planilla").height(height - 20);
-
-	var colWidth= parseInt(width/7);
-
-	colWidth= colWidth>80? colWidth: 80;
+	$("#planilla").parent().height(height).css({overflow: "hidden"});
+	
+	var colWidth= Math.floor(width/7);
 
 	var lastWidth= width - colWidth* 6;
-
-	lastWidth= lastWidth> 80? lastWidth: 80;
-
+	//lastWidth= lastWidth> 80? lastWidth: 80;
 	$.ajax({
-        url: dataUrl,
-        dataType: 'json',
-        success: function(data) {
-        	var first		= true,
-        		container	= document.getElementById('planilla');
+		url: dataUrl,
+		dataType: 'json',
+		success: function(data) {
+			var container	= document.getElementById('planilla');
+				rowHeaders	= data[0],
+				tableData	= data[1],
+				colHeaders		= ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
 
-        	grid= new Handsontable(container, {
-        		colWidths	: [colWidth, colWidth, colWidth, colWidth, colWidth, colWidth, lastWidth],
-        		data		: data[1],
-        		colHeaders	: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"],
-        		rowHeaders	: data[0],
-        		columns		: columns,
-        		fillHandle	: fill,
-        		maxRows		: data.length,
-        		cells		: function (row, col, prop) {
+			grid= new Handsontable(container, {
+				data		: tableData,
+				colHeaders	: colHeaders,
+				rowHeaders	: rowHeaders,
+				columns		: columns,
+				stretchH	: 'all',
+				maxRows		: tableData.length,
+				cells		: function (row, col, prop) {
 					var cellProperties= {};
 					if(this.instance.getData()[row][prop] == '')
 						cellProperties.readOnly=true;
@@ -94,22 +91,22 @@ $(function () {
 					cellProperties.renderer= negativeValueRenderer;
 
 					return cellProperties;
-				}
-        	});
+				},
+			});
 
-        	grid.addHook('afterChange', function(change){
-        		getChanges(change, grid.getData());
-        	})
+			grid.addHook('afterChange', function(change){
+				getChanges(change, grid.getData());
+			});
 
-        	$(".handsontable table").addClass("table table-bordered table-striped table-hover");
-        }
-    });
+			$(".handsontable table").addClass("table table-bordered table-striped table-hover");
+		}
+	});
 	
 
 	var selectCurrentWeek = function() {
-	    window.setTimeout(function () {
-	        $('.xdsoft_datetimepicker').find('.xdsoft_current').parent().addClass('xdsoft_row_current');
-	    }, 40);
+		window.setTimeout(function () {
+			$('.xdsoft_datetimepicker').find('.xdsoft_current').parent().addClass('xdsoft_row_current');
+		}, 40);
 	};
 
 	$('.week-picker').keydown(function(e){

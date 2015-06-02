@@ -11,25 +11,22 @@
     <fmt:formatDate pattern="yyyy/MM/dd" value="${planilla.fecha}" var="fecha"/>
     <fmt:formatDate pattern="dd-MM-yyyy" value="${planilla.fecha}" var="fecha2"/>
     <script>
-    	dataUrl= "${planilla_data}";
-    	saveUrl= "${planilla_save}";
-    	parent= "${parent_url}";
-    	planilla_id= "${planilla.id}";
-    	usuario_data= "${usuario_data}";
-    	user_img= "${user_img}";
-    	dias= ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]; 
-    	var fill = false;
-    	prev= "";
-    	planillaId= "${planilla.id}";
-    	date= new Date("${fecha}");
+        var dataUrl     = "${planilla_data}",
+            saveUrl     = "${planilla_save}",
+            parent      = "${parent_url}",
+            planilla_id = "${planilla.id}",
+            usuario_data= "${usuario_data}",
+            user_img    = "${user_img}",
+            dias        = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"],
+            fill        = false,
+            prev        = "",
+            planillaId  = "${planilla.id}",
+            date        = new Date("${fecha}");
+
     	<![CDATA[
 		date= new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 8);
 		var readonly= false;
 		function getChanges(change, data){
-			if(first) {
-				first = false;
-				return;
-			}
 			for(var i in change){
 				if(change[i][2] == change[i][3])
 					continue;
@@ -98,7 +95,7 @@
             </div>
         </header>
         <div class="panel-body no-padding">
-            <div id="planilla" style="overflow: auto; min-height: 200px">
+            <div id="planilla">
                 <!--  -->
             </div>
         </div>

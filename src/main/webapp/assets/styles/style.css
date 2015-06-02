@@ -91,6 +91,10 @@ input + .errors{
 	border-bottom: 1px solid #ddd;
 }
 
+.ht_master:not(.innerBorderLeft) ~ .handsontable tbody tr th, .ht_master:not(.innerBorderLeft) ~ .handsontable:not(.ht_clone_top) thead tr th:first-child{
+	border-right-width: 1px;
+}
+
 td.utilbox{
 	width: 40px;
 	text-align: center;

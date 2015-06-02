@@ -6,7 +6,7 @@
 	<spring:url value="/styles/jquery.ui/jquery-ui-1.9.2.custom.min.css" var="jquery_ui_css" />
 	<spring:url value="/js/ui/jquery-ui-1.9.2.custom.min.js" var="jquery_ui_js" />
 	<spring:url value="/js/empaques.js" var="empaques_js" />
-	<spring:url value="/assets/styles/handsontable.full.min.css" var="handsontable_css" />
+	<spring:url value="/assets/styles/handsontable.full.css" var="handsontable_css" />
 	<spring:url value="/assets/styles/handsontable.bootstrap.css" var="handsontable_bs_css" />
 	<spring:url value="/assets/styles/jquery.datetimepicker.css" var="datepicker_css" />
 	<spring:url value="/js/galleria/galleria-1.2.9.min.js" var="gallery_js" />

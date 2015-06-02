@@ -8,13 +8,15 @@
     <spring:url value="/" var="parent_url"/>
     <fmt:formatDate pattern="yyyy/MM/dd" value="${planilla.fecha}" var="fecha"/>
     <script>
-    	dataUrl= "${planilla_data}";
-    	saveUrl= "${planilla_save}";
-    	date= new Date("${fecha}");
-    	planillaId= "${planilla.id}";
-    	parent= "${parent_url}";
-    	var fill = true;
-		var readonly= false;
+        var dataUrl     = "${planilla_data}",
+            saveUrl     = "${planilla_save}",
+            date        = new Date("${fecha}"),
+            planillaId  = "${planilla.id}",
+            parent      = "${parent_url}",
+            fill        = true,
+            readonly    = false;
+        
+        var getChanges= function(change, data){};
     </script>
     <script src="${planilla_js}">
         <!-- -->
@@ -50,7 +52,7 @@
             </div>
         </header>
         <div class="panel-body no-padding">
-            <div id="planilla" style="overflow: auto; min-height: 200px">
+            <div id="planilla" >
                 <!--  -->
             </div>
         </div>

@@ -8,14 +8,16 @@
     <spring:url value="/member/planillas/save" var="planilla_save"/>
     <fmt:formatDate pattern="yyyy/MM/dd" value="${date}" var="fecha"/>
     <script>
-		var changes = [];
-		var fill = true;
-		var dataUrl= "${planilla_data}";
-		var saveUrl= "${planilla_save}";
-		var date= new Date("${fecha}");
-		date= new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 8);
-		var readonly= false;
-		var parent= "${parent_url}";
+        var changes = [],
+            fill    = true,
+            dataUrl = "${planilla_data}",
+            saveUrl = "${planilla_save}",
+            date    = new Date("${fecha}"),
+            readonly= false,
+            parent  = "${parent_url}";
+		
+        date= new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 8);
+		
 		function getChanges(change){};
 	</script>
     <script src="${planilla_js}">
@@ -52,7 +54,7 @@
             </div>
         </header>
         <div class="panel-body no-padding">
-            <div id="planilla" style="overflow: auto; min-height: 200px">
+            <div id="planilla">
                 <!--  -->
             </div>
         </div>
