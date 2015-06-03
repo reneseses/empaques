@@ -11,20 +11,32 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFBorderFormatting;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
+import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder.BorderSide;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,10 +45,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
+import com.reneseses.empaques.domain.Bloque;
+import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Repechaje;
 import com.reneseses.empaques.domain.Solicitud;
 import com.reneseses.empaques.domain.Usuario;
 import com.reneseses.empaques.domain.UsuarioId;
+import com.reneseses.empaques.domain.service.PlanillaServiceImpl;
 import com.reneseses.empaques.domain.service.RepechajeServiceImpl;
 import com.reneseses.empaques.domain.service.SolicitudServiceImpl;
 import com.reneseses.empaques.domain.service.UsuarioServiceImpl;
@@ -56,6 +71,9 @@ public class DataController {
     
     @Autowired
     private RepechajeServiceImpl repechajeServiceImpl;
+    
+    @Autowired
+    private PlanillaServiceImpl planillaServiceImpl;
     
     @RequestMapping(value="xls")
     public String getUsuariosFile(HttpServletResponse response){
@@ -157,6 +175,162 @@ public class DataController {
     public String upload(Model uiModel){
     	uiModel.addAttribute("data", new ImagenForm());
     	return "member/data/upload";
+    }
+    
+    @RequestMapping(value="/download/{id}")
+    public void download(@PathVariable ObjectId id, HttpServletResponse response){
+    	Planilla planilla= planillaServiceImpl.findPlanilla(id);
+    	
+    	Workbook wb= new XSSFWorkbook();
+    	Sheet sheet = wb.createSheet("Planilla");
+    	int rownum= 0;
+    	
+    	Font font = wb.createFont();
+        font.setColor(IndexedColors.WHITE.getIndex());
+        
+        XSSFColor blue= new XSSFColor(new java.awt.Color(68,114,196));
+        
+    	XSSFCellStyle rowHeader = (XSSFCellStyle) wb.createCellStyle();
+    	rowHeader.setAlignment(CellStyle.ALIGN_RIGHT);
+    	rowHeader.setFillForegroundColor(blue);
+    	rowHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+    	rowHeader.setFont(font);
+    	
+    	XSSFCellStyle colHeader = (XSSFCellStyle) wb.createCellStyle();
+    	colHeader.setAlignment(CellStyle.ALIGN_CENTER);
+    	colHeader.setFillForegroundColor(blue);
+    	colHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
+    	colHeader.setFont(font);
+    	
+    	XSSFCellStyle notempty = (XSSFCellStyle) wb.createCellStyle();
+    	notempty.setBorderBottom(CellStyle.BORDER_THIN);
+    	notempty.setBorderTop(CellStyle.BORDER_THIN);
+    	notempty.setBorderLeft(CellStyle.BORDER_THIN);
+    	notempty.setBorderRight(CellStyle.BORDER_THIN);
+    	notempty.setBorderColor(BorderSide.LEFT, blue);
+    	notempty.setBorderColor(BorderSide.RIGHT, blue);
+    	notempty.setBorderColor(BorderSide.TOP, blue);
+    	notempty.setBorderColor(BorderSide.BOTTOM, blue);
+    	
+    	String[] dias= new String[]{"Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"};
+    	
+    	Row headerRow = sheet.createRow(rownum);
+    	Cell cell = headerRow.createCell(0); cell.setCellValue("");
+    	
+    	sheet.setColumnWidth(0, 20*110);
+    	
+    	for(int i=0; i < dias.length; i++){
+    		cell = headerRow.createCell(i+1); cell.setCellValue(dias[i]);
+    		cell.setCellStyle(colHeader);
+    		
+    		sheet.setColumnWidth(i+1, 37*110);
+    	}
+        
+        BasicDBList turnos= planilla.getTurnos();
+
+        BasicDBList horas= (BasicDBList) turnos.get(0);
+        BasicDBList asignados= (BasicDBList) turnos.get(1);
+        
+        rownum++;
+        for(int i=0; i< horas.size(); i++){
+        	String hora= (String) horas.get(i);
+        	BasicDBObject current= (BasicDBObject) asignados.get(i);
+        	
+        	Row row = sheet.createRow(rownum);
+        	cell = row.createCell(0); cell.setCellValue(hora);
+        	if(!hora.equals(""))
+        		cell.setCellStyle(rowHeader);
+        	
+        	for(int j=0; j < dias.length; j++){
+        		cell = row.createCell(j+1);
+    
+        		String value= current.getString(dias[j]);
+        		if(!value.equals("")){
+                	cell.setCellStyle(notempty);
+        			if(value.equals("-")){
+                		cell.setCellValue("");
+                	}else
+                		cell.setCellValue(Double.parseDouble(value));
+        		}
+        	}
+            rownum++;
+        }
+        
+        /*List<Usuario> list= usuarioServiceImpl.findAllUsuarios();
+        Row row;
+        int rownum = 1;
+        for(Usuario user: list){
+        	row = sheet.createRow(rownum);
+        	cell = row.createCell(0); cell.setCellValue(user.getId().getNumero());
+            cell = row.createCell(1); cell.setCellValue(user.getNombre());
+            cell = row.createCell(2); cell.setCellValue(user.getRut());
+            cell = row.createCell(3); cell.setCellValue(user.getPassword());
+            cell = row.createCell(4); cell.setCellValue(user.getEmail());
+            cell = row.createCell(5); cell.setCellValue(user.getCelular());
+            cell = row.createCell(6); cell.setCellValue(user.getTipo().toString());
+            cell = row.createCell(7); cell.setCellValue(user.getRegimen().toString());
+            cell = row.createCell(8); cell.setCellValue("");
+            if(user.getLastSolicitud() != null){
+            	cell = row.createCell(9); cell.setCellValue(user.getLastSolicitud());
+            }
+            cell = row.createCell(10); cell.setCellValue(user.getPrioridad());
+            if(user.getFechaNacimiento() != null){
+            	cell = row.createCell(11); cell.setCellValue(user.getFechaNacimiento());
+            }
+            cell = row.createCell(12); cell.setCellValue(user.getCarrera());
+            cell = row.createCell(13); cell.setCellValue(user.getUniversidad());
+            rownum++;
+        }
+    	
+        sheet = wb.createSheet("Solicitudes");
+    	headerRow = sheet.createRow(0);
+    	cell = headerRow.createCell(0); cell.setCellValue("Fecha");
+        cell = headerRow.createCell(1); cell.setCellValue("Usuario");
+        cell = headerRow.createCell(2); cell.setCellValue("Turnos");
+        
+        List<Solicitud> sols= solicitudServiceImpl.findAllSolicituds();
+        rownum = 1;
+        for(Solicitud sol: sols){
+        	row = sheet.createRow(rownum);
+            if(sol.getFecha() != null){
+            	cell = row.createCell(0); cell.setCellValue(sol.getFecha());
+            }
+            cell = row.createCell(1); cell.setCellValue(sol.getUsuario().getNumero());
+            cell = row.createCell(2); cell.setCellValue(sol.getTurnos().toString());
+            rownum++;
+        }
+        
+        sheet = wb.createSheet("Repechajes");
+    	headerRow = sheet.createRow(0);
+    	cell = headerRow.createCell(0); cell.setCellValue("Fecha");
+        cell = headerRow.createCell(1); cell.setCellValue("Usuario");
+        cell = headerRow.createCell(2); cell.setCellValue("Turnos");
+        
+        List<Repechaje> reps= repechajeServiceImpl.findAllRepechajes();
+        rownum = 1;
+        for(Repechaje rep: reps){
+        	row = sheet.createRow(rownum);
+            if(rep.getFecha() != null){
+            	cell = row.createCell(0); cell.setCellValue(rep.getFecha());
+            }
+            cell = row.createCell(1); cell.setCellValue(rep.getUsuario().getNumero());
+            cell = row.createCell(2); cell.setCellValue(rep.getTurnos().toString());
+            rownum++;
+        }*/
+        
+        SimpleDateFormat sdf= new SimpleDateFormat("dd-MM-yyyy");
+        
+        try {
+            response.setHeader("Content-Disposition", "inline;filename=\"planilla-" + sdf.format(planilla.getFecha()) + ".xlsx\"");
+            OutputStream out = response.getOutputStream();
+            response.setContentType("xlsx");
+            wb.write(out);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     private void cellContent(Cell cell, int type, BasicDBObject doc, String column) {

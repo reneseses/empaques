@@ -189,6 +189,7 @@ public class UsuarioController {
 	@RequestMapping("turnos/solicitudes")
 	public String solicitudes(Model uiModel) {
 		populateEditForm(uiModel, new Usuario());
+		
 		return "member/usuarios/turnos/solicitudlist";
 	}
 

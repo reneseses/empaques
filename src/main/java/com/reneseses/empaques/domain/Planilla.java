@@ -106,7 +106,7 @@ public class Planilla {
 		this.setBloques(bloques);
     }
     
-	public String getTurnos(){
+	public BasicDBList getTurnos(){
 		BasicDBList ja	= new BasicDBList();
 		BasicDBList data= new BasicDBList();
 		BasicDBList rows= new BasicDBList();
@@ -155,7 +155,7 @@ public class Planilla {
 		}
 		ja.add(rows);
 		ja.add(data);
-		return ja.toString();
+		return ja;
 	}
 	
 	public String getCupos(){

@@ -52,9 +52,14 @@ $(function () {
 	var startDate	= date,
 		endDate		= date;
 	
-	var curr_date	= date.getDate(); if(curr_date <10) curr_date= "0" + curr_date,
-		curr_month	= date.getMonth() + 1; if(curr_month <10) curr_month= "0" + curr_month,
+	var curr_date	= date.getDate(),
+		curr_month	= date.getMonth() + 1,
 		curr_year	= date.getFullYear();
+
+	if(curr_date <10)
+		curr_date= "0" + curr_date;
+	 if(curr_month <10)
+	 	curr_month= "0" + curr_month;
 	
 	//$('.week-picker').val(curr_date + "-" + curr_month + "-" + curr_year);
 
@@ -124,7 +129,6 @@ $(function () {
 		onSelectDate: function(ct){
 			var mom= moment(ct).startOf("week").add(1, "d");
 			var d= mom.toDate();
-			console.log(d);
 			this.setOptions({
 				value: moment(d).format("DD-MM-YYYY")
 			});

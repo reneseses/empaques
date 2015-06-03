@@ -69,7 +69,7 @@ public class PlanillaController {
     @ResponseBody
     public String getData(@PathVariable("id") ObjectId id) {
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
-        return planilla.getTurnos();
+        return planilla.getTurnos().toString();
     }
     
     @RequestMapping("ajax/getall")
