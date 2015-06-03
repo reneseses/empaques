@@ -129,27 +129,22 @@ public class Planilla {
 		
 		for(int i=0; i< bloquesEnum.length; i++){
 			for(int k=0; k <= list.get(i); k++){
-				BasicDBList row = new BasicDBList();
 				jo = new BasicDBObject();
 				jo.put("bloque", i);
 				jo.put("turno", k);
 				for(int j= 0; j< dias.length; j++){
 					if(k >= this.bloques.get(i*dias.length + j).getCupos()){
-						jo.put(dias[j].getDia(), "");
-						row.add("");
+						jo.put(dias[j].getDia(), "_");
 					}
 					else{
 						if(this.bloques.get(i*dias.length + j).getTurnos().get(k).getUsuario() == null){
 							jo.put(dias[j].getDia(), "-");
-							row.add("-");
 						}
 						else{
 							jo.put(dias[j].getDia(), this.bloques.get(i*dias.length + j).getTurnos().get(k).getUsuario());
-							row.add(this.bloques.get(i*dias.length + j).getTurnos().get(k).getUsuario());
 						}
 					}
 				}
-				row.add(i);
 				data.add(jo);
 			}
 		}

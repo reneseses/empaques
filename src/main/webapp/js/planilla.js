@@ -9,18 +9,19 @@ function negativeValueRenderer(instance, td, row, col, prop, value, cellProperti
 		textAlign: "right"
 	});
 	
-	if(value === '') {
+	if(value === '_') {
 		td.style.background = '#eee';
+		td.style.color= "#eee"
 	}
 	else if(value === '-') {
 		td.style.background = '#c1e2b3';
-		td.style.color= "#468847";
+		td.style.color= "#c1e2b3";
 		td.style.textAlign = "center";
 	}
-	else if(value === "  "){
+	/*else if(value === "_"){
 		td.style.background = '#f0f0f0';
 		td.style.textAlign = "center";
-	}
+	}*/
 }
 var columns;
 
@@ -90,7 +91,7 @@ $(function () {
 				maxRows		: tableData.length,
 				cells		: function (row, col, prop) {
 					var cellProperties= {};
-					if(this.instance.getData()[row][prop] == '')
+					if(this.instance.getData()[row][prop] == '_')
 						cellProperties.readOnly=true;
 					
 					cellProperties.renderer= negativeValueRenderer;
@@ -147,7 +148,7 @@ function save(){
 		data: {data: JSON.stringify(grid.getData()), fecha: $(".week-picker").val()},
 		type: "POST",
 		success:function(data){
-			window.location.href = parent + "member/planillas?page=1&size=10";
+			window.location.href = parent + "member/planillas";
 		}
 	});
 }
@@ -155,10 +156,10 @@ function save(){
 function updateTurnos(){
 	$.ajax({
 		url: saveUrl,
-		data: {data: JSON.stringify(grid.getData()), id: planillaId},
+		data: {data: JSON.stringify(changes), id: planillaId},
 		type: "POST",
 		success:function(){
-			window.location.href = parent + "member/planillas?page=1&size=10";
+			window.location.href = parent + "member/planillas";
 		}
 	});
 }
@@ -169,7 +170,7 @@ function update(){
 		data: {data: JSON.stringify(changes), id: planillaId},
 		type: "POST",
 		success:function(){
-			window.location.href = parent + "member/planillas?page=1&size=10";
+			window.location.href = parent + "member/planillas";
 		}
 	});
 }

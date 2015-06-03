@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-xs-3 col-sm-2 col-sm-offset-2 col-md-1 col-md-offset-5 col-lg-1 col-lg-offset-7">
                     <div class="pull-right">
-                        <button class="btn btn-primary btn-xs" onclick="save();">
+                        <button class="btn btn-primary btn-xs" onclick="update();">
                             <i class="fa fa-save">
                                 <!-- -->
                             </i> Save</button>

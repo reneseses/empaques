@@ -21,6 +21,7 @@
             fill        = false,
             prev        = "",
             planillaId  = "${planilla.id}",
+            changes     = [],
             date        = new Date("${fecha}");
 
     	<![CDATA[
@@ -92,7 +93,7 @@
                             <a href="${parent_url}member/data/download/${planilla.id}" class="btn btn-success btn-xs">
                                 <i class="fa fa-cloud-download"><!-- --></i> Download
                             </a>
-                            <button class="btn btn-primary btn-xs" onclick="save();"><i class="fa fa-save"><!-- --></i> Save</button>
+                            <button class="btn btn-primary btn-xs" onclick="updateTurnos();"><i class="fa fa-save"><!-- --></i> Save</button>
                         </div>
                     </div>
                 </div>

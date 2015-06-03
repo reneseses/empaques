@@ -618,34 +618,51 @@ public class PlanillaController {
     }
 	
 	@RequestMapping("/saveTurnos")
-    public @ResponseBody String saveTurnos(@RequestParam("id") ObjectId id, @RequestParam("data") String data) {
-		Usuario principal= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public @ResponseBody ResponseEntity<String> saveTurnos(@RequestParam("id") ObjectId id, @RequestParam("data") String data) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/text; charset=utf-8");
 		
+		Usuario principal= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Planilla planilla = planillaServiceImpl.findPlanilla(id);
-        BasicDBList ja = (BasicDBList) JSON.parse(data);
-        List<Bloque> bloques = planilla.getBloques();
-        for (int i = 0; i < ja.size(); i++) {
-        	BasicDBList change = (BasicDBList) ja.get(i);
-        	
-        	Integer bloq= (Integer) change.get(0);
-        	String day= (String) change.get(1);
-        	Integer nume= (Integer) change.get(2);
-        	Integer numero= Integer.valueOf((int)change.get(3));
-        	
-        	UsuarioId usuarioId= new UsuarioId();
-        	usuarioId.setNumero(numero);
-        	usuarioId.setSupermercado(principal.getId().getSupermercado());
-        	
-            DiasEnum dia = DiasEnum.valueOf(day.toUpperCase());
-            Bloque bloque = bloques.get(7 * bloq + dia.ordinal());
-            Usuario usuario= usuarioService.findUsuario(usuarioId);
-            List<Turno> turnos = bloque.getTurnos();
-            Turno turno = turnos.get(nume);
-            turno.setUsuario(usuario.getId().getNumero());
+
+        try{
+	        BasicDBList ja = (BasicDBList) JSON.parse(data);
+	        List<Bloque> bloques = planilla.getBloques();
+	        for (int i = 0; i < ja.size(); i++) {
+	        	BasicDBList change = (BasicDBList) ja.get(i);
+	        	
+	        	Integer bloq= (Integer) change.get(0);
+	        	String day= (String) change.get(1);
+	        	Integer nume= (Integer) change.get(2);
+	        	String value= (String)change.get(3);
+	        	Integer numero= null;
+	        	
+	        	try{
+	        		numero= Integer.valueOf(value);
+	        	}catch(Exception e){};
+	        	
+	        	Usuario usuario= null;
+	        	if(numero != null){
+	        		UsuarioId usuarioId= new UsuarioId();
+		        	usuarioId.setNumero(numero);
+		        	usuarioId.setSupermercado(principal.getId().getSupermercado());
+		        	usuario= usuarioService.findUsuario(usuarioId);
+	        	}
+	        	
+	            DiasEnum dia = DiasEnum.valueOf(day.toUpperCase());
+	            Bloque bloque = bloques.get(7 * bloq + dia.ordinal());
+	            List<Turno> turnos = bloque.getTurnos();
+	            
+	            Turno turno = turnos.get(nume);
+	            turno.setUsuario(usuario==null?null: usuario.getId().getNumero());
+	        }
+	        
+	        planillaServiceImpl.savePlanilla(planilla);
+        }catch(Exception e){
+        	e.printStackTrace();
+        	return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        planillaServiceImpl.savePlanilla(planilla);
-        return "true";
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 	
     @RequestMapping("getuser")

@@ -232,7 +232,7 @@ public class DataController {
         BasicDBList asignados= (BasicDBList) turnos.get(1);
         
         rownum++;
-        for(int i=0; i< horas.size(); i++){
+        for(int i=0; i< horas.size() - 1; i++){
         	String hora= (String) horas.get(i);
         	BasicDBObject current= (BasicDBObject) asignados.get(i);
         	
@@ -245,7 +245,7 @@ public class DataController {
         		cell = row.createCell(j+1);
     
         		String value= current.getString(dias[j]);
-        		if(!value.equals("")){
+        		if(!value.equals("_")){
                 	cell.setCellStyle(notempty);
         			if(value.equals("-")){
                 		cell.setCellValue("");
