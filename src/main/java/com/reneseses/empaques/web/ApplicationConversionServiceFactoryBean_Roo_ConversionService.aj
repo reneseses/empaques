@@ -143,6 +143,14 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         };
     }
     
+    public Converter<String, Usuario> ApplicationConversionServiceFactoryBean.getStringToUsuarioConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, com.reneseses.empaques.domain.Usuario>() {
+            public com.reneseses.empaques.domain.Usuario convert(String id) {
+                return getObject().convert(getObject().convert(id, UsuarioId.class), Usuario.class);
+            }
+        };
+    }
+    
     public void ApplicationConversionServiceFactoryBean.afterPropertiesSet() {
         super.afterPropertiesSet();
         installLabelConverters(getObject());

@@ -233,8 +233,7 @@
 															<form:option value=""><!-- --></form:option>
 														</c:if>
 														<c:forEach items="${items}" var="item">
-															<spring:eval expression="item[sec_itemLabel]" var="value"/>
-															<option value="${value}">
+															<option value="${item[fn:escapeXml(itemValue)]}">
 																<c:choose>
 																	<c:when test="${empty itemLabel}">
 																		<spring:eval expression="item" />

@@ -34,19 +34,12 @@ public class ApplicationConversionServiceFactoryBean extends FormattingConversio
             }
         };
     }
-	
-	public Converter<String, Usuario> getStringToUsuarioConverter() {
-        return new org.springframework.core.convert.converter.Converter<java.lang.String, com.reneseses.empaques.domain.Usuario>() {
-            public com.reneseses.empaques.domain.Usuario convert(String id) {
-                return getObject().convert(UsuarioId.fromString(id), Usuario.class);
-            }
-        };
-    }
 
 	public Converter<Usuario, String> getUsuarioToStringConverter() {
         return new org.springframework.core.convert.converter.Converter<com.reneseses.empaques.domain.Usuario, java.lang.String>() {
             public String convert(Usuario usuario) {
-                return new StringBuilder().append(usuario.getPassword()).append(' ').append(usuario.getNombre()).append(' ').append(usuario.getRut()).append(' ').append(usuario.getCelular()).toString();
+            	String str= usuario.getId()==null? usuario.getNombre(): usuario.getId().getNumero() + " " + usuario.getNombre();
+                return str;
             }
         };
     }

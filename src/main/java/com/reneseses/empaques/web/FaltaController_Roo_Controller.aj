@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.UriUtils;
 import org.springframework.web.util.WebUtils;
 
@@ -30,22 +28,6 @@ privileged aspect FaltaController_Roo_Controller {
         uiModel.addAttribute("falta", faltaService.findFalta(id));
         uiModel.addAttribute("itemId", id);
         return "member/faltas/show";
-    }
-    
-    @RequestMapping(value = "/{id}", params = "form", produces = "text/html")
-    public String FaltaController.updateForm(@PathVariable("id") ObjectId id, Model uiModel) {
-        populateEditForm(uiModel, faltaService.findFalta(id));
-        return "member/faltas/update";
-    }
-    
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = "text/html")
-    public String FaltaController.delete(@PathVariable("id") ObjectId id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model uiModel) {
-        Falta falta = faltaService.findFalta(id);
-        faltaService.deleteFalta(falta);
-        uiModel.asMap().clear();
-        uiModel.addAttribute("page", (page == null) ? "1" : page.toString());
-        uiModel.addAttribute("size", (size == null) ? "10" : size.toString());
-        return "redirect:/member/faltas";
     }
     
     void FaltaController.populateEditForm(Model uiModel, Falta falta) {
