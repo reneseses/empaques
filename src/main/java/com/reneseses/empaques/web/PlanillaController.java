@@ -323,10 +323,11 @@ public class PlanillaController {
 		
 		for(Repechaje repechaje : repechajes){
 			int repCont = 0;
+			
 			Usuario empaque = usuarios.get(repechaje.getUsuario());
 			Integer maxTurnos= faltaService.getCantidadTurnosRepechaje(planilla.getId(), empaque.getId(), supermercado.getMaxRepechaje());
 			Integer currentTurnos= turnosUsuario.get(empaque.getId().getNumero());
-			
+						
 			maxTurnos= maxTurnos > supermercado.getMaxTurnosTotal() - currentTurnos? supermercado.getMaxTurnosTotal()-currentTurnos: maxTurnos;
 			if(maxTurnos<= 0)
 				continue;
@@ -335,13 +336,13 @@ public class PlanillaController {
 			
 			for(int i =0; i < ja.size() && repCont < maxTurnos; i++){
 				LinkedHashMap<String, Object> map= (LinkedHashMap<String, Object>) ja.get(i);
-				BasicDBList turnos= (BasicDBList) map.get("inicio");
+				ArrayList<String> turnos= (ArrayList<String>) map.get("inicio");
 				for(int j= 0; j< turnos.size() && repCont < 2; j++){
 					BasicDBObject solicitud= new BasicDBObject();
 					String dia= (String) map.get("dia");
 
-					solicitud.put("dia", dia);
-					solicitud.put("inicio", turnos.get(j));
+					solicitud.put("dia", DiasEnum.valueOf(dia));
+					solicitud.put("inicio", BloqueEnum.valueOf(turnos.get(j)));
 					if(planilla.buscarConflicto(solicitud, empaque.getId().getNumero()))
 						continue;
 					Bloque bloque = planilla.getBloque(DiasEnum.valueOf(dia), BloqueEnum.valueOf((String)turnos.get(j)));
@@ -565,11 +566,14 @@ public class PlanillaController {
                 Solicitud aux2= solicitudes.get(j);
                 Usuario user1= usuarios.get(aux1.getUsuario());
                 Usuario user2= usuarios.get(aux2.getUsuario());
+                Integer num1= user1.getId().getNumero();
+                Integer num2= user2.getId().getNumero();
+                
                 if (user1.getPrioridad() < user2.getPrioridad()) continue;
                 if (user1.getPrioridad() == user2.getPrioridad()) {
-                	int turno1= turnosUsuarios.containsKey(user1.getId()) &&  turnosUsuarios.get(user1.getId()) < maxTurnos ? turnosUsuarios.get(user1.getId()):maxTurnos;
-                	int turno2= turnosUsuarios.containsKey(user2.getId()) && turnosUsuarios.get(user2.getId()) < maxTurnos ? turnosUsuarios.get(user2.getId()):maxTurnos;
-                    if (turno1 < turno2) continue;
+                	int turno1= turnosUsuarios.containsKey(num1) && turnosUsuarios.get(num1) < maxTurnos ? turnosUsuarios.get(num1):maxTurnos;
+                	int turno2= turnosUsuarios.containsKey(num2) && turnosUsuarios.get(num2) < maxTurnos ? turnosUsuarios.get(num2):maxTurnos;
+                	if (turno1 < turno2) continue;
                     if (turno1 == turno2 && aux1.getFecha().before(aux2.getFecha())) continue;
                 }
                 menor= j;
@@ -588,16 +592,20 @@ public class PlanillaController {
 	            Repechaje aux= repechajes.get(j);
 	            Usuario user1= usuarios.get(rep1.getUsuario());
                 Usuario user2= usuarios.get(aux.getUsuario());
+                Integer num1= user1.getId().getNumero();
+                Integer num2= user2.getId().getNumero();
+                
 	            if (user1.getPrioridad() < user2.getPrioridad()) continue;
 	            if (user1.getPrioridad() == user2.getPrioridad()) {
-	            	int turno1= turnosUsuarios.containsKey(user1.getId()) && turnosUsuarios.get(user1.getId()) < maxTurnos ? turnosUsuarios.get(user1.getId()):maxTurnos;
-                	int turno2= turnosUsuarios.containsKey(user1.getId()) && turnosUsuarios.get(user2.getId()) < maxTurnos ? turnosUsuarios.get(user2.getId()):maxTurnos;
-                    if (turno1 < turno2) continue;
+	            	int turno1= turnosUsuarios.containsKey(num1) && turnosUsuarios.get(num1) < maxTurnos ? turnosUsuarios.get(num1):maxTurnos;
+                	int turno2= turnosUsuarios.containsKey(num2) && turnosUsuarios.get(num2) < maxTurnos ? turnosUsuarios.get(num2):maxTurnos;
+                	if (turno1 < turno2) continue;
 	                if (turno1==turno2 && rep1.getFecha().before(aux.getFecha())) continue;
 	            }
 	            menor = j;
 	        }
-	        Collections.swap(repechajes,i,menor);
+	        if(i != menor)
+	        	Collections.swap(repechajes,i,menor);
 	    }
 	}
 

@@ -4,10 +4,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Resource;
+import javax.persistence.Basic;
 import javax.servlet.ServletContext;
+import javax.xml.ws.RespectBinding;
 
 import com.mongodb.BasicDBList;
 import com.reneseses.empaques.domain.*;
@@ -21,7 +26,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
@@ -80,6 +87,18 @@ public class DefaultController {
 		}
 		
 		return "redirect:/index";
+	}
+	
+	@RequestMapping(value="checkTurnos/{id}", produces="text/json")
+	public @ResponseBody String checkTurnos(@PathVariable ObjectId id){
+		Planilla planilla= planillaService.findPlanilla(id);
+		Map<Integer, Integer> turnosUsuario= new HashMap<Integer, Integer>();
+		if(planilla != null)
+			turnosUsuario= planilla.getTurnosUsuario(usuarioServiceImpl.findAllUsuarios());
+	
+		BasicDBObject jo= new BasicDBObject(turnosUsuario);
+		
+		return jo.toString();
 	}
 
 	@RequestMapping(value="readjsondb")
