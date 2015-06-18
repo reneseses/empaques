@@ -89,10 +89,10 @@
                 </div>
                 <div class="col-xs-3 col-sm-2 col-md-6 col-lg-8">
                     <div class="pull-right">
-                        <div class="btn-group ">
-                            <a href="${parent_url}member/data/download/${planilla.id}" class="btn btn-success btn-xs">
-                                <i class="fa fa-cloud-download"><!-- --></i> Download
-                            </a>
+                        <div class="btn-group "><!-- -->
+                            <!--<a href="${parent_url}member/data/download/${planilla.id}" class="btn btn-success btn-xs">
+                                <i class="fa fa-cloud-download"></i> Download
+                            </a>-->
                             <button class="btn btn-primary btn-xs" onclick="updateTurnos();"><i class="fa fa-save"><!-- --></i> Save</button>
                         </div>
                     </div>

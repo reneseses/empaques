@@ -126,7 +126,7 @@ public class UsuarioController {
 				List<Turno> turnos = bloque.getTurnos();
 				for (Turno turno : turnos) {
 					Integer usuario = turno.getUsuario();
-					if (usuario != null && usuario == principal.getId().getNumero()) {
+					if (usuario != null && usuario.equals(principal.getId().getNumero())) {
 						jo = new BasicDBObject();
 						Calendar calendar= Calendar.getInstance();
 						calendar.setTime(bloque.getFecha());
