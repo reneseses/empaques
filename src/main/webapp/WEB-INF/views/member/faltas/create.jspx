@@ -5,9 +5,9 @@
     <div class="col-xs-12 col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
         <form:create id="fc_com_reneseses_empaques_domain_Falta" modelAttribute="falta" path="/member/faltas" render="${empty dependencies}" z="stDBk6UkME4V1+fpH2PxtKGof1o=">
             <div class="col-xs-12">
-                <field:select field="planilla" id="c_com_reneseses_empaques_domain_Falta_planilla" itemLabel="fecha" itemValue="id" items="${planillas}" path="/member/planillas" z="user-managed"/>
-                <field:select emptyOption="true" field="usuario" id="c_com_reneseses_empaques_domain_Falta_usuario" itemValue="id" items="${usuarios}" path="/member/usuarios" z="user-managed"/>
-                <field:select field="tipoFalta" id="c_com_reneseses_empaques_domain_Falta_tipoFalta" itemLabel="falta" items="${tipofaltaenums}" path="tipofaltaenums" z="user-managed"/>
+                <field:select field="planilla" id="c_com_reneseses_empaques_domain_Falta_planilla" itemLabel="fecha" itemValue="id" required="true" items="${planillas}" path="/member/planillas" z="user-managed"/>
+                <field:select emptyOption="true" field="usuario" id="c_com_reneseses_empaques_domain_Falta_usuario" itemValue="id" required="true" items="${usuarios}" path="/member/usuarios" z="user-managed"/>
+                <field:select field="tipoFalta" id="c_com_reneseses_empaques_domain_Falta_tipoFalta" itemLabel="falta" required="true" items="${tipofaltaenums}" path="tipofaltaenums" z="user-managed"/>
                 <field:input field="id" id="c_com_reneseses_empaques_domain_Falta_id" render="false" required="true" z="user-managed"/>
             </div>
         </form:create>
