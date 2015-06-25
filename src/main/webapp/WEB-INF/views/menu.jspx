@@ -66,7 +66,7 @@
                     <sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL,LOCALADMIN">
                         <menu:category id="c_usuario" z="user-managed">
                             <sec:authentication property="principal.id" var="id"/>
-                            <menu:item id="i_usuario_upload" label="Subir Usuarios" url="/member/usuarios/upload"/>
+                            <menu:item id="i_usuario_upload" render="false" label="Subir Usuarios" url="/member/usuarios/upload"/>
                             <menu:item id="i_usuario_new" messageCode="global_menu_new" url="/member/usuarios?form" z="user-managed"/>
                             <menu:item id="i_usuario_list" messageCode="global_menu_list" url="/member/usuarios?page=1&amp;size=${empty param.size ? 15 : param.size}" z="user-managed"/>
                             <menu:item id="i_usuario_update" label="Reiniciar password" url="/member/usuarios/resetpass" z="user-managed"/>
@@ -103,7 +103,7 @@
                     </sec:authorize>
                     <sec:authorize ifAnyGranted="LOCALADMIN">
                         <sec:authentication property="principal.id.supermercado" var="principal_supermercado"/>
-                        <menu:category id="c_supermercado" url="/admin/supermercado/${principal_supermercado}" z="3VrpuIrkkT2fzNucZyu+bkGU2Lw="/>
+                        <menu:category render="false" id="c_supermercado" url="/admin/supermercado/${principal_supermercado}" z="3VrpuIrkkT2fzNucZyu+bkGU2Lw="/>
                     </sec:authorize>
                 </menu:menu>
                 <ul class="nav navbar-nav navbar-right hidden-xs">
