@@ -181,7 +181,7 @@ public class Planilla {
 		for(Bloque bloque: this.bloques){
 			List<Turno> turnos = bloque.getTurnos();
 			for(Turno turno: turnos){
-				if(turno.getUsuario() != null)
+				if(turno.getUsuario() != null && map.containsKey(turno.getUsuario()))
 					map.put(turno.getUsuario(), map.get(turno.getUsuario()) + 1);
 			}
 		}

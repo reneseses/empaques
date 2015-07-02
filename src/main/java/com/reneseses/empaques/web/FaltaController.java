@@ -56,7 +56,12 @@ public class FaltaController {
     		return "accessFailure";
     	}
 				
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || falta.getUsuario() == null || falta.getPlanilla() == null || falta.getTipoFalta() == null) {
+        	List<Planilla> planillas= planillaServiceImpl.findAllPlanillasOrderByFechaDesc();
+    		List<Usuario> usuarios= usuarioServiceImpl.lightFindAllUsuarios();
+
+    		uiModel.addAttribute("planillas", planillas);
+    		uiModel.addAttribute("usuarios", usuarios);
             populateEditForm(uiModel, falta);
             return "member/faltas/create";
         }

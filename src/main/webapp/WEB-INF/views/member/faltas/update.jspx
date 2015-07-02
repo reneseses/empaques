@@ -5,6 +5,6 @@
     <form:update id="fu_com_reneseses_empaques_domain_Falta" modelAttribute="falta" path="/member/faltas" versionField="none" z="FdbcssqijqD7yMP02wzvG1F1K8Y=">
         <field:select field="usuario" id="c_com_reneseses_empaques_domain_Falta_usuario" itemLabel="numero" itemValue="id" items="${usuarios}" path="/member/usuarios" z="user-managed"/>
         <field:select field="tipoFalta" id="c_com_reneseses_empaques_domain_Falta_tipoFalta" itemLabel="falta" items="${tipofaltaenums}" path="tipofaltaenums" z="user-managed"/>
-        <field:input field="planilla" id="c_com_reneseses_empaques_domain_Falta_planilla" z="16IMABYs9ahKKkfQ60DLxMyyV10="/>
+        <field:input field="planilla" id="c_com_reneseses_empaques_domain_Falta_planilla" required="true" z="QCUfz6smD3dfcGF8990BM+Eh8lE="/>
     </form:update>
 </div>
