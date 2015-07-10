@@ -44,7 +44,7 @@
 					<button id="reset" class="btn btn-default" type="reset"><spring:message code="button_reset" htmlEscape="false"/></button>
 					<button id="proceed" class="btn btn-primary"><spring:message code="button_submit" htmlEscape="false" /></button>
 				</div>
-				<div class="clearfix"></div>
+				<div class="clearfix"><!-- --></div>
 			</div>
 		</form>
 	</div>
