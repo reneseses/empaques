@@ -111,12 +111,22 @@ public class UsuarioController {
 	}
 
 	@RequestMapping("/getTurnos/{id}")
-	public @ResponseBody ResponseEntity<String> getTurnos(@PathVariable("id") ObjectId id) {
+	public @ResponseBody ResponseEntity<String> getTurnos(@PathVariable("id") ObjectId id, @RequestParam UsuarioId usuarioId) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/json; charset=utf-8");
 		BasicDBList response= new BasicDBList();
 
 		Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if (!principal.getId().equals(usuarioId)
+				&& (principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))
+		        || principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
+		        || principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADO"))
+		        || principal.getAuthorities().contains(new SimpleGrantedAuthority("SUBENCARGADOLOCAL"))
+		        || principal.getAuthorities().contains(new SimpleGrantedAuthority("ENCARGADOLOCAL"))
+				)){
+			principal= usuarioServiceImpl.findUsuario(usuarioId);
+		}
 
 		try{
 			BasicDBObject jo;

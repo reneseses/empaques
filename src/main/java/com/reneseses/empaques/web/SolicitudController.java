@@ -69,11 +69,25 @@ public class SolicitudController {
 		headers.add("Content-Type", "application/text; charset=utf-8");
         
 		try{
-	        if(id != null)
+			Usuario usuario = (Usuario) principal;
+	        if(id != null){
 	        	solicitud= solicitudServiceImpl.findSolicitud(id);
-	        
-	        Usuario usuario = (Usuario) principal;
-	        
+	        }else{
+	        	Calendar cal = Calendar.getInstance();
+	            cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_WEEK) + 1);
+	            cal.set(Calendar.HOUR_OF_DAY, 0);
+	            Calendar date2 = Calendar.getInstance();
+	            int day = cal.get(Calendar.DAY_OF_YEAR) + 6;
+	            date2.set(Calendar.DAY_OF_YEAR, day);
+	            date2.set(Calendar.HOUR_OF_DAY, 0);
+	            date2.set(Calendar.MINUTE, 0);
+	            date2.set(Calendar.SECOND, 0);
+	            List<Solicitud> sols = solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), usuario.getId());
+	            if (sols.size() > 0) {
+	                solicitud= sols.get(0);
+	            }
+	        }
+
 	        solicitud.setUsuario(usuario.getId());
 	        
 	        BasicDBList ja = (BasicDBList) JSON.parse(turnos);
@@ -102,10 +116,26 @@ public class SolicitudController {
         
         Repechaje repechaje = new Repechaje();
         try{
+        	Usuario usuario = (Usuario) principal;
 	        if(id != null)
 	        	repechaje= repechajeService.findRepechaje(id);
-	
-	        Usuario usuario = (Usuario) principal;
+	        else{
+	        	Calendar cal = Calendar.getInstance();
+	            cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_WEEK) + 1);
+	            Calendar date2 = Calendar.getInstance();
+	            int day = cal.get(Calendar.DAY_OF_YEAR) + 7;
+	            cal.set(Calendar.HOUR_OF_DAY, 0);
+	            
+	            date2.set(Calendar.DAY_OF_YEAR, day);
+	            date2.set(Calendar.HOUR_OF_DAY, 0);
+	            date2.set(Calendar.MINUTE, 0);
+	            date2.set(Calendar.SECOND, 0);
+	            List<Repechaje> repechajes = repechajeService.findRepechajesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), usuario.getId());
+	            if (repechajes.size() > 0) {
+	                repechaje= repechajes.get(0);
+	            }
+	        }
+
 	        repechaje.setUsuario(usuario.getId());
 	        
 	        BasicDBList ja = (BasicDBList) JSON.parse(turnos);
