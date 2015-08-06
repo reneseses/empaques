@@ -17,7 +17,7 @@
 	<spring:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js" var="bootstrap_js" />
 	<spring:url value="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.15.1/handsontable.full.min.js" var="handsontable_js" />
 	<spring:url value="/assets/js/plugins/jquery.datetimepicker.js" var="datepicker_js" />
-	<spring:url value="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js" var="moment_js" />
+	<spring:url value="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js" var="moment_js" />
 	<spring:url value="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/js/standalone/selectize.min.js" var="selectize_js" />
 
 
