@@ -14,7 +14,7 @@
         <intercept-url pattern="/admin/**" access="hasAnyAuthority('ADMIN', 'LOCALADMIN')" />
         <intercept-url pattern="/member/**" access="isAuthenticated()" />
         <intercept-url pattern="/resources/**" access="permitAll" />
-        <!--  <intercept-url pattern="/**" access="permitAll" /> -->
+        <!--<intercept-url pattern="/**" access="permitAll" />-->
         <intercept-url pattern="/**" access="permitAll" requires-channel="https" />
     </http>
     <!-- Configure Authentication mechanism -->

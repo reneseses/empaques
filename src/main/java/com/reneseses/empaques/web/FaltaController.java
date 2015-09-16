@@ -138,6 +138,11 @@ public class FaltaController {
 			for(Falta falta: faltas){
 				BasicDBObject jo= new BasicDBObject();
 				
+				if(falta.getUsuario() == null){
+					faltaServiceImpl.deleteFalta(falta);
+					continue;
+				}
+				
 				BasicDBObject user= new BasicDBObject();
 				user.append("numero", falta.getUsuario().getNumero());
 				

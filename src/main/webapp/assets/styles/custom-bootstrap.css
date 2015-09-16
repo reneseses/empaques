@@ -1,0 +1,45 @@
+*{
+	border-radius: 0 !important
+}
+
+.img-circle {
+    border-radius: 50% !important;
+}
+
+.input-group-lg .input-group-addon{
+	min-width: 50px;
+}
+
+.navbar-default{
+	background-color: #4e5d6c;
+    border-color: #2b3e50;
+}
+
+.navbar-brand a{
+	color: #fff;
+	font-weight: bold
+}
+
+.navbar-brand a:hover{
+	text-decoration: none;
+	color: #f9f9f9;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #ebebeb;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: #ebebeb;
+    background-color: #485563;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    color: #ebebeb;
+    background-color: #485563;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover{
+	color: #ebebeb;
+    background-color: #485563;
+}

@@ -4,7 +4,27 @@ body{
     font-size: 13px;
 }
 
-.login-form{
+body.public{
+  	padding-top: 100px;
+    font-size: 13px;
+}
+
+body.public .navbar-brand{
+	font-size: 35px;
+	height: 70px;
+	padding: 22px 15px;
+}
+
+.login-form, .login-form > *{
+	background: #fff !important
+}
+
+.login-form .form-control{
+	box-shadow: none;
+}
+
+.login-form .input-group:first-child .input-group-addon, .login-form .input-group:first-child .form-control{
+	border-bottom: 0;
 }
 
 .avatar{
@@ -327,15 +347,6 @@ label{
 
 .thumbnail.tail.orange.active, .thumbnail.tail.orange:focus, .thumbnail.tail.orange:hover{
 	border-color: #F49C14;
-}
-
-.navbar-brand a{
-	color: #777;
-}
-
-.navbar-brand a:hover{
-	text-decoration: none;
-	color: #777;
 }
 
 .col-xxs-1, .col-xxs-2, .col-xxs-3, .col-xxs-4,

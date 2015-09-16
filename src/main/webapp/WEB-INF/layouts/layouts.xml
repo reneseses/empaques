@@ -7,8 +7,8 @@
     <put-attribute name="menu" value="/WEB-INF/views/menu.jspx" />
   </definition>
 
-  <definition name="public" template="/WEB-INF/layouts/default.jspx">
-    <put-attribute name="header" value="/WEB-INF/views/header.jspx" />
+  <definition name="public" template="/WEB-INF/layouts/public.jspx">
+	<put-attribute name="menu" value="/WEB-INF/views/menu.jspx" />
   </definition>
 
 </tiles-definitions>
