@@ -9,7 +9,7 @@
                 <field:select emptyOption="true" field="usuario" id="c_com_reneseses_empaques_domain_Falta_usuario" itemValue="id" items="${usuarios}" path="/member/usuarios" required="true" z="user-managed"/>
                 <field:select field="tipoFalta" id="c_com_reneseses_empaques_domain_Falta_tipoFalta" itemLabel="falta" items="${tipofaltaenums}" path="tipofaltaenums" required="true" z="user-managed"/>
             </div>
-            <field:input render="false" field="id" id="c_com_reneseses_empaques_domain_Falta_id" required="true" z="O0FRateyZVdh5CRYk/p3WrIku5g="/>
+            <field:input field="id" id="c_com_reneseses_empaques_domain_Falta_id" render="false" required="true" z="user-managed"/>
         </form:create>
         <form:dependency dependencies="${dependencies}" id="d_com_reneseses_empaques_domain_Falta" render="${not empty dependencies}" z="Hb0NHjzG+x05+f65iLZyJObW6jI="/>
     </div>
