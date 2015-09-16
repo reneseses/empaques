@@ -37,7 +37,7 @@ $(function(){
 		$("#planillas").prop("disabled", true);
 		$(".info-container").hide();
 		$(".loading-indicator").show();
-		$.get(appContext + "member/usuarios/getTurnos/" + id, function(turnos){
+		$.get(appContext + "member/usuarios/getTurnos/" + id, {usuarioId: userId}, function(turnos){
 			ordenar(turnos);
 			addTurnos(turnos);
 			$.get(appContext + "member/solicitudes/get?planilla=" + id, function(solicitudes){

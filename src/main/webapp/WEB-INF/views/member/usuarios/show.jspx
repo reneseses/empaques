@@ -7,6 +7,11 @@
 	<sec:authorize ifAnyGranted="ADMIN,SUBENCARGADOLOCAL,ENCARGADOLOCAL,LOCALADMIN">
 		<c:set value="true" var="admin"/>
 	</sec:authorize>
+
+	<script type="text/javascript">
+		var userId= '${usuario.id}';
+	</script>
+
 	<div class="col-xs-12 col-lg-offset-1 col-lg-10">
 		<div class="row no-space" role="tabpanel">
 			<ul class="list-group list-group-tabs col-xs-12 col-sm-4 no-padding" role="tablist">

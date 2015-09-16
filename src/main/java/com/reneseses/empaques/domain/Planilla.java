@@ -60,7 +60,7 @@ public class Planilla {
 		for(int i = rango1; i <= rango2; i = i + 7){
 			List<Turno> turnos = this.getBloques().get(i).getTurnos();
 			for(Turno turn : turnos)
-				if(turn.getEstado().equals(EstadoTurnoEnum.OCUPADO) && turn.getUsuario() == empaque)
+				if(turn.getEstado().equals(EstadoTurnoEnum.OCUPADO) && turn.getUsuario() != null && turn.getUsuario().equals(empaque))
 					return true;
 		}
 		return false;
@@ -195,7 +195,7 @@ public class Planilla {
 			for(Bloque bloque: planilla.getBloques()){
 				List<Turno> turnos = bloque.getTurnos();
 				for(Turno turno: turnos){
-					if(turno.getUsuario() != null && turno.getUsuario() == usuario.getId().getNumero())
+					if(turno.getUsuario() != null && turno.getUsuario().equals(usuario.getId().getNumero()))
 						cont++;
 				}
 			}
