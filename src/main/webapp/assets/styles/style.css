@@ -1,5 +1,5 @@
 body{
-	background: #e0e0e0;
+	background: #E9EAED;
   	padding-top: 70px;
     font-size: 13px;
 }
@@ -128,7 +128,7 @@ td.utilbox{
 .table.table-compact td, .table.table-compact th{
 	padding: 4px 6px;
 	font-size: 13px;
-} 
+}
 
 .table.table-compact td.utilbox{
 	width: 40px;
@@ -558,7 +558,7 @@ label{
     .thumbnail.tail h3{
 		font-size: 16px
 	}
-	
+
 	.thumbnail.tail h3 small{
 		font-size: 12px;
 	}

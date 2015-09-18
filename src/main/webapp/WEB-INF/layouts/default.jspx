@@ -1,10 +1,10 @@
-<html xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:tiles="http://tiles.apache.org/tags-tiles" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" >  
-	
+<html xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:tiles="http://tiles.apache.org/tags-tiles" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" >
+
 	<jsp:output doctype-root-element="HTML" doctype-system="about:legacy-compat" />
-	
-	<jsp:directive.page contentType="text/html;charset=UTF-8" />  
-	<jsp:directive.page pageEncoding="UTF-8" /> 
-			
+
+	<jsp:directive.page contentType="text/html;charset=UTF-8" />
+	<jsp:directive.page pageEncoding="UTF-8" />
+
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -12,7 +12,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 		<util:load-scripts />
-		
+
 		<spring:message code="application_name" var="app_name" htmlEscape="false"/>
 		<title><spring:message code="welcome_h3" arguments="${app_name}" /></title>
 
@@ -20,15 +20,14 @@
 
 		<script type="text/javascript">
 			var appContext= '${context}';
-			//var delay= ${delay};
 		</script>
-
+        <script type="text/javascript" src="${context}app/Application.js"><!-- --></script>
+        <script type="text/javascript" src="${context}app/views/home/HomeController.js"><!-- --></script>
 	</head>
-	
-	<body>
+
+	<body ng-app="empaquesApp">
 		<tiles:insertAttribute name="menu"/>
-		<div class="container content">
-			<tiles:insertAttribute name="body"/>
+		<div class="container content" ui-view="">
 		</div>
 	</body>
 </html>

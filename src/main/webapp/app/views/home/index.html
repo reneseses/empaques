@@ -1,33 +1,5 @@
-<div class="row" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags">
-	<jsp:directive.page contentType="text/html;charset=UTF-8" />
-	<jsp:output omit-xml-declaration="yes" />
-
-    <!--
-	<script type="text/javascript">
-	$(function () {
-		var refreshLinks= function(){
-			$(".thumbnail.tail").each(function(){
-				var	width	= $(this).width(),
-					height	= width > 200? 200: width - 10,
-					text	= $(this).find("h3"),
-					tHeight = text.height();
-
-				$(this).height(height);
-				height= $(this).height();
-				text.css({bottom: height /2 - 5});
-			});
-		}
-
-		refreshLinks();
-
-		$(".thumbnail.tail").fadeIn().css("display","block");;
-
-		$(window).resize(function(){
-			refreshLinks();
-		})
-	});
-	</script>
-	<div class="col-sm-12 col-md-8">
+<div class="row">
+    <div class="col-sm-12 col-md-8">
 		<div class="row">
 			<div class="col-md-4 col-sm-4 col-xs-6 col-xxs-12">
 				<spring:url value="/member/solicitudes/turnos" var="turnos_url" />
@@ -55,5 +27,4 @@
 			</div>
 		</div>
 	</div>
--->
 </div>

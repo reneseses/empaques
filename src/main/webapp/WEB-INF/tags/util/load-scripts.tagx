@@ -48,6 +48,8 @@
 
 	<!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
 
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"><!-- --></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"><!-- --></script>
 
 	<c:set var="userLocale">
 		<c:set var="plocale">${pageContext.response.locale}</c:set>
