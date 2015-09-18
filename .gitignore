@@ -5,3 +5,5 @@
 /.project
 .externalToolBuilders
 *.iml
+log.roo
+/src/main/resources/rebel.xml
