@@ -198,7 +198,9 @@ public class PlanillaController {
 			ja = sol.getTurnos();
 			Integer maxTurnos= 0;
 			if(!empaque.getRegimen().equals(RegimenTurnoEnum.LIBRE)){
-				maxTurnos= faltaService.getCantidadTurnos(planilla.getId(), empaque.getId(), supermercado.getMaxTurnos());
+				Integer limite= supermercado.getMaxTurnos()> supermercado.getMaxTurnosTotal()? supermercado.getMaxTurnosTotal(): supermercado.getMaxTurnos();
+				
+				maxTurnos= faltaService.getCantidadTurnos(planilla.getId(), empaque.getId(), limite);
 				if(empaque.getRegimen().equals(RegimenTurnoEnum.NUEVO))
 					maxTurnos--;
 				
