@@ -8,7 +8,7 @@
 	<spring:url value="/assets/styles/handsontable.bootstrap.css" var="handsontable_bs_css" />
 	<spring:url value="/assets/styles/jquery.datetimepicker.css" var="datepicker_css" />
 	<spring:url value="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.bootstrap3.min.css" var="selectize_css" />
-	
+
 	<spring:url value="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" var="jquery_js" />
 
 	<spring:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" var="bootstrap_css" />
@@ -23,7 +23,7 @@
 	<spring:url value="/assets/styles/style.css" var="style_css" />
 
 	<link rel="SHORTCUT ICON" href="${favicon}" />
-	
+
 	<!--<link rel="stylesheet" type="text/css" href="${jquery_ui_css}" />-->
 	<link rel="stylesheet" type="text/css" href="${bootstrap_css}" />
 	<link rel="stylesheet" type="text/css" href="${font_awesome_css}" />
@@ -49,6 +49,7 @@
 	<!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
 
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"><!-- --></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.min.js"><!-- --></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"><!-- --></script>
 
 	<c:set var="userLocale">

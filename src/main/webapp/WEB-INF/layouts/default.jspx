@@ -23,11 +23,15 @@
 		</script>
         <script type="text/javascript" src="${context}app/Application.js"><!-- --></script>
         <script type="text/javascript" src="${context}app/views/home/HomeController.js"><!-- --></script>
+        <script type="text/javascript" src="${context}app/views/solicitudes/TurnosController.js"><!-- --></script>
+
+        <script type="text/javascript" src="${context}app/services/SolicitudService.js"><!-- --></script>
 	</head>
 
 	<body ng-app="empaquesApp">
 		<tiles:insertAttribute name="menu"/>
-		<div class="container content" ui-view="">
-		</div>
+        <div class="ui-view-container">
+            <div class="container ui-view-container" ui-view="" ng-animate="'view'"><!-- --></div>
+        </div>
 	</body>
 </html>

@@ -155,6 +155,32 @@ public class SolicitudController {
         }
     }
 
+    @RequestMapping("current")
+    public @ResponseBody ResponseEntity<String> current(){
+    	HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Type", "application/text; charset=utf-8");
+		
+		try{
+			Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			
+	        Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.DAY_OF_YEAR, cal.get(Calendar.DAY_OF_YEAR) - cal.get(Calendar.DAY_OF_WEEK) + 1);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            Calendar date2 = Calendar.getInstance();
+            int day = cal.get(Calendar.DAY_OF_YEAR) + 6;
+            date2.set(Calendar.DAY_OF_YEAR, day);
+            date2.set(Calendar.HOUR_OF_DAY, 0);
+            date2.set(Calendar.MINUTE, 0);
+            date2.set(Calendar.SECOND, 0);
+            List<Solicitud> sols = solicitudServiceImpl.findSolicitudesByFechaBetweenAndUsuario(cal.getTime(), date2.getTime(), principal.getId());
+	        
+			return new ResponseEntity<String>(sols.size()== 0? null: sols.get(0).toClientJson(), headers, HttpStatus.OK);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new ResponseEntity<String>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+    }
+    
     @RequestMapping("/turnos")
     public String turno(Model uiModel) {
         Usuario principal = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

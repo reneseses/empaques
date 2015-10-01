@@ -18,6 +18,9 @@ import com.mongodb.BasicDBObject;
 import com.reneseses.empaques.enums.BloqueEnum;
 import com.reneseses.empaques.enums.DiasEnum;
 import com.reneseses.empaques.formularios.SolicitudList;
+import com.reneseses.empaques.utils.ObjectIdTransformer;
+
+import flexjson.JSONSerializer;
 
 @RooJavaBean
 @RooToString
@@ -79,5 +82,11 @@ public class Solicitud {
     	}
     	
     	return obj;
+    }
+    
+    public String toClientJson() {
+        JSONSerializer serializer=new JSONSerializer();
+        serializer.transform(new ObjectIdTransformer(), ObjectId.class);
+        return serializer.exclude("*.class").deepSerialize(this);
     }
 }
