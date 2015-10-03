@@ -7,11 +7,15 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -23,12 +27,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFBorderFormatting;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder.BorderSide;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
-import com.reneseses.empaques.domain.Bloque;
 import com.reneseses.empaques.domain.Planilla;
 import com.reneseses.empaques.domain.Repechaje;
 import com.reneseses.empaques.domain.Solicitud;
@@ -197,7 +197,7 @@ public class DataController {
     	rowHeader.setFont(font);
     	
     	XSSFCellStyle colHeader = (XSSFCellStyle) wb.createCellStyle();
-    	colHeader.setAlignment(CellStyle.ALIGN_CENTER);
+    	colHeader.setAlignment(CellStyle.ALIGN_CENTER_SELECTION);
     	colHeader.setFillForegroundColor(blue);
     	colHeader.setFillPattern(CellStyle.SOLID_FOREGROUND);
     	colHeader.setFont(font);
@@ -220,10 +220,11 @@ public class DataController {
     	sheet.setColumnWidth(0, 20*110);
     	
     	for(int i=0; i < dias.length; i++){
-    		cell = headerRow.createCell(i+1); cell.setCellValue(dias[i]);
-    		cell.setCellStyle(colHeader);
-    		
     		sheet.setColumnWidth(i+1, 37*110);
+    		
+    		cell = headerRow.createCell(i+1);
+    		cell.setCellValue(dias[i]);
+    		cell.setCellStyle(colHeader);
     	}
         
         BasicDBList turnos= planilla.getTurnos();
@@ -256,32 +257,65 @@ public class DataController {
             rownum++;
         }
         
-        /*List<Usuario> list= usuarioServiceImpl.findAllUsuarios();
+        Calendar date= Calendar.getInstance();
+		date.setTime(planilla.getFecha());
+		Calendar date1 = (Calendar) date.clone();
+		Calendar date2 = (Calendar) date.clone();
+		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) - 8);
+		date2.set(Calendar.DAY_OF_YEAR, date2.get(Calendar.DAY_OF_YEAR) - 1);
+		
+		List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetween(date1.getTime(), date2.getTime());
+        Map<Integer, Integer> turnosUsuario= planilla.getTurnosUsuario(usuarioServiceImpl.findAllUsuarios());
+                
+        SortedSet<Integer> keys = new TreeSet<Integer>(turnosUsuario.keySet());
+        
+        HashMap<Integer, Solicitud> solMap= new HashMap<Integer, Solicitud>();
+        
+        for(Solicitud solicitud: solicitudes){
+        	if(solicitud.getUsuario() != null && solicitud.getUsuario().getNumero() != null)
+        		solMap.put(solicitud.getUsuario().getNumero(), solicitud);
+        }
+        
+        
+        sheet = wb.createSheet("Turnos");
+        
         Row row;
-        int rownum = 1;
-        for(Usuario user: list){
+        row = sheet.createRow(0);
+        
+        sheet.setColumnWidth(0, 37*110);
+        sheet.setColumnWidth(1, 37*110);
+        
+        cell = row.createCell(0);
+        cell.setCellValue("Empaque");
+        cell.setCellStyle(colHeader);
+        
+        cell = row.createCell(1);
+        cell.setCellValue("Turnos");
+        cell.setCellStyle(colHeader);
+        
+        rownum = 1;
+        
+        
+        for(Integer numero: keys){
+        	if(!solMap.containsKey(numero))
+        		continue;
+        	
+        	Integer cantidad= turnosUsuario.get(numero);
+        	
         	row = sheet.createRow(rownum);
-        	cell = row.createCell(0); cell.setCellValue(user.getId().getNumero());
-            cell = row.createCell(1); cell.setCellValue(user.getNombre());
-            cell = row.createCell(2); cell.setCellValue(user.getRut());
-            cell = row.createCell(3); cell.setCellValue(user.getPassword());
-            cell = row.createCell(4); cell.setCellValue(user.getEmail());
-            cell = row.createCell(5); cell.setCellValue(user.getCelular());
-            cell = row.createCell(6); cell.setCellValue(user.getTipo().toString());
-            cell = row.createCell(7); cell.setCellValue(user.getRegimen().toString());
-            cell = row.createCell(8); cell.setCellValue("");
-            if(user.getLastSolicitud() != null){
-            	cell = row.createCell(9); cell.setCellValue(user.getLastSolicitud());
-            }
-            cell = row.createCell(10); cell.setCellValue(user.getPrioridad());
-            if(user.getFechaNacimiento() != null){
-            	cell = row.createCell(11); cell.setCellValue(user.getFechaNacimiento());
-            }
-            cell = row.createCell(12); cell.setCellValue(user.getCarrera());
-            cell = row.createCell(13); cell.setCellValue(user.getUniversidad());
+        	
+        	cell = row.createCell(0);
+            cell.setCellValue(numero);
+            cell.setCellStyle(notempty);
+            
+            cell = row.createCell(1);
+            cell.setCellValue(cantidad);
+            cell.setCellStyle(notempty);
+            
             rownum++;
         }
-    	
+        
+    	/*
         sheet = wb.createSheet("Solicitudes");
     	headerRow = sheet.createRow(0);
     	cell = headerRow.createCell(0); cell.setCellValue("Fecha");
