@@ -11,14 +11,14 @@
     <div class="col-md-6" ng-show="pageLoaded">
         <div class="panel panel-default">
             <header class="panel-heading">
-                <h2 class="panel-title">Turno 1</h2>
+                <h2 class="panel-title">Turno {{currentTurno}}</h2>
             </header>
             <div class="panel-body" style="min-height: 210px">
                 <div class="row">
                     <div class="col-xs-5">
                         <div class="form-group no-margin">
-                            <label for="dia" class="control-label">Día</label>
-                            <select id="dia" size="9" class="form-control"></select>
+                            <label class="control-label">Día</label>
+                            <select size="9" class="form-control" ng-options="day.name for day in days" ng-model="daySelected"></select>
                         </div>
                     </div>
                     <div class="col-xs-7">

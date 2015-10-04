@@ -3,6 +3,41 @@ app.controller('TurnosController', ["$scope", 'SolicitudService', function($scop
 
     $scope.pageLoaded= false;
 
+    $scope.currentTurno= 1;
+
+    $scope.days= [
+        {
+            name: "Lunes",
+            horas: []
+        },
+        {
+            name: "Martes",
+            horas: []
+        },
+        {
+            name: "Miércoles",
+            horas: []
+        },
+        {
+            name: "Jueves",
+            horas: []
+        },
+        {
+            name: "Viernes",
+            horas: []
+        },
+        {
+            name: "Sábado",
+            horas: []
+        },
+        {
+            name: "Domingo",
+            horas: []
+        }
+    ];
+
+    $scope.daySelected= $scope.days[0];
+
     solicitudService.getCurrentTurno(function(err, solicitud){
         if(err){
             console.log(err);
