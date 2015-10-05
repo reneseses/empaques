@@ -124,7 +124,7 @@
 			<header class="panel-heading">
 				<h2 class="panel-title" id="turnum">Turnos Elegidos</h2>
 			</header>
-			<div class="panel-body" style="min-height: 222px">
+			<div class="panel-body" style="min-height: 220px">
 				<ul id="turnos" class="list-unstyled no-margin">
 					<!--  -->
 				</ul>

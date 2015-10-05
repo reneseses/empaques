@@ -8,7 +8,7 @@
 		<spring:url value="/resources/j_spring_security_check" var="form_url"/>
 		<form action="${fn:escapeXml(form_url)}" method="POST" class="login-form well">
 			<h3 style="margin-top: 10px"><spring:message code="security_login_title"/></h3>
-			<div style="margin: 25px 0">
+			<div style="margin: 25px 0" class="input-group-container">
 				<div class="input-group input-group-lg">
 					<span class="input-group-addon"><i class="fa fa-user"><!--  --></i></span>
 					<input id="j_username" name="j_username" required="required" type="text" placeholder="Rut" class="form-control"/>

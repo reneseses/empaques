@@ -1,6 +1,6 @@
 /* table */
 .handsontable .table th, .handsontable .table td {
-  border-top: none;
+	border-top: none;
 }
 
 .handsontable tr {
@@ -14,23 +14,23 @@
 .handsontable .table colgroup + thead tr:first-child td,
 .handsontable .table thead:first-child tr:first-child th,
 .handsontable .table thead:first-child tr:first-child td {
-  border-top: 1px solid #CCCCCC;
+	border-top: 1px solid #d3e0e9;
 }
 
 /* table-bordered */
 .handsontable .table-bordered {
-  border: 0;
-  border-collapse: separate;
+	border: 0;
+	border-collapse: separate;
 }
 
 .handsontable .table-bordered th,
 .handsontable .table-bordered td {
-  border-left: none;
+	border-left: none;
 }
 
 .handsontable .table-bordered th:first-child,
 .handsontable .table-bordered td:first-child {
-  border-left: 1px solid #CCCCCC;
+	border-left: 1px solid #d3e0e9;
 }
 
 .handsontable .table > tbody > tr > td,
@@ -39,8 +39,8 @@
 .handsontable .table > tfoot > tr > th,
 .handsontable .table > thead > tr > td,
 .handsontable .table > thead > tr > th {
-  line-height: 21px;
-  padding: 0 4px;
+	line-height: 21px;
+	padding: 0 4px;
 }
 
 .col-lg-1.handsontable, .col-lg-10.handsontable, .col-lg-11.handsontable, .col-lg-12.handsontable,
@@ -51,10 +51,27 @@
 .col-sm-2.handsontable, .col-sm-3.handsontable, .col-sm-4.handsontable, .col-sm-5.handsontable, .col-sm-6.handsontable, .col-sm-7.handsontable, .col-sm-8.handsontable, .col-sm-9.handsontable
 .col-xs-1.handsontable, .col-xs-10.handsontable, .col-xs-11.handsontable, .col-xs-12.handsontable,
 .col-xs-2.handsontable, .col-xs-3.handsontable, .col-xs-4.handsontable, .col-xs-5.handsontable, .col-xs-6.handsontable, .col-xs-7.handsontable, .col-xs-8.handsontable, .col-xs-9.handsontable {
-  padding-left: 0;
-  padding-right: 0;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .handsontable .table-striped > tbody > tr:nth-of-type(even) {
-  background-color: #FFF;
+	background-color: #FFF;
+}
+
+.handsontable th:last-child{
+	border-right: 1px solid #d3e0e9;
+    border-bottom: 1px solid #d3e0e9;
+}
+
+.handsontable.htRowHeaders thead tr th:nth-child(2){
+	border-color: #d3e0e9
+}
+
+.handsontable .table>thead>tr>th{
+	border-bottom-width: 0px !important;
+}
+
+.handsontable th{
+	background-color: #eff9ef;
 }

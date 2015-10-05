@@ -10,12 +10,12 @@ function negativeValueRenderer(instance, td, row, col, prop, value, cellProperti
 	});
 	
 	if(value === '_') {
-		td.style.background = '#eee';
-		td.style.color= "#eee"
+		td.style.background = '#eff9ef';
+		td.style.color= "#eff9ef"
 	}
 	else if(value === '-') {
-		td.style.background = '#c1e2b3';
-		td.style.color= "#c1e2b3";
+		td.style.background = '#D3F5C5';
+		td.style.color= "#D3F5C5";
 		td.style.textAlign = "center";
 	}
 	/*else if(value === "_"){

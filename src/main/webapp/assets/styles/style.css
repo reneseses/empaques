@@ -1,11 +1,15 @@
 body{
-	background: #e0e0e0;
-  	padding-top: 70px;
+	background: #f5f8fa;
+  	padding-top: 51px;
     font-size: 13px;
 }
 
+body > .content{
+	padding-top: 20px;
+}
+
 body.public{
-  	padding-top: 100px;
+  	padding-top: 71px;
     font-size: 13px;
 }
 
@@ -13,6 +17,10 @@ body.public .navbar-brand{
 	font-size: 35px;
 	height: 70px;
 	padding: 22px 15px;
+}
+
+body.public > .content{
+	padding-top: 30px;
 }
 
 .login-form, .login-form > *{
@@ -39,7 +47,7 @@ input + .errors{
 .btn-header{
 	height: 50px;
 	width: 50px;
-	font-size: 20px;
+	font-size: 21px !important;
 	line-height: 49px;
 	border: none;
 	display: inline-block;
@@ -60,7 +68,7 @@ input + .errors{
 
 .footer{
 	background: #f5f5f5;
-	border-top: 1px solid #ddd;
+	border-top: 1px solid #d3e0e9;
 	height: 60px;
 	margin-top: 13px;
 }
@@ -108,7 +116,7 @@ input + .errors{
 
 .handsontable .handsontable table{
 	box-shadow: none;
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid #d3e0e9;
 }
 
 .ht_master:not(.innerBorderLeft) ~ .handsontable tbody tr th, .ht_master:not(.innerBorderLeft) ~ .handsontable:not(.ht_clone_top) thead tr th:first-child{
@@ -227,6 +235,10 @@ td.utilbox{
 .loading-indicator{
 	text-align: center;
 	line-height: 200px;
+}
+
+.selectize-input, .selectize-dropdown, .selectize-dropdown.form-control{
+	border-color: #d3e0e9;
 }
 
 .panel-heading .selectize-container{
