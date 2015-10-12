@@ -4,8 +4,9 @@
     <jsp:output omit-xml-declaration="yes"/>
     <page:list id="pl_com_reneseses_empaques_domain_Usuario" items="${usuarios}" z="KPGtqP2AESRq8owOjW3PsosFbwA=">
         <table:table data="${usuarios}" id="l_com_reneseses_empaques_domain_Usuario" path="/member/usuarios" z="CQAn6CHm6CNC2aQBptSVbmddslA=">
+            <table:column id="c_com_reneseses_empaques_domain_Usuario_numero" property="numero" z="hLxa960foce/SNsKg6mEX1Z28Ko="/>
             <table:column id="c_com_reneseses_empaques_domain_Usuario_password" property="password" render="false" z="user-managed"/>
-            <table:column id="c_com_reneseses_empaques_domain_Usuario_id" render="false" label="Numero" property="id" z="46jTMsbH0KDU7pVH6apKr6wRESE="/>
+            <table:column id="c_com_reneseses_empaques_domain_Usuario_id" label="Numero" property="id" render="false" z="46jTMsbH0KDU7pVH6apKr6wRESE="/>
             <table:column id="c_com_reneseses_empaques_domain_Usuario_nombre" property="nombre" z="MAKH/X+GFIfFMkGn23oSP5d1dNE="/>
             <table:column id="c_com_reneseses_empaques_domain_Usuario_rut" property="rut" z="2/6VNsBJR5cB580MV/y3WSg/CMI="/>
             <table:column id="c_com_reneseses_empaques_domain_Usuario_tipo" property="tipo" z="bwnh1y/GTVIVQaO4CbOrCjDKaO4="/>

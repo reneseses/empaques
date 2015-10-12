@@ -27,8 +27,27 @@ public class PlanillaServiceImpl implements PlanillaService {
     	return mongoTemplate.find(query, Planilla.class);
     }
 	
+	public List<Planilla> findAllPlanillasOrderByFechaDesc(ObjectId supermercado){
+		Query query= new Query(Criteria.where("supermercado").is(supermercado));
+		
+		query.with(new Sort(Sort.Direction.DESC, "fecha"));
+		query.fields().exclude("bloques");
+		
+    	return mongoTemplate.find(query, Planilla.class);
+    }
+	
 	public List<Planilla> findAllPlanillasOrderByFechaDesc(Integer limit){
 		Query query= new Query();
+		
+		query.with(new Sort(Sort.Direction.DESC, "fecha"));
+		query.fields().exclude("bloques");
+		query.limit(limit);
+		
+    	return mongoTemplate.find(query, Planilla.class);
+    }
+	
+	public List<Planilla> findAllPlanillasOrderByFechaDesc(ObjectId supermercado, Integer limit){
+		Query query= new Query(Criteria.where("supermercado").is(supermercado));
 		
 		query.with(new Sort(Sort.Direction.DESC, "fecha"));
 		query.fields().exclude("bloques");
@@ -68,8 +87,8 @@ public class PlanillaServiceImpl implements PlanillaService {
 		return mongoTemplate.findOne(query, Planilla.class);
 	}
     
-	public Planilla findPlanillaByFecha(Date fecha1, Date fecha2){
-    	List<Planilla> list= planillaRepository.findPlanillasByFechaBetween(fecha1, fecha2);
+	public Planilla findPlanillaByFecha(ObjectId supermercado, Date fecha1, Date fecha2){
+    	List<Planilla> list= planillaRepository.findPlanillasBySupermercadoAndFechaBetween(supermercado, fecha1, fecha2);
     	if(list.size() == 0)
     		return null;
     	return list.get(0);

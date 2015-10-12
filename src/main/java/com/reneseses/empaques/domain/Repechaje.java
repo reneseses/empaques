@@ -31,6 +31,7 @@ public class Repechaje {
 	
 	private BasicDBList turnos;
 	
+	@SuppressWarnings("unchecked")
 	public SolicitudList getSolicitudList(){
     	SolicitudList obj= new SolicitudList();
     	

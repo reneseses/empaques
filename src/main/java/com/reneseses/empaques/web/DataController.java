@@ -264,7 +264,7 @@ public class DataController {
 		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) - 8);
 		date2.set(Calendar.DAY_OF_YEAR, date2.get(Calendar.DAY_OF_YEAR) - 1);
 		
-		List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetween(date1.getTime(), date2.getTime());
+		List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetween(planilla.getSupermercado(), date1.getTime(), date2.getTime());
         Map<Integer, Integer> turnosUsuario= planilla.getTurnosUsuario(usuarioServiceImpl.findAllUsuarios());
                 
         SortedSet<Integer> keys = new TreeSet<Integer>(turnosUsuario.keySet());

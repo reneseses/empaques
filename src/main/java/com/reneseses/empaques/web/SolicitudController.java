@@ -223,7 +223,7 @@ public class SolicitudController {
             cal = (Calendar) date2.clone();
             date2.set(Calendar.DAY_OF_YEAR, day - 1);
             
-            Planilla planilla = planillaServiceImpl.findPlanillaByFecha(date2.getTime(), cal.getTime());
+            Planilla planilla = planillaServiceImpl.findPlanillaByFecha(supermercado.getId(), date2.getTime(), cal.getTime());
             if (planilla == null) {
                 uiModel.addAttribute("error", "Error al acceder a la planilla del " + date2.get(Calendar.DAY_OF_MONTH) + "/" + (date2.get(Calendar.MONTH) + 1) + "/" + date2.get(Calendar.YEAR));
                 return "member/solicitudes/error";
@@ -290,7 +290,7 @@ public class SolicitudController {
 			
 			Date end= cal.getTime();
 			
-			List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetween(begin, end);
+			List<Solicitud> solicitudes= solicitudServiceImpl.findSolicitudesByFechaBetween(supermercado.getId(), begin, end);
 			
 			int i=1;
 			for(Solicitud sol: solicitudes){
@@ -362,7 +362,7 @@ public class SolicitudController {
 			
 			Date end= cal.getTime();
 			
-			List<Repechaje> repechajes= repechajeService.findRepechajesByFechaBetween(begin, end);
+			List<Repechaje> repechajes= repechajeService.findRepechajesByFechaBetween(supermercado.getId(), begin, end);
 			
 			int i=1;
 			for(Repechaje rep: repechajes){

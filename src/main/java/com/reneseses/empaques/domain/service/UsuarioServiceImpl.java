@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -31,18 +33,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return usuarioRepository.findUsuarioByRut(rut);
 	}
 
-	public List<Usuario> findAllOrderByNumero(){
-		Sort order= new Sort(Sort.Direction.ASC, "id");
+	public List<Usuario> findAll(ObjectId supermercado){
+		Query q= new Query(Criteria.where("_id.supermercado").is(supermercado));
 		
-		Query query= new Query();
-		query.with(order);
-		
-		return mongoTemplate.find(query, Usuario.class);
+		return mongoTemplate.find(q, Usuario.class);
 	}
 	
-	public List<Usuario> findUsuarioEntriesOrderByNumero(int firstResult, int maxResults){
-		PageRequest pg= new PageRequest(firstResult / maxResults, maxResults);
-        return usuarioRepository.findAll();
+	public List<Usuario> findUsuarioEntries(ObjectId supermercado, int firstResult, int maxResults){
+		Query q= new Query(Criteria.where("_id.supermercado").is(supermercado));
+		Pageable paginator= new PageRequest(firstResult / maxResults, maxResults);
+		q.with(paginator);
+		
+        return mongoTemplate.find(q, Usuario.class);
 	}
 	
 	public List<Usuario> lightFindAllUsuarios(){

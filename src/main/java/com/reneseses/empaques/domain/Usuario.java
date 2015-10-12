@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Enumerated;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
@@ -79,6 +80,13 @@ public class Usuario implements UserDetails {
     private String universidad;
 
     private ObjectId image;
+    
+    @Transient
+    private Integer numero;
+    
+    public Integer getNumero(){
+    	return this.getId() == null? null: this.getId().getNumero();
+    }
     
     @Override
     public List<org.springframework.security.core.GrantedAuthority> getAuthorities() {

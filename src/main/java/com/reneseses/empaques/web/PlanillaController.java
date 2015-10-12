@@ -79,20 +79,27 @@ public class PlanillaController {
     	
     	BasicDBList response= new BasicDBList();
     	
-    	List<Planilla> planillas= planillaServiceImpl.findAllPlanillasOrderByFechaDesc();
-    	
-    	SimpleDateFormat sdf= new SimpleDateFormat("dd-MM-yyyy");
-    	
-    	for(Planilla planilla: planillas){
-    		BasicDBObject jo= new BasicDBObject();
-    		
-    		jo.append("id", planilla.getId().toString());
-    		jo.append("fecha", sdf.format(planilla.getFecha()));
-    		
-    		response.add(jo);
+    	try{
+	    	Usuario usuario= (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	    	
+	    	List<Planilla> planillas= planillaServiceImpl.findAllPlanillasOrderByFechaDesc(usuario.getId().getSupermercado());
+	    	
+	    	SimpleDateFormat sdf= new SimpleDateFormat("dd-MM-yyyy");
+	    	
+	    	for(Planilla planilla: planillas){
+	    		BasicDBObject jo= new BasicDBObject();
+	    		
+	    		jo.append("id", planilla.getId().toString());
+	    		jo.append("fecha", sdf.format(planilla.getFecha()));
+	    		
+	    		response.add(jo);
+	    	}
+	    	
+	    	return new ResponseEntity<String>(response.toString(), headers, HttpStatus.OK);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		return new ResponseEntity<String>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
     	}
-    	
-    	return new ResponseEntity<String>(response.toString(), headers, HttpStatus.OK);
     }
     
     @RequestMapping("/save")
@@ -178,13 +185,13 @@ public class PlanillaController {
 		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) - 8);
 		date2.set(Calendar.DAY_OF_YEAR, date2.get(Calendar.DAY_OF_YEAR) - 1);
 
-		Planilla pasada= planillaServiceImpl.findPlanillaByFecha(date1.getTime(), date2.getTime());
+		Planilla pasada= planillaServiceImpl.findPlanillaByFecha(supermercado.getId(), date1.getTime(), date2.getTime());
 		Map<Integer, Integer> turnosUsuario= new HashMap<Integer, Integer>();
 		if(pasada != null)
 			turnosUsuario= pasada.getTurnosUsuario(usuarioService.findAllUsuarios());
 		
 		Map<UsuarioId, Usuario> usuarios= usuarioService.findAll();
-		List<Solicitud> solicitudes= solicitudService.findSolicitudesByFechaBetween(date1.getTime(), date2.getTime());
+		List<Solicitud> solicitudes= solicitudService.findSolicitudesByFechaBetween(supermercado.getId(), date1.getTime(), date2.getTime());
 		ordenarSolicitudes(solicitudes, usuarios, turnosUsuario, supermercado);
 		
 		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) - 6);
@@ -317,7 +324,7 @@ public class PlanillaController {
 		Map<UsuarioId, Usuario> usuarios= usuarioService.findAll();
 		Map<Integer, Integer> turnosUsuario= planilla.getTurnosUsuario(usuarioService.findAllUsuarios());
 		
-		List<Repechaje> repechajes= repechajeService.findRepechajesByFechaBetween(date1.getTime(), date2.getTime());
+		List<Repechaje> repechajes= repechajeService.findRepechajesByFechaBetween(planilla.getSupermercado(), date1.getTime(), date2.getTime());
 		ordenarRepechaje(repechajes, usuarios, turnosUsuario, supermercado);
 		
 		date1.set(Calendar.DAY_OF_YEAR, date1.get(Calendar.DAY_OF_YEAR) + 2);

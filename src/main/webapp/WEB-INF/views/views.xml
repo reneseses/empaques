@@ -17,7 +17,7 @@
 		<put-attribute name="body" value="/WEB-INF/views/uncaughtException.jspx" />
 	</definition>
 
-	<definition extends="public" name="gracias">
+	<definition extends="default" name="gracias">
 		<put-attribute name="body" value="/WEB-INF/views/gracias.jspx" />
 	</definition>
 	<definition extends="public" name="accessFailure">

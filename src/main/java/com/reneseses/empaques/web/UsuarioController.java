@@ -402,14 +402,17 @@ public class UsuarioController {
 				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))
 				|| principal.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))))
 			return "accessFailure";
+		
+		ObjectId supermercado= principal.getId().getSupermercado();
+		
 		if (page != null || size != null) {
 			int sizeNo = size == null ? 25 : size.intValue();
 			final int firstResult = page == null ? 0 : (page.intValue() - 1) * sizeNo;
-			uiModel.addAttribute("usuarios", usuarioServiceImpl.findUsuarioEntriesOrderByNumero(firstResult, sizeNo));
+			uiModel.addAttribute("usuarios", usuarioServiceImpl.findUsuarioEntries(supermercado, firstResult, sizeNo));
 			float nrOfPages = (float) usuarioService.countAllUsuarios() / sizeNo;
 			uiModel.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
 		} else {
-			uiModel.addAttribute("usuarios", usuarioServiceImpl.findAllOrderByNumero());
+			uiModel.addAttribute("usuarios", usuarioServiceImpl.findAll(supermercado));
 		}
 		addDateTimeFormatPatterns(uiModel);
 		return "member/usuarios/list";

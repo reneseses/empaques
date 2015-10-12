@@ -174,6 +174,11 @@ public class FaltaController {
 				&& !principal.getAuthorities().contains(new SimpleGrantedAuthority("LOCALADMIN"))){
     		return "accessFailure";
     	}
+		List<Planilla> planillas= planillaServiceImpl.findAllPlanillasOrderByFechaDesc();
+		List<Usuario> usuarios= usuarioServiceImpl.lightFindAllUsuarios();
+
+		uiModel.addAttribute("planillas", planillas);
+		uiModel.addAttribute("usuarios", usuarios);
 		populateEditForm(uiModel, faltaService.findFalta(id));
         return "member/faltas/update";
     }

@@ -23,14 +23,10 @@
             <table class="table table-bordered table-hover table-compact table-striped" id="table-list" style="display: none">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Empaque</th>
-                        <th>Fecha</th>
-                        <th>Turno 1</th>
-                        <th>Turno 2</th>
-                        <th>Turno 3</th>
-                        <th>Turno 4</th>
-                        <th>Turno 5</th>
+                        <th style="width: 40px">#</th>
+                        <th style="width: 85px">Empaque</th>
+                        <th style="width: 160px">Fecha</th>
+                        <th>Solicitudes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,7 +49,7 @@
             </i>
         </a>
     </div>
-    <spring:url value="/js/solicitudes/list_solicitudes.js" var="list_js" />
+    <spring:url value="/js/solicitudes/list_repechajes.js" var="list_js" />
     <script type="text/javascript">
         var listUrl= appContext + "member/solicitudes/repechajes";
     </script>

@@ -43,7 +43,8 @@ public class Solicitud {
     	return false;
     }
     
-    public SolicitudList getSolicitudList(){
+    @SuppressWarnings("unchecked")
+	public SolicitudList getSolicitudList(){
     	SolicitudList obj= new SolicitudList();
     	
     	obj.setUsuario(this.usuario);

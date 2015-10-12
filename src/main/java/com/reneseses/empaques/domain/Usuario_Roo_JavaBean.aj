@@ -135,4 +135,8 @@ privileged aspect Usuario_Roo_JavaBean {
         this.image = image;
     }
     
+    public void Usuario.setNumero(Integer numero) {
+        this.numero = numero;
+    }
+    
 }
